@@ -6,6 +6,7 @@ import lombok.Data;
 public class RequestClientOption {
     private Proxy proxy;
     private long timeout;
+    private boolean fallowUrlRedirect = false;
 
     @Data
     public static class Proxy {

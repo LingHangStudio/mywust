@@ -4,6 +4,7 @@ import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
@@ -15,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -105,7 +107,9 @@ public class SimpleOkhttpRequester implements Requester {
     private OkHttpClient buildClient(OkHttpClient.Builder builder, RequestClientOption requestClientOption) {
         builder.callTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .readTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
-                .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS);
+                .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
+                .sslSocketFactory(TrustAllCert.getSSLSocketFactory(), TrustAllCert.getX509TrustManager())
+                .hostnameVerifier(TrustAllCert.getHostnameVerifier());
 
         // 设置代理
         RequestClientOption.Proxy proxyOption = requestClientOption.getProxy();
@@ -159,8 +163,12 @@ public class SimpleOkhttpRequester implements Requester {
      */
     private MediaType getMediaType(HttpRequest httpRequest) {
         // 按照指定的Content-Type设置MediaType，不指定的话按form处理
-        String contentType = httpRequest.getHeaders().get("Content-Type");
-        MediaType mediaType;
+        Map<String, String> headers = httpRequest.getHeaders();
+        if (headers == null) {
+            return MediaType.get(DEFAULT_CONTENT_TYPE);
+        }
+
+        String contentType = headers.get("Content-Type");
         if (!"".equals(contentType)) {
             return MediaType.get(contentType);
         } else {
@@ -180,9 +188,14 @@ public class SimpleOkhttpRequester implements Requester {
         Request.Builder requestBuilder = new Request.Builder().url(url);
 
         Map<String, String> requestHeaders = httpRequest.getHeaders();
-        requestHeaders.forEach(requestBuilder::header);
+        if (requestHeaders != null) {
+            requestHeaders.forEach(requestBuilder::header);
+        }
 
-        requestBuilder.header("Cookie", httpRequest.getCookies());
+        String requestCookie = httpRequest.getCookies();
+        if (requestCookie != null) {
+            requestBuilder.header("Cookie", requestCookie);
+        }
 
         if (requestMethod == RequestMethod.GET) {
             requestBuilder.get();
@@ -218,7 +231,7 @@ public class SimpleOkhttpRequester implements Requester {
 
             // 取所有的响应头，如果同一个响应头字段有多个值只拿第一个
             Map<String, List<String>> responseHeaders = response.headers().toMultimap();
-            Map<String, String> headerMap = new HashMap<>();
+            Map<String, String> headerMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             responseHeaders.forEach((k, v) -> headerMap.put(k, v.get(0)));
             httpResponse.setHeaders(headerMap);
 
@@ -229,7 +242,9 @@ public class SimpleOkhttpRequester implements Requester {
                 httpResponse.setBody(body.bytes());
             }
 
-            httpResponse.setCookies(response.header("Set-Cookie"));
+            // 提取Cookie
+            List<String> cookieHeaders = response.headers("Set-Cookie");
+            httpResponse.setCookies(StringUtil.parseCookie(cookieHeaders));
 
             return httpResponse;
         }
