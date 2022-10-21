@@ -1,65 +1,113 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
-import cn.linghang.mywust.core.api.JwcApiUrl;
+import cn.linghang.mywust.core.api.Bkjx;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
+import cn.linghang.mywust.core.service.auth.UnionLogin;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.util.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class JwcLogin {
-    // 默认5秒超时
-    private static final int DEFAULT_TIMEOUT = 5;
+    private static final Logger log = LoggerFactory.getLogger(JwcLogin.class);
 
     private final Requester requester;
 
-    public JwcLogin(Requester requester) {
+    private final UnionLogin unionLogin;
+
+    public JwcLogin(Requester requester, UnionLogin unionLogin) {
         this.requester = requester;
+        this.unionLogin = unionLogin;
     }
 
-    public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
-        // 获取ticket granting ticket（TGT）
-        HttpRequest TGTRequest = AuthRequestGenerator.unionLoginTGTRequest(username, password, JwcApiUrl.JWC_SSO_SERVICE);
-
-        HttpResponse unionAuthResponse = requester.post(new URL(JwcApiUrl.UNION_AUTH_API), TGTRequest, requestOption);
-
-        String redirectAddress = unionAuthResponse.getHeaders().get("Location");
-        if (redirectAddress == null) {
-            throw new PasswordWornException();
-        }
-
-        // 获取服务ticket（service ticket，st）
-        HttpRequest serviceTicketRequest = AuthRequestGenerator.loginTicketRequest(JwcApiUrl.JWC_SSO_SERVICE);
-
-        HttpResponse serviceTicketResponse =
-                requester.post(new URL(redirectAddress.replace("http:", "https:")), serviceTicketRequest, requestOption);
-
-        byte[] serviceTicketResponseData = serviceTicketResponse.getBody();
-        if (serviceTicketResponseData == null) {
-            System.err.println("获取服务st出错，serviceTicketResponseData == null");
+    /**
+     * <p>旧版的登录方式，既相当于直接登录<a href="http://bkjx.wust.edu.cn">bkjx系统</a></p>
+     * <p>注意，这种登录方式的密码和新版可能是不一样的</p>
+     * <p>不过不论使用哪种登录方式获取到的cookie都是可用的</p>
+     *
+     * @return 获取到的Cookies
+     */
+    public String getLoginCookieLegacy(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
+        // 获取某段神秘的dataStr（反正官网代码是这么叫的）
+        HttpRequest dataStringRequest = AuthRequestFactory.Legacy.dataStringRequest();
+        HttpResponse dataStringResponse = requester.post(new URL(Bkjx.Legacy.BKJX_DATA_STRING_API), dataStringRequest, requestOption);
+        if (dataStringResponse.getBody() == null) {
             throw new BasicException();
         }
-        String serviceTicket = new String(serviceTicketResponseData);
 
-        // 获取登录cookie（session）
-        HttpRequest sessionRequest = AuthRequestGenerator.sessionCookieRequest();
-        HttpResponse sessionResponse = requester.get(new URL(String.format(JwcApiUrl.JWC_TICKET_API, serviceTicket)), sessionRequest, requestOption);
+        String dataString = new String(dataStringResponse.getBody());
+
+        // 获取登录ticket
+        String encoded = PasswordEncoder.legacyPassword(username, password, dataString);
+        HttpRequest ticketRequest = AuthRequestFactory.Legacy.ticketRedirectRequest(encoded);
+        ticketRequest.setCookies(dataStringResponse.getCookies());
+        HttpResponse ticketResponse = requester.post(new URL(Bkjx.Legacy.BKJX_SESSION_COOKIE_API), ticketRequest, requestOption);
+        if (ticketResponse.getBody() == null) {
+            throw new BasicException();
+        }
+
+        // 使用跳转得到的链接获取cookies
+        String sessionRedirect = ticketResponse.getHeaders().get("Location");
+        if (sessionRedirect == null) {
+            throw new PasswordWornException();
+        }
+        HttpRequest sessionRequest = AuthRequestFactory.Legacy.dataStringRequest();
+
+        HttpResponse sessionResponse = requester.get(new URL(sessionRedirect), sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();
-        if (cookies == null || !cookies.contains("JSESSIONID") || !cookies.contains("SERVERID")) {
-            System.err.println("获取服务session cookie出错，关键Cookie缺失");
-            System.err.println("Cookies: " + cookies);
+        if (roughCheckCookie(cookies)) {
             throw new BasicException();
         }
 
         return cookies;
     }
 
-    private void getLoginGTG(String username, String password) {
+    public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
+        String serviceTicket = unionLogin.getServiceTicket(username, password, Bkjx.BKJX_SSO_SERVICE, requestOption);
 
+        // 获取登录cookie（session）
+        HttpRequest sessionRequest = AuthRequestFactory.sessionCookieRequest();
+        HttpResponse sessionResponse = requester.get(new URL(String.format(Bkjx.BKJX_SESSION_COOKIE_API, serviceTicket)), sessionRequest, requestOption);
+
+        String cookies = sessionResponse.getCookies();
+        if (roughCheckCookie(cookies)) {
+            throw new BasicException();
+        }
+
+        return cookies;
     }
+
+    private boolean roughCheckCookie(String cookies) throws BasicException {
+        return cookies == null || !cookies.contains("JSESSIONID") || !cookies.contains("SERVERID");
+    }
+
+    private static final int COOKIES_ERROR_RESPONSE_LENGTH =
+            ("<script languge='javascript'>window.location.href=" +
+                    "'https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fxxwcqk%2Fxxwcqk_idxOnzh.do'" +
+                    "</script>").length();
+
+
+    public boolean checkCookies(String cookies) throws IOException {
+        RequestClientOption option = new RequestClientOption();
+        option.setTimeout(5);
+        option.setProxy(null);
+        option.setFallowUrlRedirect(false);
+
+        HttpRequest testRequest = AuthRequestFactory.sessionCookieRequest();
+        testRequest.setCookies(cookies);
+        HttpResponse testResponse = requester.get(new URL(Bkjx.BKJX_TEST_API), testRequest, option);
+
+        // 判断响应长度是否为178个字，登录跳转响应长度
+        // 这种办法虽然在极端情况下可能会出错（而且还挺蠢的），但是是最快的办法中比较准确的了
+        return testResponse.getBody().length != COOKIES_ERROR_RESPONSE_LENGTH;
+    }
+
 }

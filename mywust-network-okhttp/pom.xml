@@ -44,6 +44,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
             <groupId>cn.linghang</groupId>
             <artifactId>mywust-network</artifactId>
             <version>0.0.1-dev</version>

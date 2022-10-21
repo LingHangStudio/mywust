@@ -27,11 +27,15 @@ public class StringUtil {
      * @return 解析后可用的Cookie
      */
     public static String parseCookie(List<String> cookieHeaders) {
+        if (cookieHeaders == null || cookieHeaders.isEmpty()) {
+            return null;
+        }
+
         List<String> allCookies = new ArrayList<>(cookieHeaders.size());
         cookieHeaders.forEach((cookieHeader) -> allCookies.add(cookieHeader.split(";")[0]));
 
         return Joiner.on(';')
-                .useForNull("")
+                .skipNulls()
                 .join(allCookies);
     }
 }

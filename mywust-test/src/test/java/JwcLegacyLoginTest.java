@@ -8,9 +8,9 @@ import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class JwcLoginTest {
+public class JwcLegacyLoginTest {
     public static void main(String[] args) throws BasicException, IOException {
-        new JwcLoginTest().run();
+        new JwcLegacyLoginTest().run();
     }
 
     private void run() throws BasicException, IOException {
@@ -34,7 +34,7 @@ public class JwcLoginTest {
         option.setProxy(null);
         option.setFallowUrlRedirect(false);
 
-        String cookies = jwcLogin.getLoginCookie(username, password, option);
+        String cookies = jwcLogin.getLoginCookieLegacy(username, password, option);
 
         System.out.println(cookies);
     }

@@ -7,13 +7,14 @@ import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,6 +37,8 @@ import java.util.concurrent.TimeUnit;
  * @edit 2022-10-19 21:30
  */
 public class SimpleOkhttpRequester implements Requester {
+    private static final Logger log = LoggerFactory.getLogger(SimpleOkhttpRequester.class);
+
     private final boolean useSingletonClient;
 
     private static volatile OkHttpClient rootClient;
@@ -108,6 +111,8 @@ public class SimpleOkhttpRequester implements Requester {
         builder.callTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .readTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
+                .followRedirects(requestClientOption.isFallowUrlRedirect())
+                .addInterceptor(new RedirectInterceptor())
                 .sslSocketFactory(TrustAllCert.getSSLSocketFactory(), TrustAllCert.getX509TrustManager())
                 .hostnameVerifier(TrustAllCert.getHostnameVerifier());
 
@@ -169,10 +174,10 @@ public class SimpleOkhttpRequester implements Requester {
         }
 
         String contentType = headers.get("Content-Type");
-        if (!"".equals(contentType)) {
-            return MediaType.get(contentType);
-        } else {
+        if (contentType == null || "".equals(contentType)) {
             return MediaType.get(DEFAULT_CONTENT_TYPE);
+        } else {
+            return MediaType.get(contentType);
         }
     }
 
@@ -197,18 +202,23 @@ public class SimpleOkhttpRequester implements Requester {
             requestBuilder.header("Cookie", requestCookie);
         }
 
+        byte[] data = httpRequest.getData();
+        if (data == null && requestMethod != RequestMethod.GET) {
+            data = new byte[]{0};
+        }
+
         if (requestMethod == RequestMethod.GET) {
             requestBuilder.get();
 
         } else if (requestMethod == RequestMethod.POST) {
-            requestBuilder.post(RequestBody.create(this.getMediaType(httpRequest), httpRequest.getData()));
+            requestBuilder.post(RequestBody.create(this.getMediaType(httpRequest), data));
 
         } else if (requestMethod == RequestMethod.PUT) {
-            requestBuilder.put(RequestBody.create(this.getMediaType(httpRequest), httpRequest.getData()));
+            requestBuilder.put(RequestBody.create(this.getMediaType(httpRequest), data));
 
         } else if (requestMethod == RequestMethod.DELETE) {
             if (httpRequest.getData() != null) {
-                requestBuilder.delete(RequestBody.create(this.getMediaType(httpRequest), httpRequest.getData()));
+                requestBuilder.delete(RequestBody.create(this.getMediaType(httpRequest), data));
             } else {
                 requestBuilder.delete();
             }

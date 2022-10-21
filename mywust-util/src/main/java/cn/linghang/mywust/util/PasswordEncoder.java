@@ -16,6 +16,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * <h>密码加密工具类</h>
  *
@@ -27,6 +29,7 @@ import java.security.spec.RSAPublicKeySpec;
  * <p>- 将生成的字节数组转换成16进制字符串，得到加密后的数据</p>
  * <br>
  * <p>希望不要再改登录方式了 [拜] </p>
+ *
  * @author : lensfrex
  * @description : 使用统一登陆的加密方法对密码进行加密的工具类
  * @create : 2022-09-18 14:42:06
@@ -69,7 +72,7 @@ public class PasswordEncoder {
 
             // 完成加密
             return Hex.encodeHexString(cipher.doFinal(reversedTextData));
-        } catch (IllegalBlockSizeException | BadPaddingException  e) {
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
             // 会报错的地方都是因为算法不正确，这里都是固定的值，出错了就是程序写错了，在测试的时候就应该发现的问题
             // 对于调用者不必处理这种异常，但是开发测试的时候应该要打日志来发现问题
             System.err.println("加密出错");
@@ -100,5 +103,35 @@ public class PasswordEncoder {
         }
 
         return null;
+    }
+
+    /**
+     * <p>使用旧版登录页的方法加密密码（bkjx系统直接登录）</p>
+     * <p>是直接照搬官网js代码的，只是经过了一点小修改，没有具体研究是什么加密方式（大概率可能是自创的），性能可能会有点差</p>
+     *
+     * @param dataString 加密前置字符串
+     * @param password   密码明文
+     * @return 加密后的密文
+     */
+    public static String legacyPassword(String username, String password, String dataString) {
+        String[] parts = dataString.split("#");
+        String scode = parts[0];
+        String sxh = parts[1];
+
+        String code = username + "%%%" + password;
+
+        StringBuilder encoded = new StringBuilder();
+        for (int i = 0, codeLength = code.length(); i < codeLength; i++) {
+            if (i < 20) {
+                int endIndex = parseInt(sxh.substring(i, i + 1));
+                encoded.append(code.charAt(i)).append(scode, 0, endIndex);
+                scode = scode.substring(endIndex);
+            } else {
+                encoded.append(code.substring(i));
+                i = codeLength;
+            }
+        }
+
+        return encoded.toString();
     }
 }
