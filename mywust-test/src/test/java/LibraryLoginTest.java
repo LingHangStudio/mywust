@@ -1,5 +1,6 @@
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.service.auth.UnionLogin;
+import cn.linghang.mywust.core.service.library.LibraryLogin;
 import cn.linghang.mywust.core.service.undergraduate.JwcLogin;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
@@ -8,13 +9,13 @@ import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class JwcLoginTest {
+public class LibraryLoginTest {
     public static void main(String[] args) throws BasicException, IOException {
-        new JwcLoginTest().run();
+        new LibraryLoginTest().run();
     }
 
     private void run() throws BasicException, IOException {
-        System.out.println("bkjx登录测试（统一身份验证）");
+        System.out.println("图书馆登陆测试");
         System.out.println("输入账号（学号）和密码，用“ ”（空格）分割");
 
         Scanner scanner = new Scanner(System.in);
@@ -28,17 +29,14 @@ public class JwcLoginTest {
         System.out.println("密码：" + password);
 
         Requester requester = new SimpleOkhttpRequester();
-        JwcLogin jwcLogin = new JwcLogin(requester, new UnionLogin(requester));
+        LibraryLogin libraryLogin = new LibraryLogin(requester, new UnionLogin(requester));
 
-        RequestClientOption option = new RequestClientOption();
-        option.setTimeout(5);
-        option.setProxy(null);
-        option.setFallowUrlRedirect(false);
+        RequestClientOption option = RequestClientOption.DEFAULT_OPTION;
 
-        String cookies = jwcLogin.getLoginCookie(username, password, option);
+        String cookies = libraryLogin.getLibraryLoginCookie(username, password, option);
 
-        System.out.printf("获取到Cookies: %s \n", cookies);
+        System.out.printf("获取到的cookies: %s \n", cookies);
 
-        System.out.printf("检查Cookies: %s", jwcLogin.checkCookies(cookies));
+        System.out.printf("检查Cookies: %s", libraryLogin.checkCookie(cookies));
     }
 }

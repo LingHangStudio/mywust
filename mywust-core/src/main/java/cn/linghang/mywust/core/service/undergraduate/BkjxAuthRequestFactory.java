@@ -1,45 +1,21 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
 import cn.linghang.mywust.network.HttpRequest;
+import cn.linghang.mywust.network.RequestFactory;
 import cn.linghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthRequestFactory {
-    public static HttpRequest unionLoginTGTRequest(String username, String password, String service) {
-        Map<String, String> requestForm = new HashMap<>(4);
-        requestForm.put("username", username);
-        requestForm.put("password", password);
-        requestForm.put("service", service);
-        requestForm.put("loginType", "");
-
-        String queryString = StringUtil.generateQueryString(requestForm);
-
-        HttpRequest request = new HttpRequest();
-        request.setData(queryString.getBytes(StandardCharsets.UTF_8));
-
-        return request;
-    }
-
-    public static HttpRequest loginTicketRequest(String service) {
-        Map<String, String> requestForm = new HashMap<>(1);
-        requestForm.put("service", service);
-
-        String queryString = StringUtil.generateQueryString(requestForm);
-
-        HttpRequest request = new HttpRequest();
-        request.setData(queryString.getBytes(StandardCharsets.UTF_8));
-
-        return request;
-    }
-
+public class BkjxAuthRequestFactory extends RequestFactory {
     public static HttpRequest sessionCookieRequest() {
         return DEFAULT_HTTP_REQUEST;
     }
 
-    private static final HttpRequest DEFAULT_HTTP_REQUEST = new HttpRequest();
+    public static HttpRequest getDefaultHttpRequest() {
+        return DEFAULT_HTTP_REQUEST;
+    }
 
     public static class Legacy {
         public static HttpRequest dataStringRequest() {

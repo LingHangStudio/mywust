@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.service.auth;
 import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
-import cn.linghang.mywust.core.service.undergraduate.AuthRequestFactory;
+import cn.linghang.mywust.core.service.undergraduate.BkjxAuthRequestFactory;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;

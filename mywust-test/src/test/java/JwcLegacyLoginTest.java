@@ -14,6 +14,7 @@ public class JwcLegacyLoginTest {
     }
 
     private void run() throws BasicException, IOException {
+        System.out.println("bkjx旧版直登测试");
         System.out.println("输入账号（学号）和密码，用“ ”（空格）分割");
 
         Scanner scanner = new Scanner(System.in);

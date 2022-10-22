@@ -1,6 +1,7 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
 import cn.linghang.mywust.core.api.Bkjx;
+import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
 import cn.linghang.mywust.core.service.auth.UnionLogin;
@@ -28,15 +29,16 @@ public class JwcLogin {
     }
 
     /**
-     * <p>旧版的登录方式，既相当于直接登录<a href="http://bkjx.wust.edu.cn">bkjx系统</a></p>
+     * <p>旧版的登录方式，既相当于直接登录<a href="http://bkjx.wust.edu.cn">bkjx系统，不建议使用</a></p>
      * <p>注意，这种登录方式的密码和新版可能是不一样的</p>
      * <p>不过不论使用哪种登录方式获取到的cookie都是可用的</p>
      *
      * @return 获取到的Cookies
      */
+    @Deprecated
     public String getLoginCookieLegacy(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
         // 获取某段神秘的dataStr（反正官网代码是这么叫的）
-        HttpRequest dataStringRequest = AuthRequestFactory.Legacy.dataStringRequest();
+        HttpRequest dataStringRequest = BkjxAuthRequestFactory.Legacy.dataStringRequest();
         HttpResponse dataStringResponse = requester.post(new URL(Bkjx.Legacy.BKJX_DATA_STRING_API), dataStringRequest, requestOption);
         if (dataStringResponse.getBody() == null) {
             throw new BasicException();
@@ -46,7 +48,7 @@ public class JwcLogin {
 
         // 获取登录ticket
         String encoded = PasswordEncoder.legacyPassword(username, password, dataString);
-        HttpRequest ticketRequest = AuthRequestFactory.Legacy.ticketRedirectRequest(encoded);
+        HttpRequest ticketRequest = BkjxAuthRequestFactory.Legacy.ticketRedirectRequest(encoded);
         ticketRequest.setCookies(dataStringResponse.getCookies());
         HttpResponse ticketResponse = requester.post(new URL(Bkjx.Legacy.BKJX_SESSION_COOKIE_API), ticketRequest, requestOption);
         if (ticketResponse.getBody() == null) {
@@ -58,7 +60,7 @@ public class JwcLogin {
         if (sessionRedirect == null) {
             throw new PasswordWornException();
         }
-        HttpRequest sessionRequest = AuthRequestFactory.Legacy.dataStringRequest();
+        HttpRequest sessionRequest = BkjxAuthRequestFactory.Legacy.dataStringRequest();
 
         HttpResponse sessionResponse = requester.get(new URL(sessionRedirect), sessionRequest, requestOption);
 
@@ -71,10 +73,10 @@ public class JwcLogin {
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
-        String serviceTicket = unionLogin.getServiceTicket(username, password, Bkjx.BKJX_SSO_SERVICE, requestOption);
+        String serviceTicket = unionLogin.getServiceTicket(username, password, UnionAuth.BKJX_SSO_SERVICE, requestOption);
 
         // 获取登录cookie（session）
-        HttpRequest sessionRequest = AuthRequestFactory.sessionCookieRequest();
+        HttpRequest sessionRequest = BkjxAuthRequestFactory.sessionCookieRequest();
         HttpResponse sessionResponse = requester.get(new URL(String.format(Bkjx.BKJX_SESSION_COOKIE_API, serviceTicket)), sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();
@@ -96,12 +98,9 @@ public class JwcLogin {
 
 
     public boolean checkCookies(String cookies) throws IOException {
-        RequestClientOption option = new RequestClientOption();
-        option.setTimeout(5);
-        option.setProxy(null);
-        option.setFallowUrlRedirect(false);
+        RequestClientOption option = RequestClientOption.DEFAULT_OPTION;
 
-        HttpRequest testRequest = AuthRequestFactory.sessionCookieRequest();
+        HttpRequest testRequest = BkjxAuthRequestFactory.getDefaultHttpRequest();
         testRequest.setCookies(cookies);
         HttpResponse testResponse = requester.get(new URL(Bkjx.BKJX_TEST_API), testRequest, option);
 

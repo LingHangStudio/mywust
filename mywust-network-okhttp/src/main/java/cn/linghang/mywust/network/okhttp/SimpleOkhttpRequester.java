@@ -15,6 +15,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -256,6 +257,9 @@ public class SimpleOkhttpRequester implements Requester {
             List<String> cookieHeaders = response.headers("Set-Cookie");
             httpResponse.setCookies(StringUtil.parseCookie(cookieHeaders));
 
+            log.debug("Receive Response: {}", response);
+            log.debug("Response Headers: {}", responseHeaders);
+//            log.debug("Response body: {}", new String(Arrays.copyOf(httpResponse.getBody(), 64)));
             return httpResponse;
         }
     }
@@ -273,6 +277,11 @@ public class SimpleOkhttpRequester implements Requester {
     private HttpResponse doRequest(RequestMethod requestMethod, URL url, HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
         OkHttpClient client = getOkhttpClient(requestClientOption);
         Request request = this.buildRequest(requestMethod, url, httpRequest);
+
+        log.debug("------------Do Request------------");
+        log.debug("Request Options: {}" ,requestClientOption);
+        log.debug("Request: {}", request);
+        log.debug("Headers: {}", request.headers());
 
         return this.sendRequest(client, request);
     }
