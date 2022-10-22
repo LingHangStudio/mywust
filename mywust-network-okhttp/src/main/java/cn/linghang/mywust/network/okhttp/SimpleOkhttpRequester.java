@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -186,12 +184,11 @@ public class SimpleOkhttpRequester implements Requester {
      * 根据请求信息来构建Request
      *
      * @param requestMethod 请求方法，可选值：GET, POST, PUT, DELETE
-     * @param url           地址
      * @param httpRequest   请求体
      * @return Request
      */
-    private Request buildRequest(RequestMethod requestMethod, URL url, HttpRequest httpRequest) {
-        Request.Builder requestBuilder = new Request.Builder().url(url);
+    private Request buildRequest(RequestMethod requestMethod, HttpRequest httpRequest) {
+        Request.Builder requestBuilder = new Request.Builder().url(httpRequest.getUrl());
 
         Map<String, String> requestHeaders = httpRequest.getHeaders();
         if (requestHeaders != null) {
@@ -268,15 +265,14 @@ public class SimpleOkhttpRequester implements Requester {
      * 执行请求
      *
      * @param requestMethod       请求方法
-     * @param url                 请求地址
      * @param httpRequest         请求体
      * @param requestClientOption 请求响应
      * @return 包装好的Http响应
      * @throws IOException 如果网络请求有异常
      */
-    private HttpResponse doRequest(RequestMethod requestMethod, URL url, HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
+    private HttpResponse doRequest(RequestMethod requestMethod, HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
         OkHttpClient client = getOkhttpClient(requestClientOption);
-        Request request = this.buildRequest(requestMethod, url, httpRequest);
+        Request request = this.buildRequest(requestMethod, httpRequest);
 
         log.debug("------------Do Request------------");
         log.debug("Request Options: {}" ,requestClientOption);
@@ -287,31 +283,31 @@ public class SimpleOkhttpRequester implements Requester {
     }
 
     @Override
-    public HttpResponse get(URL url, HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
-        return this.doRequest(RequestMethod.GET, url, httpRequest, requestClientOption);
+    public HttpResponse get(HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
+        return this.doRequest(RequestMethod.GET, httpRequest, requestClientOption);
     }
 
     @Override
-    public HttpResponse post(URL url, HttpRequest request, RequestClientOption requestClientOption) throws IOException {
-        return this.doRequest(RequestMethod.POST, url, request, requestClientOption);
+    public HttpResponse post(HttpRequest request, RequestClientOption requestClientOption) throws IOException {
+        return this.doRequest(RequestMethod.POST, request, requestClientOption);
     }
 
     @Override
-    public HttpResponse postJson(URL url, HttpRequest request, Object requestBody, RequestClientOption requestClientOption) throws IOException {
+    public HttpResponse postJson(HttpRequest request, Object requestBody, RequestClientOption requestClientOption) throws IOException {
         String json = new ObjectMapper().writeValueAsString(requestBody);
         request.setData(json.getBytes(StandardCharsets.UTF_8));
         request.getHeaders().put("Content-Type", JSON_CONTENT_TYPE);
 
-        return this.doRequest(RequestMethod.POST, url, request, requestClientOption);
+        return this.doRequest(RequestMethod.POST, request, requestClientOption);
     }
 
     @Override
-    public HttpResponse put(URL url, HttpRequest request, RequestClientOption requestClientOption) throws IOException {
-        return this.doRequest(RequestMethod.PUT, url, request, requestClientOption);
+    public HttpResponse put(HttpRequest request, RequestClientOption requestClientOption) throws IOException {
+        return this.doRequest(RequestMethod.PUT, request, requestClientOption);
     }
 
     @Override
-    public HttpResponse delete(URL url, HttpRequest request, RequestClientOption requestClientOption) throws IOException {
-        return this.doRequest(RequestMethod.DELETE, url, request, requestClientOption);
+    public HttpResponse delete(HttpRequest request, RequestClientOption requestClientOption) throws IOException {
+        return this.doRequest(RequestMethod.DELETE, request, requestClientOption);
     }
 }

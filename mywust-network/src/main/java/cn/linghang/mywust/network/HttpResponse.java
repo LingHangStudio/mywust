@@ -25,4 +25,39 @@ public class HttpResponse {
         sb.append('}');
         return sb.toString();
     }
+
+    public static HttpResponseBuilder builder() {
+        return new HttpResponseBuilder();
+    }
+
+    public static final class HttpResponseBuilder {
+        private final HttpResponse httpResponse;
+
+        private HttpResponseBuilder() {
+            httpResponse = new HttpResponse();
+        }
+
+        public static HttpResponseBuilder aHttpResponse() {
+            return new HttpResponseBuilder();
+        }
+
+        public HttpResponseBuilder headers(Map<String, String> headers) {
+            httpResponse.setHeaders(headers);
+            return this;
+        }
+
+        public HttpResponseBuilder cookies(String cookies) {
+            httpResponse.setCookies(cookies);
+            return this;
+        }
+
+        public HttpResponseBuilder body(byte[] body) {
+            httpResponse.setBody(body);
+            return this;
+        }
+
+        public HttpResponse build() {
+            return httpResponse;
+        }
+    }
 }

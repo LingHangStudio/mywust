@@ -39,6 +39,6 @@ public class JwcLoginTest {
 
         System.out.printf("获取到Cookies: %s \n", cookies);
 
-        System.out.printf("检查Cookies: %s", jwcLogin.checkCookies(cookies));
+        System.out.printf("检查Cookies: %s", jwcLogin.checkCookies(cookies, RequestClientOption.DEFAULT_OPTION));
     }
 }

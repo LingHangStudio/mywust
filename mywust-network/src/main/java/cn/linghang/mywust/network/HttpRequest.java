@@ -2,6 +2,7 @@ package cn.linghang.mywust.network;
 
 import lombok.Data;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class HttpRequest {
         return defaultHeaders;
     }
 
-    private Map<String, String> urlParams;
+    private URL url;
 
     private Map<String, String> headers;
 
@@ -32,14 +33,15 @@ public class HttpRequest {
         headers = new HashMap<>(DEFAULT_HEADERS);
     }
 
-    public void setHeaders(Map<String, String> headers) {
+    public HttpRequest addHeaders(Map<String, String> headers) {
         this.headers.putAll(headers);
+        return this;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("HttpRequest{");
-        sb.append("urlParams=").append(urlParams);
+        sb.append("urlParams=").append(url);
         sb.append(", headers=").append(headers);
         sb.append(", cookies='").append(cookies).append('\'');
         sb.append(", data=");
@@ -49,5 +51,45 @@ public class HttpRequest {
         }
         sb.append('}');
         return sb.toString();
+    }
+
+    public static HttpRequestBuilder builder() {
+        return new HttpRequestBuilder();
+    }
+
+    public static class HttpRequestBuilder {
+        private final HttpRequest httpRequest;
+
+        private HttpRequestBuilder() {
+            httpRequest = new HttpRequest();
+        }
+
+        public static HttpRequestBuilder aHttpRequest() {
+            return new HttpRequestBuilder();
+        }
+
+        public HttpRequestBuilder url(URL url) {
+            httpRequest.setUrl(url);
+            return this;
+        }
+
+        public HttpRequestBuilder headers(Map<String, String> headers) {
+            httpRequest.setHeaders(headers);
+            return this;
+        }
+
+        public HttpRequestBuilder cookies(String cookies) {
+            httpRequest.setCookies(cookies);
+            return this;
+        }
+
+        public HttpRequestBuilder data(byte[] data) {
+            httpRequest.setData(data);
+            return this;
+        }
+
+        public HttpRequest build() {
+            return httpRequest;
+        }
     }
 }

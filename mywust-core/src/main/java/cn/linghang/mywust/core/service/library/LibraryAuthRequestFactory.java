@@ -1,14 +1,15 @@
 package cn.linghang.mywust.core.service.library;
 
+import cn.linghang.mywust.core.api.Library;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.RequestFactory;
 
 public class LibraryAuthRequestFactory extends RequestFactory {
-    public static HttpRequest sessionCookieRequest() {
-        return DEFAULT_HTTP_REQUEST;
+    public static HttpRequest sessionCookieRequest(String serviceTicket) {
+        return makeHttpRequest(String.format(Library.LIBRARY_SESSION_COOKIE_API, serviceTicket));
     }
 
     public static HttpRequest indexRequest() {
-        return DEFAULT_HTTP_REQUEST;
+        return makeHttpRequest(Library.LIBRARY_INDEX_URL);
     }
 }

@@ -1,5 +1,6 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
+import cn.linghang.mywust.core.api.Bkjx;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.RequestFactory;
 import cn.linghang.mywust.util.StringUtil;
@@ -9,17 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BkjxAuthRequestFactory extends RequestFactory {
-    public static HttpRequest sessionCookieRequest() {
-        return DEFAULT_HTTP_REQUEST;
-    }
-
-    public static HttpRequest getDefaultHttpRequest() {
-        return DEFAULT_HTTP_REQUEST;
+    public static HttpRequest sessionCookieRequest(String serviceTicket) {
+        return makeHttpRequest(String.format(Bkjx.BKJX_SESSION_COOKIE_API, serviceTicket));
     }
 
     public static class Legacy {
         public static HttpRequest dataStringRequest() {
-            return DEFAULT_HTTP_REQUEST;
+            return makeHttpRequest(Bkjx.Legacy.BKJX_DATA_STRING_API);
         }
 
         public static HttpRequest ticketRedirectRequest(String encode) {
@@ -34,11 +31,8 @@ public class BkjxAuthRequestFactory extends RequestFactory {
             extendHeaders.put("Referer", "http://bkjx.wust.edu.cn/");
             extendHeaders.put("Origin", "http://bkjx.wust.edu.cn");
 
-            HttpRequest httpRequest = new HttpRequest();
-            httpRequest.setHeaders(extendHeaders);
-            httpRequest.setData(queryString.getBytes(StandardCharsets.UTF_8));
-
-            return httpRequest;
+            return makeHttpRequest(Bkjx.Legacy.BKJX_SESSION_COOKIE_API, queryString.getBytes(StandardCharsets.UTF_8))
+                    .addHeaders(extendHeaders);
         }
     }
 }

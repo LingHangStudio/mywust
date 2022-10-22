@@ -1,9 +1,7 @@
 package cn.linghang.mywust.core.service.auth;
 
-import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
-import cn.linghang.mywust.core.service.undergraduate.BkjxAuthRequestFactory;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -13,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * 统一认证登录
@@ -32,8 +29,7 @@ public class UnionLogin {
 
         // 获取ticket granting ticket（TGT），以获取ServiceTicket
         HttpRequest TGTRequest = AuthRequestFactory.unionLoginTGTRequest(username, encodedPassword, serviceUrl);
-
-        HttpResponse unionAuthResponse = requester.post(new URL(UnionAuth.UNION_AUTH_API), TGTRequest, requestOption);
+        HttpResponse unionAuthResponse = requester.post(TGTRequest, requestOption);
 
         String redirectAddress = unionAuthResponse.getHeaders().get("Location");
         if (redirectAddress == null) {
@@ -41,10 +37,8 @@ public class UnionLogin {
         }
 
         // 获取服务ticket（service ticket，ST）
-        HttpRequest serviceTicketRequest = AuthRequestFactory.loginTicketRequest(serviceUrl);
-
-        HttpResponse serviceTicketResponse =
-                requester.post(new URL(redirectAddress.replace("http:", "https:")), serviceTicketRequest, requestOption);
+        HttpRequest serviceTicketRequest = AuthRequestFactory.loginTicketRequest(redirectAddress.replace("http:", "https:"), serviceUrl);
+        HttpResponse serviceTicketResponse = requester.post(serviceTicketRequest, requestOption);
 
         byte[] serviceTicketResponseData = serviceTicketResponse.getBody();
         if (serviceTicketResponseData == null) {
