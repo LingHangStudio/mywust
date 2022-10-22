@@ -12,6 +12,8 @@ public class Bkjx {
 
     public static final String BKJX_TEST_API = "http://bkjx.wust.edu.cn/jsxsd/xxwcqk/xxwcqk_idxOnzh.do";
 
+    public static final String BKJX_STUDENT_INFO_API = "http://bkjx.wust.edu.cn/jsxsd/grxx/xsxx";
+
     public static class Legacy {
         public static final String BKJX_INDEX = "http://bkjx.wust.edu.cn";
         public static final String BKJX_DATA_STRING_API = "http://bkjx.wust.edu.cn/Logon.do?method=logon&flag=sess";

@@ -1,4 +1,6 @@
-package cn.linghang.mywust.network;
+package cn.linghang.mywust.core.request;
+
+import cn.linghang.mywust.network.HttpRequest;
 
 import java.net.URL;
 

@@ -6,7 +6,10 @@ public class UnionAuth {
      */
     public static final String UNION_AUTH_API = "https://auth.wust.edu.cn/lyuapServer/v1/tickets";
 
-    public static final String LIBRARY_SSO_SERVICE = "https://libsys.wust.edu.cn:443/meta-local/opac/cas/rosetta";
+    public static class Service {
 
-    public static final String BKJX_SSO_SERVICE = "http://bkjx.wust.edu.cn/jsxsd/sso.jsp";
+        public static final String LIBRARY_SSO_SERVICE = "https://libsys.wust.edu.cn:443/meta-local/opac/cas/rosetta";
+
+        public static final String BKJX_SSO_SERVICE = "http://bkjx.wust.edu.cn/jsxsd/sso.jsp";
+    }
 }

@@ -1,8 +1,7 @@
-package cn.linghang.mywust.core.service.auth;
+package cn.linghang.mywust.core.request;
 
 import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.network.HttpRequest;
-import cn.linghang.mywust.network.RequestFactory;
 import cn.linghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;

@@ -1,17 +1,20 @@
-package cn.linghang.mywust.core.service.undergraduate;
+package cn.linghang.mywust.core.request;
 
 import cn.linghang.mywust.core.api.Bkjx;
 import cn.linghang.mywust.network.HttpRequest;
-import cn.linghang.mywust.network.RequestFactory;
 import cn.linghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BkjxAuthRequestFactory extends RequestFactory {
+public class BkjxRequestFactory extends RequestFactory {
     public static HttpRequest sessionCookieRequest(String serviceTicket) {
         return makeHttpRequest(String.format(Bkjx.BKJX_SESSION_COOKIE_API, serviceTicket));
+    }
+
+    public static HttpRequest studentInfoRequest(String cookies) {
+        return makeHttpRequest(Bkjx.BKJX_STUDENT_INFO_API, null, cookies);
     }
 
     public static class Legacy {

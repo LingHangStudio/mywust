@@ -237,6 +237,8 @@ public class SimpleOkhttpRequester implements Requester {
         try (Response response = client.newCall(request).execute()) {
             HttpResponse httpResponse = new HttpResponse();
 
+            httpResponse.setStatusCode(response.code());
+
             // 取所有的响应头，如果同一个响应头字段有多个值只拿第一个
             Map<String, List<String>> responseHeaders = response.headers().toMultimap();
             Map<String, String> headerMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -256,7 +258,7 @@ public class SimpleOkhttpRequester implements Requester {
 
             log.debug("Receive Response: {}", response);
             log.debug("Response Headers: {}", responseHeaders);
-//            log.debug("Response body: {}", new String(Arrays.copyOf(httpResponse.getBody(), 64)));
+
             return httpResponse;
         }
     }

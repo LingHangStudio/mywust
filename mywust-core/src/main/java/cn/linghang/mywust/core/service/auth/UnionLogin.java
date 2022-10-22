@@ -2,6 +2,7 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
+import cn.linghang.mywust.core.request.AuthRequestFactory;
 import cn.linghang.mywust.network.HttpRequest;
 import cn.linghang.mywust.network.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
