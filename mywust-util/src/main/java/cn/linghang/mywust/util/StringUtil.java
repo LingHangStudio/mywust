@@ -2,6 +2,8 @@ package cn.linghang.mywust.util;
 
 import com.google.common.base.Joiner;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,9 @@ public class StringUtil {
      * @return 生成的表单请求字符串
      */
     public static String generateQueryString(Map<String, String> queryParams) {
+        // 自动对value值进行url编码
+        queryParams.forEach((k, v) -> queryParams.put(k, URLEncoder.encode(v, StandardCharsets.UTF_8)));
+
         return Joiner.on('&')
                 .useForNull("")
                 .withKeyValueSeparator('=')

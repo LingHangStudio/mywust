@@ -7,8 +7,14 @@ import java.util.Map;
 @Data
 public class HttpResponse {
     public static final int HTTP_OK = 200;
+    public static final int HTTP_RESOURCE_CREATED = 201;
+
+    public static final int HTTP_REDIRECT_301 = 301;
+    public static final int HTTP_REDIRECT_302 = 302;
+
     public static final int HTTP_FORBIDDEN = 403;
     public static final int HTTP_NOT_FOUND = 404;
+
     public static final int HTTP_SERVER_ERROR = 500;
     public static final int HTTP_SERVICE_UNAVAILABLE = 503;
 

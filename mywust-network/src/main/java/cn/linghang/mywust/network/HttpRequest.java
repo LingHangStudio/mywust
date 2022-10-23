@@ -38,6 +38,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest addHeaders(String key, String value) {
+        this.headers.put(key, value);
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("HttpRequest{");
