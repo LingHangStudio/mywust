@@ -32,8 +32,11 @@ public class JwcLoginTest {
 
         RequestClientOption option = new RequestClientOption();
         option.setTimeout(5);
-        option.setProxy(null);
         option.setFallowUrlRedirect(false);
+        RequestClientOption.Proxy proxy = new RequestClientOption.Proxy();
+        proxy.setPort(6060);
+        proxy.setAddress("127.0.0.1");
+        option.setProxy(proxy);
 
         String cookies = jwcLogin.getLoginCookie(username, password, option);
 

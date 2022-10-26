@@ -1,4 +1,4 @@
-package cn.linghang.mywust.network;
+package cn.linghang.mywust.network.entitys;
 
 import lombok.Data;
 

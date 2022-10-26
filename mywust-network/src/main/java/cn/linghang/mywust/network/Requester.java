@@ -1,5 +1,8 @@
 package cn.linghang.mywust.network;
 
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
+
 import java.io.IOException;
 
 /**

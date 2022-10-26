@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request;
 
 import cn.linghang.mywust.core.api.Library;
-import cn.linghang.mywust.network.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpRequest;
 
 public class LibraryRequestFactory extends RequestFactory {
     public static HttpRequest sessionCookieRequest(String serviceTicket) {

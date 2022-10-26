@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request;
 
 import cn.linghang.mywust.core.api.PhysicsSystem;
-import cn.linghang.mywust.network.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
