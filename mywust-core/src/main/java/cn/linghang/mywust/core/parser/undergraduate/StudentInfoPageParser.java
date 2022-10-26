@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.parser.undergraduate;
 
-import cn.linghang.mywust.core.exception.HtmlPageParseException;
+import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.parser.undergraduate.xpath.StudentInfoXpath;
 import cn.linghang.mywust.model.undergrade.StudentInfo;
@@ -11,11 +11,11 @@ import org.jsoup.select.Elements;
 
 public class StudentInfoPageParser implements Parser<StudentInfo> {
 
-    public StudentInfo parse(String html) throws HtmlPageParseException {
+    public StudentInfo parse(String html) throws ParseException {
         Document page = Jsoup.parse(html);
         Element table = page.getElementById("xjkpTable");
         if (table == null) {
-            throw new HtmlPageParseException();
+            throw new ParseException();
         }
 
         Elements studentElements = table.selectXpath(StudentInfoXpath.STUDENT_NUMBER);

@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
 import cn.linghang.mywust.core.exception.CookieInvalidException;
-import cn.linghang.mywust.core.exception.HtmlPageParseException;
+import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.undergraduate.StudentInfoPageParser;
 import cn.linghang.mywust.core.request.BkjxRequestFactory;
 import cn.linghang.mywust.core.util.BkjxUtil;
@@ -42,7 +42,7 @@ public class JwcService {
         return new String(response.getBody());
     }
 
-    public StudentInfo getStudentInfo(String cookies, RequestClientOption requestOption) throws IOException, CookieInvalidException, HtmlPageParseException {
+    public StudentInfo getStudentInfo(String cookies, RequestClientOption requestOption) throws IOException, CookieInvalidException, ParseException {
         String studentInfoPage = this.getStudentInfoPage(cookies, requestOption);
 
         return studentInfoPageParser.parse(studentInfoPage);
