@@ -1,6 +1,7 @@
-package cn.linghang.mywust.core.request;
+package cn.linghang.mywust.core.request.physics;
 
 import cn.linghang.mywust.core.api.PhysicsSystem;
+import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
 

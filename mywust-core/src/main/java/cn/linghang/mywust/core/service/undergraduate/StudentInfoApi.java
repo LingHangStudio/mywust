@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.service.undergraduate;
 import cn.linghang.mywust.core.exception.CookieInvalidException;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.undergraduate.StudentInfoPageParser;
-import cn.linghang.mywust.core.request.BkjxRequestFactory;
+import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
 import cn.linghang.mywust.core.util.BkjxUtil;
 import cn.linghang.mywust.model.undergrade.StudentInfo;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -13,7 +13,7 @@ import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
-public class StudentInfoApi {
+public class StudentInfoApi extends UndergraduateApi {
     private final Requester requester;
 
     private static final StudentInfoPageParser parser = new StudentInfoPageParser();
@@ -26,13 +26,7 @@ public class StudentInfoApi {
         HttpRequest request = BkjxRequestFactory.studentInfoRequest(cookies);
         HttpResponse response = requester.get(request, requestOption);
 
-        // 检查响应是否正确
-        if (response.getBody() == null ||
-                response.getStatusCode() != HttpResponse.HTTP_OK ||
-                BkjxUtil.checkLoginFinger(response.getBody())) {
-
-            throw new CookieInvalidException();
-        }
+        checkResponse(response, cookies);
 
         return new String(response.getBody());
     }

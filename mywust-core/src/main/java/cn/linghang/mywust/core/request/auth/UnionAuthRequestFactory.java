@@ -1,6 +1,7 @@
-package cn.linghang.mywust.core.request;
+package cn.linghang.mywust.core.request.auth;
 
 import cn.linghang.mywust.core.api.UnionAuth;
+import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
 
@@ -8,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthRequestFactory extends RequestFactory {
+public class UnionAuthRequestFactory extends RequestFactory {
     public static HttpRequest unionLoginTGTRequest(String username, String password, String service) {
         Map<String, String> requestForm = new HashMap<>(4);
         requestForm.put("username", username);

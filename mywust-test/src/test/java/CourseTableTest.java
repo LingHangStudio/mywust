@@ -1,19 +1,23 @@
 import cn.linghang.mywust.core.exception.BasicException;
-import cn.linghang.mywust.core.service.undergraduate.TrainingPlanApi;
+import cn.linghang.mywust.core.service.undergraduate.CourseTableApi;
+import cn.linghang.mywust.core.service.undergraduate.ExamInfoApi;
+import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.model.undergrade.ExamInfo;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
-public class SchemeTest {
+public class CourseTableTest {
     public static void main(String[] args) throws BasicException, IOException {
-        new SchemeTest().run();
+        new CourseTableTest().run();
     }
 
     private void run() throws BasicException, IOException {
-        System.out.println("培养方案获取");
+        System.out.println("成绩获取");
         System.out.println("Cookie：");
 
         Scanner scanner = new Scanner(System.in);
@@ -21,6 +25,13 @@ public class SchemeTest {
         String cookie = scanner.nextLine();
 
         System.out.println("使用Cookie：" + cookie);
+
+        System.out.println("学期（如2022-2023-1）：");
+        String term = scanner.nextLine();
+        System.out.println("使用学期：" + term);
+
+        Requester requester = new SimpleOkhttpRequester();
+        CourseTableApi service = new CourseTableApi(requester);
 
         RequestClientOption option = new RequestClientOption();
         option.setTimeout(5);
@@ -30,11 +41,10 @@ public class SchemeTest {
         option.setProxy(proxy);
         option.setFallowUrlRedirect(false);
 
-        Requester requester = new SimpleOkhttpRequester();
-        TrainingPlanApi jwcService = new TrainingPlanApi(requester);
+        List<Course> courses = service.getCourseTable("2023-2024-2", cookie, option);
 
-        String page = jwcService.getPrueSchemePage(cookie, option);
-
-        System.out.println(page);
+        for (Course info : courses) {
+            System.out.println(info);
+        }
     }
 }

@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.service.auth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
 import cn.linghang.mywust.core.parser.physics.PhysicsIndexPageParser;
-import cn.linghang.mywust.core.request.PhysicsSystemRequestFactory;
+import cn.linghang.mywust.core.request.physics.PhysicsSystemRequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;

@@ -18,6 +18,8 @@ public class Bkjx {
 
     public static final String BKJX_SCHEME_API = "http://bkjx.wust.edu.cn/jsxsd/pyfa/topyfamx";
 
+    public static final String BKJX_COURSE_TABLE_API = "http://bkjx.wust.edu.cn/jsxsd/xskb/xskb_list.do";
+
     public static class Legacy {
         public static final String BKJX_INDEX = "http://bkjx.wust.edu.cn";
         public static final String BKJX_DATA_STRING_API = "http://bkjx.wust.edu.cn/Logon.do?method=logon&flag=sess";

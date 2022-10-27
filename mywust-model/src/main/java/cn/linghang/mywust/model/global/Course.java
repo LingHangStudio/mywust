@@ -46,12 +46,12 @@ public class Course {
     /**
      * 开始时间
      */
-    private int start;
+    private int startSection;
 
     /**
      * 结束时间
      */
-    private int end;
+    private int endSection;
 
     private ClassRoom classroom;
 

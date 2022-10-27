@@ -1,12 +1,16 @@
 package cn.linghang.mywust.network.entitys;
 
+import cn.linghang.mywust.util.RepeatableComparator;
 import cn.linghang.mywust.util.StringUtil;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class FormBodyBuilder {
+    public static final Comparator<String> REPEATABLE_COMPARATOR = new RepeatableComparator();
+
     private final Map<String, String> queryParams;
 
     public FormBodyBuilder(Map<String, String> queryParams) {
@@ -14,7 +18,15 @@ public class FormBodyBuilder {
     }
 
     public FormBodyBuilder() {
-        this.queryParams = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this(false);
+    }
+
+    public FormBodyBuilder(boolean repeatable) {
+        if (repeatable) {
+            this.queryParams = new TreeMap<>(REPEATABLE_COMPARATOR);
+        } else {
+            this.queryParams = new HashMap<>();
+        }
     }
 
     public FormBodyBuilder(int initSize) {
@@ -38,4 +50,7 @@ public class FormBodyBuilder {
     public String buildAndToString() {
         return StringUtil.generateQueryString(this.queryParams);
     }
+
 }
+
+

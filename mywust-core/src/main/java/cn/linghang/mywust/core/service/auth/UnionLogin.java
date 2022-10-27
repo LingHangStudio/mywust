@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.exception.PasswordWornException;
-import cn.linghang.mywust.core.request.AuthRequestFactory;
+import cn.linghang.mywust.core.request.auth.UnionAuthRequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -29,7 +29,7 @@ public class UnionLogin {
         String encodedPassword = PasswordEncoder.encodePassword(password);
 
         // 获取ticket granting ticket（TGT），以获取ServiceTicket
-        HttpRequest TGTRequest = AuthRequestFactory.unionLoginTGTRequest(username, encodedPassword, serviceUrl);
+        HttpRequest TGTRequest = UnionAuthRequestFactory.unionLoginTGTRequest(username, encodedPassword, serviceUrl);
         HttpResponse unionAuthResponse = requester.post(TGTRequest, requestOption);
 
         String redirectAddress = unionAuthResponse.getHeaders().get("Location");
@@ -38,7 +38,7 @@ public class UnionLogin {
         }
 
         // 获取服务ticket（service ticket，ST）
-        HttpRequest serviceTicketRequest = AuthRequestFactory.loginTicketRequest(redirectAddress.replace("http:", "https:"), serviceUrl);
+        HttpRequest serviceTicketRequest = UnionAuthRequestFactory.loginTicketRequest(redirectAddress.replace("http:", "https:"), serviceUrl);
         HttpResponse serviceTicketResponse = requester.post(serviceTicketRequest, requestOption);
 
         byte[] serviceTicketResponseData = serviceTicketResponse.getBody();

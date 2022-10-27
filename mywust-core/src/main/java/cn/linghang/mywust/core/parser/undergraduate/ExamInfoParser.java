@@ -5,6 +5,7 @@ import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.parser.undergraduate.xpath.ExamInfoXpath;
 import cn.linghang.mywust.model.undergrade.ExamInfo;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,8 @@ public class ExamInfoParser implements Parser<List<ExamInfo>> {
         List<ExamInfo> examInfos = new ArrayList<>(rows.size());
 
         try {
-            for (int i = 1; i < rows.size(); i++) {
-                Elements columns = rows.get(i).getElementsByTag("td");
+            for (Element row : rows) {
+                Elements columns = row.getElementsByTag("td");
 
                 ExamInfo examInfo = new ExamInfo();
 

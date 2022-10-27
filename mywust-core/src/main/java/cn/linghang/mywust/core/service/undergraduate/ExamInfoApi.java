@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.service.undergraduate;
 import cn.linghang.mywust.core.exception.CookieInvalidException;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.undergraduate.ExamInfoParser;
-import cn.linghang.mywust.core.request.BkjxRequestFactory;
+import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
 import cn.linghang.mywust.core.util.BkjxUtil;
 import cn.linghang.mywust.model.undergrade.ExamInfo;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class ExamInfoApi {
+public class ExamInfoApi extends UndergraduateApi {
     private static final Logger log = LoggerFactory.getLogger(ExamInfoApi.class);
 
     private final Requester requester;
@@ -31,13 +31,7 @@ public class ExamInfoApi {
         HttpRequest request = BkjxRequestFactory.examScoreInfoRequest(cookies, "", "", "");
         HttpResponse response = requester.post(request, requestClientOption);
 
-        // 检查响应是否正确
-        if (response.getBody() == null ||
-                response.getStatusCode() != HttpResponse.HTTP_OK ||
-                BkjxUtil.checkLoginFinger(response.getBody())) {
-
-            throw new CookieInvalidException("[请求获取成绩]：Cookie无效：" + cookies);
-        }
+        checkResponse(response, cookies);
 
         return new String(response.getBody());
     }

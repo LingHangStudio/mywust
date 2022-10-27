@@ -1,6 +1,7 @@
-package cn.linghang.mywust.core.request;
+package cn.linghang.mywust.core.request.library;
 
 import cn.linghang.mywust.core.api.Library;
+import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 
 public class LibraryRequestFactory extends RequestFactory {

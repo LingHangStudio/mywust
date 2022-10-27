@@ -4,11 +4,11 @@ import com.google.common.base.Joiner;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StringUtil {
+    private static final RepeatableComparator REPEATABLE_COMPARATOR = new RepeatableComparator();
+
     /**
      * 将map转换成url请求表单格式的请求字符串（类似于 user=admin&passwd=123456&time=11111 这种）
      *
@@ -17,12 +17,13 @@ public class StringUtil {
      */
     public static String generateQueryString(Map<String, String> queryParams) {
         // 自动对value值进行url编码
-        queryParams.forEach((k, v) -> queryParams.put(k, URLEncoder.encode(v, StandardCharsets.UTF_8)));
+        Map<String, String> urlEncodedQueryParams = new TreeMap<>(REPEATABLE_COMPARATOR);
+        queryParams.forEach((k, v) -> urlEncodedQueryParams.put(k, URLEncoder.encode(v, StandardCharsets.UTF_8)));
 
         return Joiner.on('&')
                 .useForNull("")
                 .withKeyValueSeparator('=')
-                .join(queryParams);
+                .join(urlEncodedQueryParams);
     }
 
     /**

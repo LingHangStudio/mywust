@@ -4,7 +4,7 @@ import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.parser.physics.xpath.PhysicsCourseXpath;
-import cn.linghang.mywust.model.PhysicsCourse;
+import cn.linghang.mywust.model.physics.PhysicsCourse;
 import cn.linghang.mywust.model.global.ClassRoom;
 import cn.linghang.mywust.model.global.Course;
 import org.jsoup.Jsoup;
@@ -68,8 +68,8 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
 
             Matcher startEndMatcher = PHYSICS_COURSE_START_END_PATTERN.matcher(time);
             if (startEndMatcher.find()) {
-                course.setStart(Integer.parseInt(startEndMatcher.group("start")));
-                course.setEnd(Integer.parseInt(startEndMatcher.group("end")));
+                course.setStartSection(Integer.parseInt(startEndMatcher.group("start")));
+                course.setEndSection(Integer.parseInt(startEndMatcher.group("end")));
             }
 
             Matcher dateMatcher = PHYSICS_COURSE_DATE_PATTERN.matcher(time);
