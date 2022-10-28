@@ -28,6 +28,9 @@ public class ExamInfoParser implements Parser<List<ExamInfo>> {
         try {
             for (Element row : rows) {
                 Elements columns = row.getElementsByTag("td");
+                if (columns.size() < 14) {
+                    continue;
+                }
 
                 ExamInfo examInfo = new ExamInfo();
 
