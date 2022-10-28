@@ -17,7 +17,7 @@ public class CourseTableTest {
     }
 
     private void run() throws BasicException, IOException {
-        System.out.println("成绩获取");
+        System.out.println("课表");
         System.out.println("Cookie：");
 
         Scanner scanner = new Scanner(System.in);
@@ -41,7 +41,7 @@ public class CourseTableTest {
         option.setProxy(proxy);
         option.setFallowUrlRedirect(false);
 
-        List<Course> courses = service.getCourseTable("2023-2024-2", cookie, option);
+        List<Course> courses = service.getCourseTable(term, cookie, option);
 
         for (Course info : courses) {
             System.out.println(info);

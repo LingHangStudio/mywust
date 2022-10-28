@@ -51,15 +51,15 @@ public class JwcLogin {
     }
 
     private static final int COOKIES_ERROR_RESPONSE_LENGTH =
-            ("<script languge='javascript'>window.location.href=" +
-                    "'https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fxxwcqk%2Fxxwcqk_idxOnzh.do'" +
+            ("<script languge='javascript'>" +
+                    "window.location.href='https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fframework%2FblankPage.jsp'" +
                     "</script>").length();
 
     public boolean checkCookies(String cookies, RequestClientOption option) throws IOException {
         HttpRequest testRequest = BkjxRequestFactory.makeHttpRequest(Bkjx.BKJX_TEST_API, null, cookies);
         HttpResponse testResponse = requester.get(testRequest, option);
 
-        // 判断响应长度是否为178个字，登录跳转响应长度
+        // 判断响应长度是否为这么多个字，登录跳转响应长度
         // 这种办法虽然在极端情况下可能会出错（而且还挺蠢的），但是是最快的办法中比较准确的了
         return testResponse.getBody().length != COOKIES_ERROR_RESPONSE_LENGTH;
     }

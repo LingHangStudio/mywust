@@ -10,7 +10,7 @@ import lombok.Getter;
 public class Bkjx {
     public static final String BKJX_SESSION_COOKIE_API = "http://bkjx.wust.edu.cn/jsxsd/sso.jsp?ticket=%s";
 
-    public static final String BKJX_TEST_API = "http://bkjx.wust.edu.cn/jsxsd/xxwcqk/xxwcqk_idxOnzh.do";
+    public static final String BKJX_TEST_API = "http://bkjx.wust.edu.cn/jsxsd/framework/blankPage.jsp";
 
     public static final String BKJX_STUDENT_INFO_API = "http://bkjx.wust.edu.cn/jsxsd/grxx/xsxx";
 
