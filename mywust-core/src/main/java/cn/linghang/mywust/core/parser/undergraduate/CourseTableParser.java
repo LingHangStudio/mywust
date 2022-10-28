@@ -71,11 +71,12 @@ public class CourseTableParser implements Parser<List<Course>> {
                     // 靠行位置来确定节次，而不是靠time字段的节次数据确定（因为太不好处理了）
                     // 具体算法就是行索引x2 + 1就是开始的节次（索引从0开始）
                     // 对于只有一个小节的课程，这类课程多数是在线课程，实际选课的时候照样会和其他课冲突，因此这里一律按照两小节大课处理
-                    int lineIndex = girdCount / 7;
+                    int lineIndex = (girdCount - 1) / 7;
                     course.setStartSection(lineIndex * 2 + 1);
                     course.setEndSection(lineIndex * 2 + 2);
 
-                    course.setWeekDay(girdCount % 7);
+                    int weekDay = girdCount % 7;
+                    course.setWeekDay(weekDay == 0 ? 7 : weekDay);
 
                     // 提取周次信息，根据老项目，可能会有用","分成两段周次信息，但根据实际测试没有发现类似的课程
                     String time = timeElements.isEmpty() ? "" : timeElements.get(i).text();
