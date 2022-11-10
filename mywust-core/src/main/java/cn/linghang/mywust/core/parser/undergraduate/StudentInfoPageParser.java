@@ -15,7 +15,7 @@ public class StudentInfoPageParser implements Parser<StudentInfo> {
         Document page = Jsoup.parse(html);
         Element table = page.getElementById("xjkpTable");
         if (table == null) {
-            throw new ParseException();
+            throw new ParseException(html);
         }
 
         Elements studentElements = table.selectXpath(StudentInfoXpath.STUDENT_NUMBER);

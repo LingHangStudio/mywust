@@ -20,34 +20,37 @@ public class ExamInfoParser implements Parser<List<ExamInfo>> {
     public List<ExamInfo> parse(String html) throws ParseException {
         Elements rows = Jsoup.parse(html).selectXpath(ExamInfoXpath.EXAM_INFO_ROWS_XPATH);
         if (rows.isEmpty()) {
-            throw new ParseException();
+            throw new ParseException(html);
         }
 
         List<ExamInfo> examInfos = new ArrayList<>(rows.size());
 
         try {
             for (Element row : rows) {
-                Elements columns = row.getElementsByTag("td");
-                if (columns.size() < 14) {
+                // 提取出当前行的所有格子
+                Elements girds = row.getElementsByTag("td");
+
+                // 如果这行格子数少于6个，即到了“成绩”的那个格子就没了，那就没啥意义了，直接跳过，不理了
+                if (girds.size() < 6) {
                     continue;
                 }
 
                 ExamInfo examInfo = new ExamInfo();
 
                 // 这段看着震撼，但其实很丑
-                examInfo.setId(columns.get(0).text());
-                examInfo.setTerm(columns.get(1).text());
-                examInfo.setCourseNumber(columns.get(2).text());
-                examInfo.setCourseName(columns.get(3).text());
-                examInfo.setGroupName(columns.get(4).text());
-                examInfo.setScore(columns.get(5).text());
-                examInfo.setFlag(columns.get(6).text());
-                examInfo.setCredit(columns.get(7).text());
-                examInfo.setCourseHours(columns.get(8).text());
-                examInfo.setGradePoint(columns.get(9).text());
-                examInfo.setEvaluateMethod(columns.get(11).text());
-                examInfo.setKind(columns.get(12).text());
-                examInfo.setCourseKind(columns.get(13).text());
+                examInfo.setId(girds.get(0).text());
+                examInfo.setTerm(girds.get(1).text());
+                examInfo.setCourseNumber(girds.get(2).text());
+                examInfo.setCourseName(girds.get(3).text());
+                examInfo.setGroupName(girds.get(4).text());
+                examInfo.setScore(girds.get(5).text());
+                examInfo.setFlag(girds.get(6).text());
+                examInfo.setCredit(girds.get(7).text());
+                examInfo.setCourseHours(girds.get(8).text());
+                examInfo.setGradePoint(girds.get(9).text());
+                examInfo.setEvaluateMethod(girds.get(11).text());
+                examInfo.setKind(girds.get(12).text());
+                examInfo.setCourseKind(girds.get(13).text());
 
                 examInfos.add(examInfo);
             }

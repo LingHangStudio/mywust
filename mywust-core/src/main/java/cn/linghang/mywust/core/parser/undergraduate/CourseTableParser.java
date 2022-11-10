@@ -22,9 +22,9 @@ public class CourseTableParser implements Parser<List<Course>> {
 
     private static final String COURSE_SPLIT_TAG_STR = "</div><div>";
 
-    private static final Pattern WEEK_RANGE_REGEX = Pattern.compile("(?<startWeek>\\d+)-(?<endWeek>\\d+)\\(周\\)");
+    private static final Pattern WEEK_RANGE_REGEX = Pattern.compile("(?<startWeek>\\d+)-(?<endWeek>\\d+)");
 
-    private static final Pattern SINGLE_WEEK_REGEX = Pattern.compile("(?<week>\\d+)\\(周\\)");
+    private static final Pattern SINGLE_WEEK_REGEX = Pattern.compile("(?<week>\\d+)");
 
     @Override
     public List<Course> parse(String html) throws ParseException {
@@ -40,6 +40,7 @@ public class CourseTableParser implements Parser<List<Course>> {
 
             List<Course> courses = new ArrayList<>(girds.size());
 
+            // 遍历每个格子，使用girdCount计数格子来计算节次信息
             int girdCount = 0;
             for (Element gird : girds) {
                 girdCount++;
@@ -48,12 +49,18 @@ public class CourseTableParser implements Parser<List<Course>> {
                 String girdHtml = gird.outerHtml().replace(COURSE_SPLIT_STR, COURSE_SPLIT_TAG_STR);
                 Elements courseElements = Jsoup.parse(girdHtml).getElementsByTag("div");
                 for (Element courseElement : courseElements) {
-                    String courseName = courseElement.ownText();
+                    Course.CourseBuilder courseBuilder = Course.builder();
 
                     // 格子文本为空，说明这个格子没课，直接跳过这个格子就行了
+                    // 注意，使用这个条件判断时对jsoup版本有要求，在比较旧的版本下gird.ownText()空格子其实并不空，而是有一个空格的
+                    // 在某个版本之后（至少是1.10到1.15之间的某个版本）会自动剔除多余空格（trim()），所以直接这样判断就行了
+                    // 只不过需要注意一下jsoup的版本，太旧的话可能不会起作用，如确需在旧版本上使用请手动trim或加条件
+                    String courseName = courseElement.ownText();
                     if ("".equals(courseName)) {
                         continue;
                     }
+
+                    courseBuilder.name(courseName);
 
                     // 直接获取格子里所有课程的关键字段，每个下表对应格子里相应的课程
                     Elements classElements = courseElement.getElementsByAttributeValue("title", "课堂名称");
@@ -61,48 +68,55 @@ public class CourseTableParser implements Parser<List<Course>> {
                     Elements timeElements = courseElement.getElementsByAttributeValue("title", "周次(节次)");
                     Elements classroomElements = courseElement.getElementsByAttributeValue("title", "教室");
 
-                    Course course = new Course();
-
-                    course.setName(courseName);
-                    course.setTeachClass(classElements.isEmpty() ? "" : classElements.get(0).text());
-                    course.setTeacher(teacherElements.isEmpty() ? "" : teacherElements.get(0).text());
+                    courseBuilder.teachClass(classElements.isEmpty() ? "" : classElements.get(0).text());
+                    courseBuilder.teacher(teacherElements.isEmpty() ? "" : teacherElements.get(0).text());
 
                     ClassRoom classRoom = new ClassRoom();
                     classRoom.setRoom(classroomElements.isEmpty() ? "" : classroomElements.get(0).text());
-                    course.setClassroom(classRoom);
-
-                    // 提取周次信息
-                    String time = timeElements.isEmpty() ? "" : timeElements.get(0).text();
-                    Matcher matcher = WEEK_RANGE_REGEX.matcher(time);
-                    if (matcher.find()) {
-                        course.setStartWeek(Integer.parseInt(matcher.group("startWeek")));
-                        course.setEndWeek(Integer.parseInt(matcher.group("endWeek")));
-                    } else {
-                        // 普通匹配不到的话多半就是只有一周的课程
-                        matcher = SINGLE_WEEK_REGEX.matcher(time);
-                        if (matcher.find()) {
-                            course.setStartWeek(Integer.parseInt(matcher.group("week")));
-                            course.setEndWeek(Integer.parseInt(matcher.group("week")));
-                        }
-                    }
-
-                    // 靠行位置来确定节次，而不是靠time字段的节次数据确定（因为太不好处理了）
-                    // 具体算法就是行索引x2 + 1就是开始的节次（索引从0开始）
-                    int lineIndex = (int) (girdCount * 0.142);
-                    course.setStartSection(lineIndex * 2 + 1);
-                    course.setEndSection(lineIndex * 2 + 2);
+                    courseBuilder.classroom(classRoom);
 
                     int weekDay = girdCount % 7;
-                    course.setWeekDay(weekDay == 0 ? 7 : weekDay);
+                    courseBuilder.weekDay(weekDay == 0 ? 7 : weekDay);
 
-                    courses.add(course);
+                    // 靠行位置来确定节次和星期，而不是靠time字段的数据确定（因为太不好处理了）
+                    // 对于只有一个小节的课程，这类课程多数是在线课程，这里一律按照两小节大课处理
+                    // 具体算法就是行索引x2 + 1就是开始的节次（索引从0开始）
+                    int lineIndex = (int) (girdCount * 0.142);
+                    courseBuilder.startSection(lineIndex * 2 + 1);
+                    courseBuilder.endSection(lineIndex * 2 + 2);
+
+                    // 提取周次信息，可能会有用","分成两段的周次信息文本
+                    // 去除后面不需要的节次信息，以免对正则提取产生影响
+                    // 这样做理论上有点浪费性能了，但还行
+                    String timeText = timeElements.isEmpty() ? "" : timeElements.get(0).text().split("\\[")[0];
+                    String[] times = timeText.split(",");
+                    for (String time : times) {
+                        int startWeek = 0;
+                        int endWeek = 0;
+
+                        Matcher matcher = WEEK_RANGE_REGEX.matcher(time);
+                        if (matcher.find()) {
+                            startWeek = Integer.parseInt(matcher.group("startWeek"));
+                            endWeek = Integer.parseInt(matcher.group("endWeek"));
+                        } else {
+                            // 普通匹配不到的话多半就是只有一周的课程
+                            matcher = SINGLE_WEEK_REGEX.matcher(time);
+                            if (matcher.find()) {
+                                startWeek = Integer.parseInt(matcher.group("week"));
+                                endWeek = Integer.parseInt(matcher.group("week"));
+                            }
+                        }
+
+                        courseBuilder.startWeek(startWeek).endWeek(endWeek);
+                        courses.add(courseBuilder.build());
+                    }
                 }
             }
 
             return courses;
         } catch (Exception e) {
             log.warn("解析课表时出现问题：{}", e.getMessage(), e);
-            throw new ParseException();
+            throw new ParseException(html);
         }
 
     }

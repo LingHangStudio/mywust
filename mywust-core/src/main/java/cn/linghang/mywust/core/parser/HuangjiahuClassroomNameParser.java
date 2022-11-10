@@ -47,7 +47,7 @@ public class HuangjiahuClassroomNameParser implements Parser<ClassRoom> {
             }
         } catch (Exception e) {
             log.warn("解析教室编号失败，教室：{}", classroomName);
-            throw new ParseException();
+            throw new ParseException(classroomName);
         }
 
         return classRoom;

@@ -27,7 +27,7 @@ public class SchemeTest {
         RequestClientOption.Proxy proxy = new RequestClientOption.Proxy();
         proxy.setPort(6060);
         proxy.setAddress("127.0.0.1");
-        option.setProxy(proxy);
+        option.setProxy(null);
         option.setFallowUrlRedirect(false);
 
         Requester requester = new SimpleOkhttpRequester();

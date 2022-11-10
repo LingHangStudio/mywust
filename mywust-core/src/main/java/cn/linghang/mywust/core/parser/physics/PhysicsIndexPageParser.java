@@ -12,7 +12,7 @@ public class PhysicsIndexPageParser implements Parser<String> {
         Document page = Jsoup.parse(html);
         Elements linkElements = page.selectXpath(PhysicsIndexXpath.PHYSICS_LINK_XPATH);
         if (linkElements.isEmpty()) {
-            throw new ParseException();
+            throw new ParseException(html);
         }
 
         return linkElements.get(0).attr("href");

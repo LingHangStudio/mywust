@@ -34,7 +34,7 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
     public List<PhysicsCourse> parse(String html) throws ParseException {
         Elements courseElements = Jsoup.parse(html).selectXpath(PhysicsCourseXpath.COURSE_ROWS_XPATH);
         if (courseElements.isEmpty()) {
-            throw new ParseException();
+            throw new ParseException(html);
         }
 
         List<PhysicsCourse> courses = new ArrayList<>(courseElements.size());
