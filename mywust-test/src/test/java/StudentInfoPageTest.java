@@ -1,9 +1,6 @@
 import cn.linghang.mywust.core.exception.BasicException;
-import cn.linghang.mywust.core.parser.undergraduate.StudentInfoPageParser;
-import cn.linghang.mywust.core.service.auth.JwcLogin;
-import cn.linghang.mywust.core.service.auth.UnionLogin;
 import cn.linghang.mywust.core.service.undergraduate.StudentInfoApi;
-import cn.linghang.mywust.model.undergrade.StudentInfo;
+import cn.linghang.mywust.model.global.StudentInfo;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;

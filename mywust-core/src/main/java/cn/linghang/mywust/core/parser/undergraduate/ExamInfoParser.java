@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.parser.undergraduate;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.parser.undergraduate.xpath.ExamInfoXpath;
-import cn.linghang.mywust.model.undergrade.ExamInfo;
+import cn.linghang.mywust.model.global.ExamInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

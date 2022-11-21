@@ -55,7 +55,19 @@ public class Course {
 
     private ClassRoom classroom;
 
-    public static final Map<String, Integer> WEEKDAY_MAP = makeWeekdayMap();
+    private static final Map<String, Integer> WEEKDAY_MAP = makeWeekdayMap();
+
+    public static int getWeekDayNumber(String weekText) {
+        return WEEKDAY_MAP.getOrDefault(weekText, 1);
+    }
+
+    public void setWeekDay(String weekText) {
+        this.weekDay =  getWeekDayNumber(weekText);
+    }
+
+    public void setWeekDay(int weekDay) {
+        this.weekDay = weekDay;
+    }
 
     private static Map<String, Integer> makeWeekdayMap() {
         HashMap<String, Integer> map = new HashMap<>(7 + 2);

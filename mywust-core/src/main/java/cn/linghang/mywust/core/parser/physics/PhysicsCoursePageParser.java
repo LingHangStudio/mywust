@@ -63,7 +63,7 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
 
             Matcher weekDayMatcher = PHYSICS_COURSE_WEEKDAY_PATTERN.matcher(time);
             if (weekDayMatcher.find()) {
-                course.setWeekDay(Course.WEEKDAY_MAP.getOrDefault(weekDayMatcher.group("weekDay"), 1));
+                course.setWeekDay(weekDayMatcher.group("weekDay"));
             }
 
             Matcher startEndMatcher = PHYSICS_COURSE_START_END_PATTERN.matcher(time);

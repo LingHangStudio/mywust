@@ -1,4 +1,4 @@
-package cn.linghang.mywust.model.undergrade;
+package cn.linghang.mywust.model.global;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

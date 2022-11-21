@@ -33,12 +33,12 @@ public class FormBodyBuilder {
         this.queryParams = new HashMap<>(initSize);
     }
 
-    public FormBodyBuilder addQueryParams(Map<String, String> params) {
+    public FormBodyBuilder add(Map<String, String> params) {
         this.queryParams.putAll(params);
         return this;
     }
 
-    public FormBodyBuilder addQueryParam(String key, String value) {
+    public FormBodyBuilder add(String key, String value) {
         this.queryParams.put(key, value);
         return this;
     }

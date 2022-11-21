@@ -1,10 +1,8 @@
 package cn.linghang.mywust.core.request.undergrade;
 
-import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.FormBodyBuilder;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * <p>课表请求参数生成</p>
@@ -27,30 +25,32 @@ public class CourseTableRequestParamFactory {
     private static final String MAGIC_PARAM_PREFIX_5 = "ACC171586F9245B09C86C589102423B4-";
 
     private static Map<String, String> generateMagicQueryParam() {
-        Map<String, String> magicParams = new TreeMap<>(FormBodyBuilder.REPEATABLE_COMPARATOR);
+        FormBodyBuilder formBodyBuilder = new FormBodyBuilder(true);
         for (int i = 0; i < 6; i++) {
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_0 + i + "-1");
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_1 + i + "-1");
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_2 + i + "-1");
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_3 + i + "-1");
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_4 + i + "-1");
-            magicParams.put("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_5 + i + "-1");
+            formBodyBuilder
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_0 + i + "-1")
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_1 + i + "-1")
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_2 + i + "-1")
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_3 + i + "-1")
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_4 + i + "-1")
+                    .add("jx0415zbdiv_1", MAGIC_PARAM_PREFIX_5 + i + "-1")
 
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_0 + i + "-2");
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_1 + i + "-2");
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_2 + i + "-2");
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_3 + i + "-2");
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_4 + i + "-2");
-            magicParams.put("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_5 + i + "-2");
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_0 + i + "-2")
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_1 + i + "-2")
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_2 + i + "-2")
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_3 + i + "-2")
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_4 + i + "-2")
+                    .add("jx0415zbdiv_2", MAGIC_PARAM_PREFIX_5 + i + "-2");
         }
 
-        magicParams.put("jx0404id", "");
-        magicParams.put("cj0701id", "");
-        magicParams.put("zc", "");
-        magicParams.put("demo", "");
-        magicParams.put("sfFD", "1");
-        magicParams.put("kbjcmsid", "9486203B90F3E3CBE0532914A8C03BE2");
+        formBodyBuilder
+                .add("jx0404id", "")
+                .add("cj0701id", "")
+                .add("zc", "")
+                .add("demo", "")
+                .add("sfFD", "1")
+                .add("kbjcmsid", "9486203B90F3E3CBE0532914A8C03BE2");
 
-        return magicParams;
+        return formBodyBuilder.build();
     }
 }

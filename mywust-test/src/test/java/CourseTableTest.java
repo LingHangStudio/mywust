@@ -1,8 +1,6 @@
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.service.undergraduate.CourseTableApi;
-import cn.linghang.mywust.core.service.undergraduate.ExamInfoApi;
 import cn.linghang.mywust.model.global.Course;
-import cn.linghang.mywust.model.undergrade.ExamInfo;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
