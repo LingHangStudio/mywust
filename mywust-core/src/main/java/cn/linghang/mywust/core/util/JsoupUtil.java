@@ -13,10 +13,15 @@ public class JsoupUtil {
         return element == null ? "" : element.text();
     }
 
+    public static String getOuterHtml(Element element) {
+        return element == null ? "" : element.outerHtml();
+    }
+
     /**
      * 从Element中拿到指定的标签值
+     *
      * @param element 元素对象
-     * @param key 标签值的key
+     * @param key     标签值的key
      * @return 相应的值，若element为空则返回空字符串
      */
     public static String getAttr(Element element, String key) {
@@ -29,6 +34,7 @@ public class JsoupUtil {
 
     /**
      * 从Element中拿到指定的文本内容
+     *
      * @param element 元素对象
      * @return 相应的值，若element为空则返回空字符串
      */
@@ -42,6 +48,7 @@ public class JsoupUtil {
 
     /**
      * 从select类型的Element中拿取到已选中的选项值
+     *
      * @param element 元素对象
      * @return 相应的值，若element为空则返回空字符串
      */

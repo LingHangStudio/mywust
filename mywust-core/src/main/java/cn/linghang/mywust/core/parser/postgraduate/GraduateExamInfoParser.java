@@ -25,6 +25,8 @@ public class GraduateExamInfoParser implements Parser<List<ExamInfo>> {
                 continue;
             }
 
+            scoreElements.removeIf(element -> element.hasClass("pagestopr"));
+
             ExamInfo examInfo = new ExamInfo();
 
             examInfo.setCourseName(infoGirds.get(0).text());
