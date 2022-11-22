@@ -43,4 +43,8 @@ public class GraduateRequestFactory extends RequestFactory {
     public static HttpRequest courseTableRequest(String cookie) {
         return makeHttpRequest(Graduate.GRADUATE_COURSE_TABLE_API, null, cookie);
     }
+
+    public static HttpRequest examScoreInfoRequest(String cookie) {
+        return makeHttpRequest(Graduate.GRADUATE_SCORE_API, null, cookie);
+    }
 }

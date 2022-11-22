@@ -6,4 +6,6 @@ public class Graduate {
 
     public static final String GRADUATE_STUDENT_INFO_API = "http://59.68.177.189/pyxx/grgl/student_info1.aspx";
     public static final String GRADUATE_COURSE_TABLE_API = "http://59.68.177.189/pyxx/pygl/kbcx_xs.aspx";
+    public static final String GRADUATE_SCORE_API = "http://59.68.177.189/pyxx/grgl/xskccjcx.aspx";
+    public static final String GRADUATE_TRAINING_PLAN_PAGE_API = "http://59.68.177.189/pyxx/pygl/pyjhcx.aspx";
 }

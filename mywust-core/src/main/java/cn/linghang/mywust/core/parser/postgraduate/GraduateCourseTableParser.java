@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GraduateCourseTablePageParser implements Parser<List<Course>> {
+public class GraduateCourseTableParser implements Parser<List<Course>> {
 
     private static final Pattern COURSE_TABLE_REGEX = Pattern.compile("课程:(?<name>.*?)<br>班级:(?<class>.*?)<br>\\((?<classRoom>.*?)\\)<br>(?<week>.*?)<br>(?<section>.*?)<br>主讲教师:(?<teacher>.*?)<br>");
 

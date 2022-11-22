@@ -3,6 +3,7 @@ package cn.linghang.mywust.core.parser.undergraduate;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.parser.undergraduate.xpath.ExamInfoXpath;
+import cn.linghang.mywust.core.util.JsoupUtil;
 import cn.linghang.mywust.model.global.ExamInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -38,19 +39,23 @@ public class ExamInfoParser implements Parser<List<ExamInfo>> {
                 ExamInfo examInfo = new ExamInfo();
 
                 // 这段看着震撼，但其实很丑
-                examInfo.setId(girds.get(0).text());
-                examInfo.setTerm(girds.get(1).text());
-                examInfo.setCourseNumber(girds.get(2).text());
-                examInfo.setCourseName(girds.get(3).text());
-                examInfo.setGroupName(girds.get(4).text());
-                examInfo.setScore(girds.get(5).text());
-                examInfo.setFlag(girds.get(6).text());
-                examInfo.setCredit(girds.get(7).text());
-                examInfo.setCourseHours(girds.get(8).text());
-                examInfo.setGradePoint(girds.get(9).text());
-                examInfo.setEvaluateMethod(girds.get(11).text());
-                examInfo.setKind(girds.get(12).text());
-                examInfo.setCourseKind(girds.get(13).text());
+                examInfo.setId(JsoupUtil.getElementContext(girds.get(0)));
+
+                examInfo.setTerm(JsoupUtil.getElementContext(girds.get(1)));
+                examInfo.setCourseNumber(JsoupUtil.getElementContext(girds.get(2)));
+
+                examInfo.setCourseName(JsoupUtil.getElementContext(girds.get(3)));
+                examInfo.setGroupName(JsoupUtil.getElementContext(girds.get(4)));
+
+                examInfo.setScore(JsoupUtil.getElementContext(girds.get(5)));
+                examInfo.setFlag(JsoupUtil.getElementContext(girds.get(6)));
+                examInfo.setCredit(JsoupUtil.getElementContext(girds.get(7)));
+                examInfo.setCourseHours(JsoupUtil.getElementContext(girds.get(8)));
+                examInfo.setGradePoint(JsoupUtil.getElementContext(girds.get(9)));
+
+                examInfo.setEvaluateMethod(JsoupUtil.getElementContext(girds.get(11)));
+                examInfo.setKind(JsoupUtil.getElementContext(girds.get(12)));
+                examInfo.setCourseKind(JsoupUtil.getElementContext(girds.get(13)));
 
                 examInfos.add(examInfo);
             }
