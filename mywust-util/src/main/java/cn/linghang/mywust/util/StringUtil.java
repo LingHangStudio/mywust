@@ -1,6 +1,7 @@
 package cn.linghang.mywust.util;
 
 import com.google.common.base.Joiner;
+import org.apache.commons.codec.binary.Base64;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -43,5 +44,24 @@ public class StringUtil {
         return Joiner.on(';')
                 .skipNulls()
                 .join(allCookies);
+    }
+
+    /**
+     * 生成参数签名
+     * @param appId appId
+     * @param secretKey secretKey
+     * @return 生成得到的签名sign字段
+     */
+    public static String generateSignText(String appId, String secretKey, Map<String, String> params) {
+        StringBuilder rawText = new StringBuilder(appId + secretKey);
+        Set<String> keys = params.keySet();
+        for (String key : keys) {
+            rawText
+                    .append(key)
+                    .append('=')
+                    .append(params.get(key));
+        }
+
+        return Base64.encodeBase64String(rawText.toString().getBytes(StandardCharsets.UTF_8));
     }
 }

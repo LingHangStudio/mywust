@@ -1,6 +1,8 @@
 package cn.linghang.mywust.captcha;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 待处理的图片验证码

@@ -33,7 +33,7 @@ public class GraduateRequestFactory extends RequestFactory {
 
         byte[] requestData = StringUtil.generateQueryString(params).getBytes(StandardCharsets.UTF_8);
 
-        return makeHttpRequest(Graduate.GRADUATE_LOGIN_API, requestData);
+        return makeHttpRequest(Graduate.GRADUATE_LOGIN_API, requestData, captcha.getBindInfo());
     }
 
     public static HttpRequest studentInfoRequest(String cookie) {

@@ -35,6 +35,11 @@ public class ApiException extends BasicException {
          */
         UNKNOWN_EXCEPTION(-1, "未知错误(开发又有活干啦)"),
 
+        /**
+         * 网络异常
+         */
+        NETWORK_EXCEPTION(-2, "网络错误..."),
+
         // --------------------------------
         // 统一认证的异常(本科生、图书馆)
 
@@ -84,10 +89,15 @@ public class ApiException extends BasicException {
          * 研究生密码错误
          */
         GRADUATE_PASSWORD_WRONG(140100, "研究生登录: 密码错误"),
-        ;
+
 
         // --------------------------------
         // 图书馆API异常代码
+
+        // --------------------------------
+        // 内部API异常代码
+        INTERNAL_EXCEPTION(160100, "内部服务出错...后端要背锅"),
+        ;
 
         private final int value;
         private final String describe;
