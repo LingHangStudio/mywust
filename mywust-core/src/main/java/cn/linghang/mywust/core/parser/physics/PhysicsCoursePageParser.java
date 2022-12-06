@@ -3,10 +3,8 @@ package cn.linghang.mywust.core.parser.physics;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.core.parser.physics.xpath.PhysicsCourseXpath;
-import cn.linghang.mywust.model.physics.PhysicsCourse;
 import cn.linghang.mywust.model.global.ClassRoom;
-import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.model.physics.PhysicsCourse;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
@@ -82,4 +80,16 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
 
         return courses;
     }
+}
+
+final class PhysicsCourseXpath {
+    /**
+     * 用于获取表格中所有行的xpath
+     * */
+    public static final String COURSE_ROWS_XPATH = "//*[@id=\"ID_PEE110301_gvpee120101\"]/tbody/tr";
+
+    public static final String COURSE_ROW_NAME_XPATH = "";
+    public static final String COURSE_ROW_TEACHER_XPATH = "";
+    public static final String COURSE_ROW_TIME_XPATH = "";
+    public static final String COURSE_ROW_CLASSROOM_XPATH = "";
 }

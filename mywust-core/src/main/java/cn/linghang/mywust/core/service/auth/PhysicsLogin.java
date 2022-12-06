@@ -1,13 +1,13 @@
 package cn.linghang.mywust.core.service.auth;
 
+import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.exception.BasicException;
-import cn.linghang.mywust.core.exception.PasswordWornException;
 import cn.linghang.mywust.core.parser.physics.PhysicsIndexPageParser;
 import cn.linghang.mywust.core.request.physics.PhysicsSystemRequestFactory;
-import cn.linghang.mywust.network.entitys.HttpRequest;
-import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,19 +29,19 @@ public class PhysicsLogin {
         HttpRequest loginCookieRequest = PhysicsSystemRequestFactory.loginCookiesRequest(username, password, null);
         HttpResponse loginCookieResponse = requester.post(loginCookieRequest, requestClientOption);
         if (loginCookieResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302) {
-            throw new PasswordWornException();
+            throw new ApiException(ApiException.Code.PHYSICS_PASSWORD_WRONG);
         }
 
         String loginCookies = loginCookieResponse.getCookies();
         if (loginCookies == null) {
-            throw new PasswordWornException();
+            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
         // 请求主页，获取实验选课系统的链接，顺便测试获取到的cookie是否有效，主页能否正常访问
         HttpRequest indexRequest = PhysicsSystemRequestFactory.mainIndexRequest(loginCookies);
         HttpResponse indexResponse = requester.get(indexRequest, requestClientOption);
         if (indexResponse.getStatusCode() != HttpResponse.HTTP_OK || indexResponse.getBody() == null) {
-            throw new BasicException();
+            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
         // 登录实验选课系统，因为之前使用的登录接口和真正的物理实验选课系统是两个不一样的系统，
@@ -51,7 +51,10 @@ public class PhysicsLogin {
         HttpRequest systemIndexRequest = PhysicsSystemRequestFactory.physicsSystemIndexRequest(redirect, loginCookies);
 
         requestClientOption.setFallowUrlRedirect(true);
-        requester.get(systemIndexRequest, requestClientOption);
+        HttpResponse response = requester.get(systemIndexRequest, requestClientOption);
+        if (response.getStatusCode() != HttpResponse.HTTP_OK) {
+            throw new ApiException(ApiException.Code.COOKIE_INVALID);
+        }
 
         return loginCookies;
     }

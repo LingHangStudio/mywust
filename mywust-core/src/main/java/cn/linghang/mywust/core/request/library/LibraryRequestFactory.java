@@ -12,4 +12,16 @@ public class LibraryRequestFactory extends RequestFactory {
     public static HttpRequest indexRequest() {
         return makeHttpRequest(Library.LIBRARY_INDEX_URL);
     }
+
+    public static HttpRequest currentLoanRequest(String cookie) {
+        return makeHttpRequest(Library.LIBRARY_CURRENT_LOAN_API, null, cookie);
+    }
+
+    public static HttpRequest loanHistoryRequest(String cookie) {
+        return makeHttpRequest(Library.LIBRARY_LOAN_HISTORY_API, null, cookie);
+    }
+
+    public static HttpRequest overdueSoonRequest(String cookie) {
+        return makeHttpRequest(Library.LIBRARY_OVERDUE_SOON_API, null, cookie);
+    }
 }

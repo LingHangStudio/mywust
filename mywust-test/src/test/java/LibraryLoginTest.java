@@ -4,16 +4,14 @@ import cn.linghang.mywust.core.service.auth.LibraryLogin;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class LibraryLoginTest {
-    public static void main(String[] args) throws BasicException, IOException {
-        new LibraryLoginTest().run();
-    }
-
-    private void run() throws BasicException, IOException {
+    @Test
+    public void run() throws BasicException, IOException {
         System.out.println("图书馆登陆测试");
         System.out.println("输入账号（学号）和密码，用“ ”（空格）分割");
 
@@ -28,7 +26,7 @@ public class LibraryLoginTest {
         System.out.println("密码：" + password);
 
         Requester requester = new SimpleOkhttpRequester();
-        LibraryLogin libraryLogin = new LibraryLogin(requester, new UnionLogin(requester));
+        LibraryLogin libraryLogin = new LibraryLogin(requester);
 
         RequestClientOption option = RequestClientOption.DEFAULT_OPTION;
 

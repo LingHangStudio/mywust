@@ -2,7 +2,6 @@ package cn.linghang.mywust.core.parser.physics;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.core.parser.physics.xpath.PhysicsIndexXpath;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -18,3 +17,8 @@ public class PhysicsIndexPageParser implements Parser<String> {
         return linkElements.get(0).attr("href");
     }
 }
+
+final class PhysicsIndexXpath {
+    public static final String PHYSICS_LINK_XPATH = "//*[@id=\"rolemenu\"]/tbody/tr[1]/td[1]/a[2]";
+}
+

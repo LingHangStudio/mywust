@@ -1,18 +1,16 @@
 import cn.linghang.mywust.core.exception.BasicException;
-import cn.linghang.mywust.core.service.undergraduate.TrainingPlanApi;
+import cn.linghang.mywust.core.service.undergraduate.TrainingPlanApiService;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.okhttp.SimpleOkhttpRequester;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class SchemeTest {
-    public static void main(String[] args) throws BasicException, IOException {
-        new SchemeTest().run();
-    }
-
-    private void run() throws BasicException, IOException {
+    @Test
+    public void run() throws BasicException, IOException {
         System.out.println("培养方案获取");
         System.out.println("Cookie：");
 
@@ -31,9 +29,9 @@ public class SchemeTest {
         option.setFallowUrlRedirect(false);
 
         Requester requester = new SimpleOkhttpRequester();
-        TrainingPlanApi jwcService = new TrainingPlanApi(requester);
+        TrainingPlanApiService jwcService = new TrainingPlanApiService(requester);
 
-        String page = jwcService.getPrueSchemePage(cookie, option);
+        String page = jwcService.getTrainingPlanPage(cookie, option);
 
         System.out.println(page);
     }

@@ -1,5 +1,7 @@
 package cn.linghang.mywust.core.util;
 
+import cn.linghang.mywust.core.api.Bkjx;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -7,7 +9,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class BkjxUtil {
     // 在“Bkjx”系统里边如果收到的响应开头是这个的话多半是cookie无效了，需要重新登录获取cookie
-    private static final byte[] LOGIN_MESSAGE_RESPONSE_FINGER = "<script languge='javascript'>".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] LOGIN_MESSAGE_RESPONSE_FINGER = "<script".getBytes(StandardCharsets.UTF_8);
 
     /**
      * <p>通过粗暴地比较响应字节前几个字符是否为登录跳转特征字符判断是否需要重新登录</p>

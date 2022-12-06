@@ -4,10 +4,10 @@ import cn.linghang.mywust.core.api.Bkjx;
 import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
-import cn.linghang.mywust.network.entitys.HttpRequest;
-import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +23,6 @@ public class JwcLogin {
     public JwcLogin(Requester requester) {
         this.requester = requester;
         this.unionLogin = new UnionLogin(requester);
-    }
-
-    public JwcLogin(Requester requester, UnionLogin unionLogin) {
-        this.requester = requester;
-        this.unionLogin = unionLogin;
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
@@ -51,9 +46,8 @@ public class JwcLogin {
     }
 
     private static final int COOKIES_ERROR_RESPONSE_LENGTH =
-            ("<script languge='javascript'>" +
-                    "window.location.href='https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fframework%2FblankPage.jsp'" +
-                    "</script>").length();
+            ("<script languge='javascript'>window.location.href='https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fframework%2FblankPage.jsp'</script>")
+                    .length();
 
     public boolean checkCookies(String cookies, RequestClientOption option) throws IOException {
         HttpRequest testRequest = BkjxRequestFactory.makeHttpRequest(Bkjx.BKJX_TEST_API, null, cookies);

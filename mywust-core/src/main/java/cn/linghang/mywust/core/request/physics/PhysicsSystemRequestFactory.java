@@ -27,11 +27,30 @@ public class PhysicsSystemRequestFactory extends RequestFactory {
         return makeHttpRequest(redirect, null, cookies);
     }
 
+    public static HttpRequest physicsCourseIndexRequest(Map<String, String> indexParam, String cookies) {
+        // 补上“动态”生成的参数
+        indexParam.put("smLabManage", "upnMenu|lnk_2");
+        indexParam.put("__EVENTTARGET", "lnk_2");
+        indexParam.put("ID_PEE01$NoticeType", "-999");
+        indexParam.put("ID_PEE01$txtCreater", "");
+        indexParam.put("ID_PEE01$IsRead", "-999");
+        indexParam.put("ID_PEE01$ObjPager_input", "1");
+        indexParam.put("__ASYNCPOST", "true");
+
+        byte[] fromData = StringUtil.generateQueryString(indexParam).getBytes(StandardCharsets.UTF_8);
+        return makeHttpRequest(PhysicsSystem.PHYSICS_COURSE_INDEX_URL, fromData, cookies);
+    }
+
+    public static HttpRequest physicsCourseRequest(String cookies) {
+        return makeHttpRequest(PhysicsSystem.PHYSICS_COURSE_API, null, cookies);
+    }
+
     private static Map<String, String> makeLoginQueryParam(String username, String password) {
         // 这几个算是是写死了的，也能用
         // 但其实最好还是从首页动态获取某些关键字段（"__VIEWSTATE"）
         // 这种办法等后面有时间了再实现
         Map<String, String> queryParams = new HashMap<>(12);
+
         queryParams.put("__EVENTTARGET", "");
         queryParams.put("__EVENTARGUMENT", "");
         queryParams.put("__VIEWSTATE", VIEW_STATE);

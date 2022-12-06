@@ -1,4 +1,4 @@
-package cn.linghang.mywust.core.parser.postgraduate;
+package cn.linghang.mywust.core.parser.graduate;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;

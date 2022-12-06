@@ -1,13 +1,15 @@
 package cn.linghang.mywust.core.service.auth;
 
+import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.exception.BasicException;
-import cn.linghang.mywust.core.exception.PasswordWornException;
 import cn.linghang.mywust.core.request.auth.UnionAuthRequestFactory;
-import cn.linghang.mywust.network.entitys.HttpRequest;
-import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.util.PasswordEncoder;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class UnionLogin {
 
         String redirectAddress = unionAuthResponse.getHeaders().get("Location");
         if (redirectAddress == null) {
-            throw new PasswordWornException();
+            throw new ApiException(this.analyzeFailReason(unionAuthResponse.getBody()));
         }
 
         // 获取服务ticket（service ticket，ST）
@@ -45,9 +47,27 @@ public class UnionLogin {
         if (serviceTicketResponseData == null) {
             log.warn("获取服务st出错，serviceTicketResponseData == null");
 
-            throw new BasicException();
+            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
         return new String(serviceTicketResponseData);
+    }
+
+    private ApiException.Code analyzeFailReason(byte[] response) {
+        try {
+            JsonNode dataNode = new ObjectMapper().readTree(response).get("data");
+            switch (dataNode.get("code").asText()) {
+                case "PASSERROR":
+                    return ApiException.Code.UNI_LOGIN_PASSWORD_WRONG;
+                case "NOUSER":
+                    return ApiException.Code.UNI_LOGIN_USER_NOT_EXISTS;
+                case "USERLOCK":
+                    return ApiException.Code.UNI_LOGIN_USER_BANNED;
+                default:
+                    return ApiException.Code.UNKNOWN_EXCEPTION;
+            }
+        } catch (Exception e) {
+            return ApiException.Code.UNKNOWN_EXCEPTION;
+        }
     }
 }

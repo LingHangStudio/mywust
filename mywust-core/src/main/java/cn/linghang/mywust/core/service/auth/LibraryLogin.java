@@ -4,10 +4,10 @@ import cn.linghang.mywust.core.api.Library;
 import cn.linghang.mywust.core.api.UnionAuth;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.library.LibraryRequestFactory;
-import cn.linghang.mywust.network.entitys.HttpRequest;
-import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
@@ -16,9 +16,9 @@ public class LibraryLogin {
 
     private final UnionLogin unionLogin;
 
-    public LibraryLogin(Requester requester, UnionLogin unionLogin) {
+    public LibraryLogin(Requester requester) {
         this.requester = requester;
-        this.unionLogin = unionLogin;
+        this.unionLogin = new UnionLogin(requester);
     }
 
     public String getLibraryLoginCookie(String username, String password, RequestClientOption requestOption) throws BasicException, IOException {
