@@ -52,14 +52,21 @@
         <dependency>
             <groupId>cn.linghang</groupId>
             <artifactId>mywust-network</artifactId>
-            <version>0.0.1-dev</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>cn.linghang</groupId>
             <artifactId>mywust-util</artifactId>
-            <version>0.0.1-dev</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub LingHangStudio Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/LingHangStudio/mywust</url>
+        </repository>
+    </distributionManagement>
 </project>

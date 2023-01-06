@@ -7,27 +7,29 @@
     <groupId>cn.linghang</groupId>
     <artifactId>mywust</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-dev</version>
+    <version>0.0.1-SNAPSHOT</version>
+
     <modules>
         <module>mywust-core</module>
         <module>mywust-model</module>
         <module>mywust-network</module>
         <module>mywust-util</module>
+        <module>mywust-network-httpclient</module>
+        <module>mywust-network-okhttp</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.externalAnnotations.junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12-an1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub LingHangStudio Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/LingHangStudio/mywust</url>
+        </repository>
+    </distributionManagement>
 </project>

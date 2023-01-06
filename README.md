@@ -51,7 +51,17 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 ## 使用说明
 
-> 待补充，先留个坑
+### 在项目中引用mywust-core
+
+目前该项目发布在Github Package上，如遇网络问题请自备工具解决
+
+关于如何在自己的项目中引用：
+
+- Maven项目请参阅：[使用 Apache Maven 注册表](https://docs.github.com/zh/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
+
+- Gradle项目请参阅：[使用 Gradle 注册表](https://docs.github.com/zh/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry)
+
+~~未来有可能会考虑自建Maven仓库~~
 
 ## 目录规范
 

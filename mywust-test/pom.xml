@@ -11,7 +11,7 @@
         <dependency>
             <groupId>cn.linghang</groupId>
             <artifactId>mywust-core</artifactId>
-            <version>0.0.1-dev</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
