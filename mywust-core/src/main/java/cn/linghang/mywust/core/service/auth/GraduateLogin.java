@@ -3,7 +3,6 @@ package cn.linghang.mywust.core.service.auth;
 import cn.linghang.mywust.captcha.SolvedImageCaptcha;
 import cn.linghang.mywust.captcha.UnsolvedImageCaptcha;
 import cn.linghang.mywust.core.exception.ApiException;
-import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.graduate.GraduateRequestFactory;
 import cn.linghang.mywust.core.service.captcha.solver.CaptchaSolver;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -28,7 +27,7 @@ public class GraduateLogin {
         this.captchaSolver = captchaSolver;
     }
 
-    public String getLoginCookie(String username, String password, RequestClientOption option) throws IOException, BasicException {
+    public String getLoginCookie(String username, String password, RequestClientOption option) throws IOException, ApiException {
         // 请求获取验证码
         HttpRequest captchaImageRequest = GraduateRequestFactory.captchaRequest();
         HttpResponse captchaImageResponse = requester.get(captchaImageRequest, option);
@@ -87,7 +86,7 @@ class ImageUtil {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "png", outputStream);
 
-            return byteArrayInputStream.readAllBytes();
+            return outputStream.toByteArray();
         } catch (Exception e) {
             throw new ApiException(ApiException.Code.INTERNAL_EXCEPTION);
         }

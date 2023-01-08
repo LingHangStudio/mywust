@@ -2,6 +2,7 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.exception.BasicException;
+import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.physics.PhysicsIndexPageParser;
 import cn.linghang.mywust.core.request.physics.PhysicsSystemRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -24,7 +25,7 @@ public class PhysicsLogin {
         this.requester = requester;
     }
 
-    public String getLoginCookie(String username, String password, RequestClientOption requestClientOption) throws IOException, BasicException {
+    public String getLoginCookie(String username, String password, RequestClientOption requestClientOption) throws IOException, ApiException, ParseException {
         // 直接登录，ASP.NET_SessionId其实在这步就能获取到，不需要再请求一遍首页获取
         HttpRequest loginCookieRequest = PhysicsSystemRequestFactory.loginCookiesRequest(username, password, null);
         HttpResponse loginCookieResponse = requester.post(loginCookieRequest, requestClientOption);

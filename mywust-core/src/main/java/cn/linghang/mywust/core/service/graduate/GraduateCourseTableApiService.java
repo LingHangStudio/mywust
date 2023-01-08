@@ -17,6 +17,9 @@ public class GraduateCourseTableApiService extends GraduateApiService{
 
     public String getCourseTablePage(String cookie, RequestClientOption option) throws IOException, ApiException {
         HttpRequest request = GraduateRequestFactory.courseTableRequest(cookie);
+        request.addHeaders("Referer", "http://59.68.177.189/pyxx/pygl/kbcx_xs.aspx");
+        request.addHeaders("Origin", "http://59.68.177.189");
+
         HttpResponse response = requester.get(request, option);
         super.checkResponse(response);
 

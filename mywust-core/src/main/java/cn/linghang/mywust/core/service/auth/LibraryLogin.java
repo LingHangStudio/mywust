@@ -2,6 +2,7 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.api.Library;
 import cn.linghang.mywust.core.api.UnionAuth;
+import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.library.LibraryRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -21,7 +22,7 @@ public class LibraryLogin {
         this.unionLogin = new UnionLogin(requester);
     }
 
-    public String getLibraryLoginCookie(String username, String password, RequestClientOption requestOption) throws BasicException, IOException {
+    public String getLibraryLoginCookie(String username, String password, RequestClientOption requestOption) throws ApiException, IOException {
         // 获取service ticket以进行进一步的登录
         String serviceTicket = unionLogin.getServiceTicket(username, password, UnionAuth.Service.LIBRARY_SSO_SERVICE, requestOption);
 

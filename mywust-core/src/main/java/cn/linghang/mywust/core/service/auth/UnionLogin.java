@@ -27,7 +27,7 @@ public class UnionLogin {
         this.requester = requester;
     }
 
-    public String getServiceTicket(String username, String password, String serviceUrl, RequestClientOption requestOption) throws IOException, BasicException {
+    public String getServiceTicket(String username, String password, String serviceUrl, RequestClientOption requestOption) throws IOException, ApiException {
         String encodedPassword = PasswordEncoder.encodePassword(password);
 
         // 获取ticket granting ticket（TGT），以获取ServiceTicket

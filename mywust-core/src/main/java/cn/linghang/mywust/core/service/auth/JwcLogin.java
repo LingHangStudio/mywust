@@ -2,6 +2,7 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.api.Bkjx;
 import cn.linghang.mywust.core.api.UnionAuth;
+import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -25,7 +26,7 @@ public class JwcLogin {
         this.unionLogin = new UnionLogin(requester);
     }
 
-    public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, BasicException {
+    public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, ApiException {
         // 获取service ticket以进行进一步的登录
         String serviceTicket = unionLogin.getServiceTicket(username, password, UnionAuth.Service.BKJX_SSO_SERVICE, requestOption);
 
@@ -35,7 +36,7 @@ public class JwcLogin {
 
         String cookies = sessionResponse.getCookies();
         if (roughCheckCookie(cookies)) {
-            throw new BasicException();
+            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
         return cookies;

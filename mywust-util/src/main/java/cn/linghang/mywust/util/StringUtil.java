@@ -3,6 +3,7 @@ package cn.linghang.mywust.util;
 import com.google.common.base.Joiner;
 import org.apache.commons.codec.binary.Base64;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -19,7 +20,12 @@ public class StringUtil {
     public static String generateQueryString(Map<String, String> queryParams) {
         // 自动对value值进行url编码
         Map<String, String> urlEncodedQueryParams = new TreeMap<>(REPEATABLE_COMPARATOR);
-        queryParams.forEach((k, v) -> urlEncodedQueryParams.put(k, URLEncoder.encode(v, StandardCharsets.UTF_8)));
+        queryParams.forEach((k, v) -> {
+            try {
+                urlEncodedQueryParams.put(k, URLEncoder.encode(v, StandardCharsets.UTF_8.name()));
+            } catch (UnsupportedEncodingException ignored) {
+            }
+        });
 
         return Joiner.on('&')
                 .useForNull("")
