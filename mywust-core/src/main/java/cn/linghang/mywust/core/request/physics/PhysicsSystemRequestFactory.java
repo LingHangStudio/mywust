@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.request.physics;
 
-import cn.linghang.mywust.core.api.PhysicsSystem;
+import cn.linghang.mywust.core.api.PhysicsSystemUrls;
 import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
@@ -11,16 +11,16 @@ import java.util.Map;
 
 public class PhysicsSystemRequestFactory extends RequestFactory {
     public static HttpRequest loginIndexRequest() {
-        return makeHttpRequest(PhysicsSystem.PHYSICS_LOGIN_INDEX);
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_LOGIN_INDEX);
     }
 
     public static HttpRequest loginCookiesRequest(String username, String password, String cookies) {
         byte[] queryData = StringUtil.generateQueryString(makeLoginQueryParam(username, password)).getBytes(StandardCharsets.UTF_8);
-        return makeHttpRequest(PhysicsSystem.PHYSICS_LOGIN_COOKIES_API, queryData, cookies);
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_LOGIN_COOKIES_API, queryData, cookies);
     }
 
     public static HttpRequest mainIndexRequest(String cookies) {
-        return makeHttpRequest(PhysicsSystem.PHYSICS_MAIN_INDEX_URL, null, cookies);
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_MAIN_INDEX_URL, null, cookies);
     }
 
     public static HttpRequest physicsSystemIndexRequest(String redirect, String cookies) {
@@ -38,11 +38,11 @@ public class PhysicsSystemRequestFactory extends RequestFactory {
         indexParam.put("__ASYNCPOST", "true");
 
         byte[] fromData = StringUtil.generateQueryString(indexParam).getBytes(StandardCharsets.UTF_8);
-        return makeHttpRequest(PhysicsSystem.PHYSICS_COURSE_INDEX_URL, fromData, cookies);
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_COURSE_INDEX_URL, fromData, cookies);
     }
 
     public static HttpRequest physicsCourseRequest(String cookies) {
-        return makeHttpRequest(PhysicsSystem.PHYSICS_COURSE_API, null, cookies);
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_COURSE_API, null, cookies);
     }
 
     private static Map<String, String> makeLoginQueryParam(String username, String password) {

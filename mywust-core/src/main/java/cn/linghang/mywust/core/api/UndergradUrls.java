@@ -7,7 +7,7 @@ import lombok.Getter;
  * <p>其实是本科生用的教务处系统</p>
  */
 @Getter
-public class Bkjx {
+public class UndergradUrls {
     public static final String BKJX_SESSION_COOKIE_API = "http://bkjx.wust.edu.cn/jsxsd/sso.jsp?ticket=%s";
 
     public static final String BKJX_TEST_API = "http://bkjx.wust.edu.cn/jsxsd/framework/blankPage.jsp";

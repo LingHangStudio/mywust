@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class StudentInfoPageParser implements Parser<StudentInfo> {
+public class UndergradStudentInfoPageParser implements Parser<StudentInfo> {
 
     public StudentInfo parse(String html) throws ParseException {
         Document page = Jsoup.parse(html);

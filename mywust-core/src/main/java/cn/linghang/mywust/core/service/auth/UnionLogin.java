@@ -1,14 +1,12 @@
 package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.core.exception.ApiException;
-import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.auth.UnionAuthRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.util.PasswordEncoder;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,7 @@ public class UnionLogin {
 
         String redirectAddress = unionAuthResponse.getHeaders().get("Location");
         if (redirectAddress == null) {
-            throw new ApiException(this.analyzeFailReason(unionAuthResponse.getBody()));
+            throw analyzeFailReason(unionAuthResponse.getBody());
         }
 
         // 获取服务ticket（service ticket，ST）
@@ -53,21 +51,34 @@ public class UnionLogin {
         return new String(serviceTicketResponseData);
     }
 
-    private ApiException.Code analyzeFailReason(byte[] response) {
+    private ApiException analyzeFailReason(byte[] response) {
         try {
-            JsonNode dataNode = new ObjectMapper().readTree(response).get("data");
-            switch (dataNode.get("code").asText()) {
+            String code = new ObjectMapper().readTree(response).get("data").get("code").asText();
+            switch (code) {
                 case "PASSERROR":
-                    return ApiException.Code.UNI_LOGIN_PASSWORD_WRONG;
+                case "FALSE":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_PASSWORD_WRONG);
                 case "NOUSER":
-                    return ApiException.Code.UNI_LOGIN_USER_NOT_EXISTS;
+                    return new ApiException(ApiException.Code.UNI_LOGIN_USER_NOT_EXISTS);
                 case "USERLOCK":
-                    return ApiException.Code.UNI_LOGIN_USER_BANNED;
+                    return new ApiException(ApiException.Code.UNI_LOGIN_USER_BANNED);
+                case "USERDISABLED":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_USER_DISABLED);
+                case "ISMODIFYPASS":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_NEED_CHANGE_PASSWORD);
+                case "USERNOTONLY":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_USER_NOT_ONLY);
+                case "NOREGISTER":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_NO_REGISTER);
+                case "TWOVERIFY":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_NEED_TFA);
                 default:
-                    return ApiException.Code.UNKNOWN_EXCEPTION;
+                    log.warn("未知的原因：{}", code);
+                    return new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "未知的错误原因：" + code);
             }
         } catch (Exception e) {
-            return ApiException.Code.UNKNOWN_EXCEPTION;
+            log.warn("分析失败原因出错：{}， 响应：{}", e, new String(response));
+            return new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, e.toString());
         }
     }
 }

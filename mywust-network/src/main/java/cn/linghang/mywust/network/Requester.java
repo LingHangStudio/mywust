@@ -21,50 +21,47 @@ public interface Requester {
      * 发送Get请求
      *
      * @param request             请求体
-     * @param requestClientOption 请求选项
+     * @param requestClientOption 请求选项，为null时，使用默认的选项
      * @return 响应数据
      * @throws IOException 如果网络请求有异常
      */
     HttpResponse get(HttpRequest request, RequestClientOption requestClientOption) throws IOException;
 
+    HttpResponse get(HttpRequest request) throws IOException;
+
     /**
      * 发送Post请求
      *
      * @param request             请求体
-     * @param requestClientOption 请求选项
+     * @param requestClientOption 请求选项，为null时，使用默认的选项
      * @return 响应数据
      * @throws IOException 如果网络请求有异常
      */
     HttpResponse post(HttpRequest request, RequestClientOption requestClientOption) throws IOException;
 
-    /**
-     * 发送Post请求，并将对象自动封装成json
-     *
-     * @param request             请求体
-     * @param requestClientOption 请求选项
-     * @return 响应数据
-     * @throws IOException 如果网络请求有异常
-     */
-    HttpResponse postJson(HttpRequest request, Object requestBody, RequestClientOption requestClientOption) throws IOException;
+    HttpResponse post(HttpRequest request) throws IOException;
 
     /**
      * 发送Put请求
      *
      * @param request             请求体
-     * @param requestClientOption 请求选项
+     * @param requestClientOption 请求选项，为null时，使用默认的选项
      * @return 响应数据
      * @throws IOException 如果网络请求有异常
      */
     HttpResponse put(HttpRequest request, RequestClientOption requestClientOption) throws IOException;
 
+    HttpResponse put(HttpRequest request) throws IOException;
+
     /**
      * 发送Delete请求
      *
      * @param request             请求体
-     * @param requestClientOption 请求选项
+     * @param requestClientOption 请求选项，为null时，使用默认的选项
      * @return 响应数据
      * @throws IOException 如果网络请求有异常
      */
     HttpResponse delete(HttpRequest request, RequestClientOption requestClientOption) throws IOException;
 
+    HttpResponse delete(HttpRequest request) throws IOException;
 }

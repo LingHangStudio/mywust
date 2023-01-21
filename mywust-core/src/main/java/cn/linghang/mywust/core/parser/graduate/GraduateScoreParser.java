@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.parser.graduate;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.ExamInfo;
+import cn.linghang.mywust.model.global.Score;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,13 +11,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraduateExamInfoParser implements Parser<List<ExamInfo>> {
+public class GraduateScoreParser implements Parser<List<Score>> {
     @Override
-    public List<ExamInfo> parse(String html) throws ParseException {
+    public List<Score> parse(String html) throws ParseException {
         Document document = Jsoup.parse(html);
         Elements scoreElements = document.getElementsByClass("GridViewRowStyle");
 
-        List<ExamInfo> examInfos = new ArrayList<>(scoreElements.size());
+        List<Score> scores = new ArrayList<>(scoreElements.size());
 
         for (Element scoreElement : scoreElements) {
             Elements infoGirds = scoreElement.getElementsByTag("td");
@@ -27,16 +27,16 @@ public class GraduateExamInfoParser implements Parser<List<ExamInfo>> {
 
             scoreElements.removeIf(element -> element.hasClass("pagestopr"));
 
-            ExamInfo examInfo = new ExamInfo();
+            Score score = new Score();
 
-            examInfo.setCourseName(infoGirds.get(0).text());
-            examInfo.setCredit(infoGirds.get(1).text());
-            examInfo.setTerm(infoGirds.get(2).text());
-            examInfo.setScore(infoGirds.get(3).text());
+            score.setCourseName(infoGirds.get(0).text());
+            score.setCredit(infoGirds.get(1).text());
+            score.setTerm(infoGirds.get(2).text());
+            score.setScore(infoGirds.get(3).text());
 
-            examInfos.add(examInfo);
+            scores.add(score);
         }
 
-        return examInfos;
+        return scores;
     }
 }

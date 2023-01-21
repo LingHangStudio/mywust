@@ -1,27 +1,32 @@
 package cn.linghang.mywust.core.service.undergraduate;
 
 import cn.linghang.mywust.core.exception.ApiException;
-import cn.linghang.mywust.core.exception.ParseException;
-import cn.linghang.mywust.core.parser.undergraduate.ExamInfoParser;
 import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
-import cn.linghang.mywust.model.global.ExamInfo;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.network.entitys.HttpResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
-public class ExamInfoApiService extends UndergraduateApiService {
+public class UndergradScoreApiService extends UndergradApiServiceBase {
 
-    public ExamInfoApiService(Requester requester) {
+    public UndergradScoreApiService(Requester requester) {
         super(requester);
     }
 
-    public String getExamInfoPage(String cookies, RequestClientOption requestClientOption) throws IOException, ApiException {
+    @Override
+    public String getPage(String cookie, Map<String, String> params, RequestClientOption option) throws ApiException, IOException {
+        return this.getPage(cookie, option);
+    }
+
+    @Override
+    public String getPage(String cookie, Map<String, String> params) throws ApiException, IOException {
+        return this.getPage(cookie, params, null);
+    }
+
+    public String getPage(String cookies, RequestClientOption requestClientOption) throws IOException, ApiException {
         HttpRequest request = BkjxRequestFactory.examScoreInfoRequest(cookies, "", "", "");
         HttpResponse response = requester.post(request, requestClientOption);
 

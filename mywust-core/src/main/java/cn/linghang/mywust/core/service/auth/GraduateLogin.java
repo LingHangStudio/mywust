@@ -2,7 +2,9 @@ package cn.linghang.mywust.core.service.auth;
 
 import cn.linghang.mywust.captcha.SolvedImageCaptcha;
 import cn.linghang.mywust.captcha.UnsolvedImageCaptcha;
+import cn.linghang.mywust.core.api.GraduateUrls;
 import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.core.request.graduate.GraduateRequestFactory;
 import cn.linghang.mywust.core.service.captcha.solver.CaptchaSolver;
 import cn.linghang.mywust.network.RequestClientOption;
@@ -52,6 +54,23 @@ public class GraduateLogin {
 
         // 使用当初通过验证码得到的cookie来作为登录cookie，至于是否真正可行待验证
         return captchaImageResponse.getCookies();
+    }
+
+    public void checkCookies(String cookie, RequestClientOption option) throws ApiException, IOException {
+        HttpRequest request = RequestFactory.makeHttpRequest(GraduateUrls.GRADUATE_INDEX_TEST_API, null, cookie);
+        HttpResponse response = requester.get(request, option);
+
+        this.checkResponse(response);
+    }
+
+    public void checkResponse(HttpResponse response) throws ApiException {
+        // 检查响应是否正确
+        if (response.getBody() == null ||
+                response.getStatusCode() != HttpResponse.HTTP_OK ||
+                new String(response.getBody()).contains("name=\"_ctl0:txtpassword\"")) {
+
+            throw new ApiException(ApiException.Code.COOKIE_INVALID);
+        }
     }
 }
 

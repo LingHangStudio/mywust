@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request.graduate;
 
 import cn.linghang.mywust.captcha.SolvedImageCaptcha;
-import cn.linghang.mywust.core.api.Graduate;
+import cn.linghang.mywust.core.api.GraduateUrls;
 import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class GraduateRequestFactory extends RequestFactory {
     public static HttpRequest captchaRequest() {
-        return makeHttpRequest(Graduate.GRADUATE_CAPTCHA_API);
+        return makeHttpRequest(GraduateUrls.GRADUATE_CAPTCHA_API);
     }
 
     private static final Map<String,String> LOGIN_CONST_PARAMS = new HashMap<>(5);
@@ -33,22 +33,22 @@ public class GraduateRequestFactory extends RequestFactory {
 
         byte[] requestData = StringUtil.generateQueryString(params).getBytes(StandardCharsets.UTF_8);
 
-        return makeHttpRequest(Graduate.GRADUATE_LOGIN_API, requestData, captcha.getBindInfo());
+        return makeHttpRequest(GraduateUrls.GRADUATE_LOGIN_API, requestData, captcha.getBindInfo());
     }
 
     public static HttpRequest studentInfoRequest(String cookie) {
-        return makeHttpRequest(Graduate.GRADUATE_STUDENT_INFO_API, null, cookie);
+        return makeHttpRequest(GraduateUrls.GRADUATE_STUDENT_INFO_API, null, cookie);
     }
 
     public static HttpRequest courseTableRequest(String cookie) {
-        return makeHttpRequest(Graduate.GRADUATE_COURSE_TABLE_API, null, cookie);
+        return makeHttpRequest(GraduateUrls.GRADUATE_COURSE_TABLE_API, null, cookie);
     }
 
     public static HttpRequest examScoreInfoRequest(String cookie) {
-        return makeHttpRequest(Graduate.GRADUATE_SCORE_API, null, cookie);
+        return makeHttpRequest(GraduateUrls.GRADUATE_SCORE_API, null, cookie);
     }
 
     public static HttpRequest trainingPlanPageRequest(String cookie) {
-        return makeHttpRequest(Graduate.GRADUATE_TRAINING_PLAN_PAGE_API, null, cookie);
+        return makeHttpRequest(GraduateUrls.GRADUATE_TRAINING_PLAN_PAGE_API, null, cookie);
     }
 }

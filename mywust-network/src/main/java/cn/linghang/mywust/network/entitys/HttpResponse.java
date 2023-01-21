@@ -1,10 +1,17 @@
 package cn.linghang.mywust.network.entitys;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HttpResponse {
     public static final int HTTP_OK = 200;
     public static final int HTTP_RESOURCE_CREATED = 201;
@@ -26,6 +33,18 @@ public class HttpResponse {
 
     private byte[] body;
 
+    public String getStringBody() {
+        return new String(body);
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
+    public void setBody(String stringBody) {
+        this.body = stringBody.getBytes(StandardCharsets.UTF_8);
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("HttpResponse{");
@@ -38,40 +57,5 @@ public class HttpResponse {
         }
         sb.append('}');
         return sb.toString();
-    }
-
-    public static HttpResponseBuilder builder() {
-        return new HttpResponseBuilder();
-    }
-
-    public static final class HttpResponseBuilder {
-        private final HttpResponse httpResponse;
-
-        private HttpResponseBuilder() {
-            httpResponse = new HttpResponse();
-        }
-
-        public static HttpResponseBuilder aHttpResponse() {
-            return new HttpResponseBuilder();
-        }
-
-        public HttpResponseBuilder headers(Map<String, String> headers) {
-            httpResponse.setHeaders(headers);
-            return this;
-        }
-
-        public HttpResponseBuilder cookies(String cookies) {
-            httpResponse.setCookies(cookies);
-            return this;
-        }
-
-        public HttpResponseBuilder body(byte[] body) {
-            httpResponse.setBody(body);
-            return this;
-        }
-
-        public HttpResponse build() {
-            return httpResponse;
-        }
     }
 }

@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CourseTableParser implements Parser<List<Course>> {
-    private static final Logger log = LoggerFactory.getLogger(CourseTableParser.class);
+public class UndergradCourseTableParser implements Parser<List<Course>> {
+    private static final Logger log = LoggerFactory.getLogger(UndergradCourseTableParser.class);
 
     private static final String COURSE_SPLIT_STR = "---------------------";
 

@@ -9,13 +9,13 @@ import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
-public class GraduateStudentInfoApiService extends GraduateApiService {
+public class GraduateStudentInfoApiService extends GraduateApiServiceBase {
 
     public GraduateStudentInfoApiService(Requester requester) {
         super(requester);
     }
 
-    public String getStudentInfoPage(String cookie, RequestClientOption option) throws ApiException, IOException {
+    public String getPage(String cookie, RequestClientOption option) throws ApiException, IOException {
         HttpRequest request = GraduateRequestFactory.studentInfoRequest(cookie);
         HttpResponse response = requester.get(request, option);
         super.checkResponse(response);

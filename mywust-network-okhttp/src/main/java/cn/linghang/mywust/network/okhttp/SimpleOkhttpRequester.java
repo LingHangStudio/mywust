@@ -1,11 +1,10 @@
 package cn.linghang.mywust.network.okhttp;
 
-import cn.linghang.mywust.network.entitys.HttpRequest;
-import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
+import cn.linghang.mywust.network.entitys.HttpRequest;
+import cn.linghang.mywust.network.entitys.HttpResponse;
 import cn.linghang.mywust.util.StringUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author lensfrex
  * @create 2022-10-15 09:49
- * @edit 2022-10-19 21:30
+ * @edit 2023-01-21 15:35
  */
 public class SimpleOkhttpRequester implements Requester {
     private static final Logger log = LoggerFactory.getLogger(SimpleOkhttpRequester.class);
@@ -46,7 +44,7 @@ public class SimpleOkhttpRequester implements Requester {
      * 默认的，多例模式的SimpleOkhttpRequester构造方法
      */
     public SimpleOkhttpRequester() {
-        this(new OkHttpClient(), false);
+        this(false);
     }
 
     /**
@@ -55,11 +53,12 @@ public class SimpleOkhttpRequester implements Requester {
      * @param useSingletonClient 是否使用单例模式
      */
     public SimpleOkhttpRequester(boolean useSingletonClient) {
-        this(new OkHttpClient(), useSingletonClient);
+        this.useSingletonClient = useSingletonClient;
+        this.setRootClient();
     }
 
     /**
-     * 使用特定okhttpClient对象并且指定是否使用单例模式的SimpleOkhttpRequester私有构造方法
+     * 使用特定okhttpClient对象作为rootClient，仅在rootClient为null时起作用，并指定是否使用单例模式的SimpleOkhttpRequester私有构造方法
      *
      * @param okHttpClient       okhttpClient对象
      * @param useSingletonClient 是否使用单例模式
@@ -70,30 +69,65 @@ public class SimpleOkhttpRequester implements Requester {
     }
 
     /**
-     * 指定client参数选项的SimpleOkhttpRequester构造方法，默认不使用单例模式
+     * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，默认不使用单例模式
      *
-     * @param requestClientOption client参数选项
+     * @param requestClientOption client参数选项，为null时使用默认选项
      */
     public SimpleOkhttpRequester(RequestClientOption requestClientOption) {
         this(requestClientOption, false);
     }
 
     /**
-     * 指定client参数选项的SimpleOkhttpRequester构造方法，并且指定是否使用单例模式
+     * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，并且指定是否使用单例模式
      *
-     * @param requestClientOption client参数选项
+     * @param requestClientOption client参数选项，为null时使用默认选项
      * @param useSingletonClient  是否使用单例模式
      */
     public SimpleOkhttpRequester(RequestClientOption requestClientOption, boolean useSingletonClient) {
-        this.useSingletonClient = useSingletonClient;
-        this.setRootClient(buildClient(new OkHttpClient.Builder(), requestClientOption));
+        this(requestClientOption, useSingletonClient, null);
     }
 
+    /**
+     * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，并且指定是否使用单例模式以及CookieJar
+     *
+     * @param requestClientOption client参数选项，为null时使用默认选项
+     * @param useSingletonClient  是否使用单例模式
+     * @param cookieJar           指定的cookieJar
+     */
+    public SimpleOkhttpRequester(RequestClientOption requestClientOption, boolean useSingletonClient, CookieJar cookieJar) {
+        this.useSingletonClient = useSingletonClient;
+        if (rootClient == null) {
+            synchronized (SimpleOkhttpRequester.class) {
+                if (rootClient == null ) {
+                    rootClient = this.buildClient(new OkHttpClient.Builder(), requestClientOption, cookieJar);
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置指定的client为根client，仅在rootClient为null时设置
+     *
+     * @param okHttpClient 传入的client
+     */
     private void setRootClient(OkHttpClient okHttpClient) {
         if (rootClient == null) {
             synchronized (SimpleOkhttpRequester.class) {
-                if (rootClient == null) {
+                if (rootClient == null ) {
                     rootClient = okHttpClient;
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置一个新的根client，只在rootClient为null时设置，保证根client只有一个
+     */
+    private void setRootClient() {
+        if (rootClient == null) {
+            synchronized (SimpleOkhttpRequester.class) {
+                if (rootClient == null) {
+                    rootClient = new OkHttpClient();
                 }
             }
         }
@@ -103,17 +137,26 @@ public class SimpleOkhttpRequester implements Requester {
      * 构建一个okhttpClient
      *
      * @param builder             okhttpClient.Builder
-     * @param requestClientOption client参数选项
+     * @param requestClientOption client参数选项，当null时为默认的option
+     * @param cookieJar           提供的CookieJar，当为null时不设置
      * @return 构建好的client
      */
-    private OkHttpClient buildClient(OkHttpClient.Builder builder, RequestClientOption requestClientOption) {
+    private OkHttpClient buildClient(OkHttpClient.Builder builder, RequestClientOption requestClientOption, CookieJar cookieJar) {
+        if (requestClientOption == null) {
+            requestClientOption = new RequestClientOption();
+        }
+
         builder.callTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .readTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .followRedirects(requestClientOption.isFallowUrlRedirect())
-                .addInterceptor(new RedirectInterceptor())
-                .sslSocketFactory(TrustAllCert.getSSLSocketFactory(), TrustAllCert.getX509TrustManager())
-                .hostnameVerifier(TrustAllCert.getHostnameVerifier());
+                .addInterceptor(new RedirectInterceptor());
+
+        // 是否忽略SSL错误
+        if (requestClientOption.isIgnoreSSLError()) {
+            builder.sslSocketFactory(TrustAllCert.getSSLSocketFactory(), TrustAllCert.getX509TrustManager())
+                    .hostnameVerifier(TrustAllCert.getHostnameVerifier());
+        }
 
         // 设置代理
         RequestClientOption.Proxy proxyOption = requestClientOption.getProxy();
@@ -122,6 +165,11 @@ public class SimpleOkhttpRequester implements Requester {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddress);
 
             builder.proxy(proxy);
+        }
+
+        // 设置CookieJar
+        if (cookieJar != null) {
+            builder.cookieJar(cookieJar);
         }
 
         return builder.build();
@@ -139,13 +187,8 @@ public class SimpleOkhttpRequester implements Requester {
             return rootClient;
         }
 
-        return buildClient(rootClient.newBuilder(), requestClientOption);
+        return buildClient(rootClient.newBuilder(), requestClientOption, null);
     }
-
-    /**
-     * json的content-type
-     */
-    private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
     /**
      * 默认的content-type（form）
@@ -273,11 +316,15 @@ public class SimpleOkhttpRequester implements Requester {
      * @throws IOException 如果网络请求有异常
      */
     private HttpResponse doRequest(RequestMethod requestMethod, HttpRequest httpRequest, RequestClientOption requestClientOption) throws IOException {
+        if (requestClientOption == null) {
+            requestClientOption = RequestClientOption.DEFAULT_OPTION;
+        }
+
         OkHttpClient client = getOkhttpClient(requestClientOption);
         Request request = this.buildRequest(requestMethod, httpRequest);
 
         log.debug("------------Do Request------------");
-        log.debug("Request Options: {}" ,requestClientOption);
+        log.debug("Request Options: {}", requestClientOption);
         log.debug("Request: {}", request);
         log.debug("Headers: {}", request.headers());
 
@@ -290,17 +337,18 @@ public class SimpleOkhttpRequester implements Requester {
     }
 
     @Override
+    public HttpResponse get(HttpRequest httpRequest) throws IOException {
+        return this.doRequest(RequestMethod.GET, httpRequest, null);
+    }
+
+    @Override
     public HttpResponse post(HttpRequest request, RequestClientOption requestClientOption) throws IOException {
         return this.doRequest(RequestMethod.POST, request, requestClientOption);
     }
 
     @Override
-    public HttpResponse postJson(HttpRequest request, Object requestBody, RequestClientOption requestClientOption) throws IOException {
-        String json = new ObjectMapper().writeValueAsString(requestBody);
-        request.setData(json.getBytes(StandardCharsets.UTF_8));
-        request.getHeaders().put("Content-Type", JSON_CONTENT_TYPE);
-
-        return this.doRequest(RequestMethod.POST, request, requestClientOption);
+    public HttpResponse post(HttpRequest request) throws IOException {
+        return this.doRequest(RequestMethod.POST, request, null);
     }
 
     @Override
@@ -309,7 +357,18 @@ public class SimpleOkhttpRequester implements Requester {
     }
 
     @Override
+    public HttpResponse put(HttpRequest request) throws IOException {
+        return this.doRequest(RequestMethod.PUT, request, null);
+    }
+
+    @Override
     public HttpResponse delete(HttpRequest request, RequestClientOption requestClientOption) throws IOException {
         return this.doRequest(RequestMethod.DELETE, request, requestClientOption);
     }
+
+    @Override
+    public HttpResponse delete(HttpRequest request) throws IOException {
+        return this.doRequest(RequestMethod.DELETE, request, null);
+    }
+
 }

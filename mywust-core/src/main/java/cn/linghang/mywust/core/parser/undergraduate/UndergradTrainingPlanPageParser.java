@@ -5,7 +5,7 @@ import cn.linghang.mywust.core.parser.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
-public class TrainingPlanPageParser implements Parser<String> {
+public class UndergradTrainingPlanPageParser implements Parser<String> {
 
     @Override
     public String parse(String html) throws ParseException {

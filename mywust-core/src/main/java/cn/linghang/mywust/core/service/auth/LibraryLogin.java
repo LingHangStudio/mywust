@@ -1,9 +1,8 @@
 package cn.linghang.mywust.core.service.auth;
 
-import cn.linghang.mywust.core.api.Library;
-import cn.linghang.mywust.core.api.UnionAuth;
+import cn.linghang.mywust.core.api.LibraryUrls;
+import cn.linghang.mywust.core.api.UnionAuthUrls;
 import cn.linghang.mywust.core.exception.ApiException;
-import cn.linghang.mywust.core.exception.BasicException;
 import cn.linghang.mywust.core.request.library.LibraryRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
@@ -22,9 +21,9 @@ public class LibraryLogin {
         this.unionLogin = new UnionLogin(requester);
     }
 
-    public String getLibraryLoginCookie(String username, String password, RequestClientOption requestOption) throws ApiException, IOException {
+    public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws ApiException, IOException {
         // 获取service ticket以进行进一步的登录
-        String serviceTicket = unionLogin.getServiceTicket(username, password, UnionAuth.Service.LIBRARY_SSO_SERVICE, requestOption);
+        String serviceTicket = unionLogin.getServiceTicket(username, password, UnionAuthUrls.Service.LIBRARY_SSO_SERVICE, requestOption);
 
         // 获取登录cookie（session）
         HttpRequest sessionRequest = LibraryRequestFactory.sessionCookieRequest(serviceTicket);
@@ -41,7 +40,7 @@ public class LibraryLogin {
 
     public boolean checkCookie(String cookies) throws IOException {
         RequestClientOption option = RequestClientOption.DEFAULT_OPTION;
-        HttpRequest testRequest = LibraryRequestFactory.makeHttpRequest(Library.LIBRARY_COOKIE_TEST_URL, null, cookies);
+        HttpRequest testRequest = LibraryRequestFactory.makeHttpRequest(LibraryUrls.LIBRARY_COOKIE_TEST_URL, null, cookies);
         HttpResponse testResponse = requester.get(testRequest, option);
 
         // 响应居然是JSON，好评！

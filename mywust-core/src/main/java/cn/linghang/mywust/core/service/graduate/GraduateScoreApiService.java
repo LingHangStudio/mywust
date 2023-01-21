@@ -9,13 +9,13 @@ import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
-public class GraduateScoreApiService extends GraduateApiService{
+public class GraduateScoreApiService extends GraduateApiServiceBase {
 
     public GraduateScoreApiService(Requester requester) {
         super(requester);
     }
 
-    public String getScorePage(String cookie, RequestClientOption option) throws IOException, ApiException {
+    public String getPage(String cookie, RequestClientOption option) throws IOException, ApiException {
         HttpRequest request = GraduateRequestFactory.examScoreInfoRequest(cookie);
         request.addHeaders("Referer", "http://59.68.177.189/pyxx/leftmenu.aspx");
 

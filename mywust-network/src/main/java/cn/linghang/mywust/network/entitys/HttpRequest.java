@@ -1,12 +1,15 @@
 package cn.linghang.mywust.network.entitys;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@Builder
 public class HttpRequest {
     private static final Map<String, String> DEFAULT_HEADERS = initDefaultHeaders();
 
@@ -33,6 +36,13 @@ public class HttpRequest {
         headers = new HashMap<>(DEFAULT_HEADERS);
     }
 
+    public HttpRequest(URL url, Map<String, String> headers, String cookies, byte[] data) {
+        this.url = url;
+        this.headers = headers;
+        this.cookies = cookies;
+        this.data = data;
+    }
+
     public HttpRequest addHeaders(Map<String, String> headers) {
         this.headers.putAll(headers);
         return this;
@@ -41,6 +51,18 @@ public class HttpRequest {
     public HttpRequest addHeaders(String key, String value) {
         this.headers.put(key, value);
         return this;
+    }
+
+    public String getStringData() {
+        return new String(this.data);
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public void setData(String stringData) {
+        this.data = stringData.getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
@@ -56,45 +78,5 @@ public class HttpRequest {
         }
         sb.append('}');
         return sb.toString();
-    }
-
-    public static HttpRequestBuilder builder() {
-        return new HttpRequestBuilder();
-    }
-
-    public static class HttpRequestBuilder {
-        private final HttpRequest httpRequest;
-
-        private HttpRequestBuilder() {
-            httpRequest = new HttpRequest();
-        }
-
-        public static HttpRequestBuilder aHttpRequest() {
-            return new HttpRequestBuilder();
-        }
-
-        public HttpRequestBuilder url(URL url) {
-            httpRequest.setUrl(url);
-            return this;
-        }
-
-        public HttpRequestBuilder headers(Map<String, String> headers) {
-            httpRequest.setHeaders(headers);
-            return this;
-        }
-
-        public HttpRequestBuilder cookies(String cookies) {
-            httpRequest.setCookies(cookies);
-            return this;
-        }
-
-        public HttpRequestBuilder data(byte[] data) {
-            httpRequest.setData(data);
-            return this;
-        }
-
-        public HttpRequest build() {
-            return httpRequest;
-        }
     }
 }

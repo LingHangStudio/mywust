@@ -13,9 +13,9 @@ public class RedirectInterceptor implements Interceptor {
         Response response = chain.proceed(request);
 
         String location = response.headers().get("Location");
-        if (location != null) {
-            System.out.println(("Request redirected to：" + location));
-        }
+//        if (location != null) {
+//            System.out.println(("Request redirected to：" + location));
+//        }
 
         return response;
     }

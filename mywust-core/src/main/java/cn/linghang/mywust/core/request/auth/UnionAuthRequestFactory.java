@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.request.auth;
 
-import cn.linghang.mywust.core.api.UnionAuth;
+import cn.linghang.mywust.core.api.UnionAuthUrls;
 import cn.linghang.mywust.core.request.RequestFactory;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
@@ -19,7 +19,7 @@ public class UnionAuthRequestFactory extends RequestFactory {
 
         String queryString = StringUtil.generateQueryString(requestForm);
 
-        return makeHttpRequest(UnionAuth.UNION_AUTH_API, queryString.getBytes(StandardCharsets.UTF_8));
+        return makeHttpRequest(UnionAuthUrls.UNION_AUTH_API, queryString.getBytes(StandardCharsets.UTF_8));
     }
 
     public static HttpRequest loginTicketRequest(String redirectUrl, String service) {

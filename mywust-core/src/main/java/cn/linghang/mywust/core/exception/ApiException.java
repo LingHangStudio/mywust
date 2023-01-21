@@ -12,6 +12,14 @@ public class ApiException extends BasicException {
         this.code = code;
     }
 
+    public static ApiException create(Code code, String message) {
+        return new ApiException(code, message);
+    }
+
+    public static ApiException create(Code code) {
+        return new ApiException(code);
+    }
+
     public Code getCode() {
         return code;
     }
@@ -40,6 +48,11 @@ public class ApiException extends BasicException {
          */
         NETWORK_EXCEPTION(-2, "网络错误..."),
 
+        /**
+         * 输入参数错误
+         */
+        PARAM_WRONG_EXCEPTION(-3, "输入参数错误..."),
+
         // --------------------------------
         // 统一认证的异常(本科生、图书馆)
 
@@ -58,6 +71,33 @@ public class ApiException extends BasicException {
          */
         UNI_LOGIN_USER_BANNED(100102, "统一认证登录: 用户被封禁"),
 
+        /**
+         * 用户账号停用
+         */
+        UNI_LOGIN_USER_DISABLED(100103, "统一认证登录: 用户已停用"),
+
+        /**
+         * 用户账号需要更改密码
+         */
+        UNI_LOGIN_NEED_CHANGE_PASSWORD(100104, "统一认证登录: 用户账号密码需要修改"),
+
+        // 下面的几个几乎不会遇到，但是从官网源码来看是有可能的
+
+        /**
+         * 用户账号不唯一
+         */
+        UNI_LOGIN_USER_NOT_ONLY(100105, "统一认证登录: 用户不唯一，请联系学校处理"),
+
+        /**
+         * 用户未注册
+         */
+        UNI_LOGIN_NO_REGISTER(100106, "统一认证登录: 用户未注册"),
+
+        /**
+         * 用户账号设置了TFA验证，不能直接用密码账号登录
+         */
+        UNI_LOGIN_NEED_TFA(100107, "统一认证登录: 用户账号需要TFA二步验证"),
+
         // --------------------------------
         // 共有异常码：cookie无效
 
@@ -68,6 +108,11 @@ public class ApiException extends BasicException {
 
         // --------------------------------
         // 本科生API异常代码
+
+        /**
+         *
+         */
+        BKJX_LEGACY_LOGIN_PASSWORD_WRONG(110101, "本科教学系统-旧版登录方式：密码错误"),
 
         /**
          * 需要评教

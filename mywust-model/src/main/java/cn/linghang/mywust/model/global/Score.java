@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamInfo {
+public class Score {
     /**
      * 序号id，在某些场景下可能会有用
      */

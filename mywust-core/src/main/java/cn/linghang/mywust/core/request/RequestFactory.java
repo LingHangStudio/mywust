@@ -3,6 +3,7 @@ package cn.linghang.mywust.core.request;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class RequestFactory {
@@ -24,6 +25,23 @@ public class RequestFactory {
         return HttpRequest.builder()
                 .url(makeUrl(url))
                 .data(data)
+                .cookies(cookies)
+                .build()
+                .addHeaders(DEFAULT_HTTP_REQUEST.getHeaders());
+    }
+
+    public static HttpRequest makeHttpRequest(String url, String data) {
+        return makeStringDataHttpRequest(url, data, null);
+    }
+
+    public static HttpRequest makeHttpRequest(String url, String data, String cookies, Map<String, String> additionalHeaders) {
+        return makeStringDataHttpRequest(url, data, cookies).addHeaders(additionalHeaders);
+    }
+
+    public static HttpRequest makeStringDataHttpRequest(String url, String stringData, String cookies) {
+        return HttpRequest.builder()
+                .url(makeUrl(url))
+                .data(stringData.getBytes(StandardCharsets.UTF_8))
                 .cookies(cookies)
                 .build()
                 .addHeaders(DEFAULT_HTTP_REQUEST.getHeaders());
