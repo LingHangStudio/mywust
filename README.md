@@ -73,7 +73,12 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 ## 使用到的开源库
 
-> 待补充，先留个坑
+- HTML解析：[jsoup](https://jsoup.org/license) (MIT License)
+- Json解析：[jackson](https://github.com/FasterXML) (Apache License 2.0)
+- 代码简化：[lombok](https://projectlombok.org/) (MIT License)
+- 日志输出：[slf4j](https://www.slf4j.org/) (MIT License)
+- 各种工具：[guava](https://guava.dev/) (Apache License 2.0)
+- 编解码库：[apache commons codec](https://commons.apache.org/proper/commons-codec/) (Apache License 2.0)
 
 ## 开源协议
 
