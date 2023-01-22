@@ -17,6 +17,8 @@ public class GraduateTrainingPlanApiService extends GraduateApiServiceBase {
 
     public String getPage(String cookie, RequestClientOption option) throws IOException, ApiException {
         HttpRequest request = GraduateRequestFactory.trainingPlanPageRequest(cookie);
+        request.addHeaders("Referer", "http://59.68.177.189/pyxx/leftmenu.aspx");
+
         HttpResponse response = requester.get(request, option);
         super.checkResponse(response);
 
