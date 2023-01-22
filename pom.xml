@@ -7,7 +7,7 @@
     <groupId>cn.linghang</groupId>
     <artifactId>mywust</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${rversion}</version>
 
     <modules>
         <module>mywust-core</module>
@@ -18,7 +18,20 @@
         <module>mywust-network-okhttp</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
     <properties>
+        <rversion>0.0.1</rversion>
+
+        <lombok.version>1.18.22</lombok.version>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
