@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mywust</artifactId>
         <groupId>cn.linghang</groupId>
-        <version>${rversion}</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>mywust-network-httpclient</artifactId>
 
