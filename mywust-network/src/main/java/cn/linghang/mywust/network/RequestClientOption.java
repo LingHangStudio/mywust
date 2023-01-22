@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class RequestClientOption {
     private Proxy proxy;
     private long timeout;
@@ -66,5 +65,41 @@ public class RequestClientOption {
 
         @Override
         public void setFallowUrlRedirect(boolean fallowUrlRedirect) {}
+    }
+
+    public static RequestClientOptionBuilder builder() {
+        return new RequestClientOptionBuilder();
+    }
+
+    public static final class RequestClientOptionBuilder {
+        private final RequestClientOption requestClientOption;
+
+        private RequestClientOptionBuilder() {
+            requestClientOption = new RequestClientOption();
+        }
+
+        public RequestClientOptionBuilder proxy(Proxy proxy) {
+            requestClientOption.setProxy(proxy);
+            return this;
+        }
+
+        public RequestClientOptionBuilder timeout(long timeout) {
+            requestClientOption.setTimeout(timeout);
+            return this;
+        }
+
+        public RequestClientOptionBuilder fallowUrlRedirect(boolean fallowUrlRedirect) {
+            requestClientOption.setFallowUrlRedirect(fallowUrlRedirect);
+            return this;
+        }
+
+        public RequestClientOptionBuilder ignoreSSLError(boolean ignoreSSLError) {
+            requestClientOption.setIgnoreSSLError(ignoreSSLError);
+            return this;
+        }
+
+        public RequestClientOption build() {
+            return requestClientOption;
+        }
     }
 }

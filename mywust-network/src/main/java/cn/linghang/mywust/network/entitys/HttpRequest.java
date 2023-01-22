@@ -38,9 +38,13 @@ public class HttpRequest {
 
     public HttpRequest(URL url, Map<String, String> headers, String cookies, byte[] data) {
         this.url = url;
-        this.headers = headers;
         this.cookies = cookies;
         this.data = data;
+
+        this.headers = headers;
+        if (headers == null) {
+            this.headers = new HashMap<>(DEFAULT_HEADERS);
+        }
     }
 
     public HttpRequest addHeaders(Map<String, String> headers) {

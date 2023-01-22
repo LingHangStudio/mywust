@@ -35,9 +35,15 @@ public class UndergraduateLogin {
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();
-        if (checkCookies(cookies, requestOption)) {
-            log.warn("[mywust]: Cookie检查不通过：{}", cookies);
+        if (!roughCheckCookie(cookies)) {
+            log.error("[mywust]: Cookie粗查不通过：{}", cookies);
             throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "登录获取的Cookie无效");
+        }
+
+        // 检查Cookie是否真正可用，同时请求一次任意接口使后续接口能够正确响应
+        // 拿到Cookie后调用的第一个接口会产生302/301跳转，需要再次调用才能正确响应
+        if (!checkCookies(cookies, requestOption)) {
+            log.warn("[mywust]: Cookie检查不通过：{}", cookies);
         }
 
         return cookies;
@@ -92,7 +98,7 @@ public class UndergraduateLogin {
     }
 
     private boolean roughCheckCookie(String cookies) {
-        return cookies == null || !cookies.contains("JSESSIONID") || !cookies.contains("SERVERID");
+        return cookies != null && cookies.contains("JSESSIONID") && cookies.contains("SERVERID");
     }
 
     private static final int COOKIES_ERROR_RESPONSE_LENGTH =
