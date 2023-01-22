@@ -1,6 +1,7 @@
 package cn.linghang.mywust.core.util;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class JsoupUtil {
     /**
@@ -59,6 +60,30 @@ public class JsoupUtil {
             return element.getElementsByAttributeValue("selected", "selected")
                     .get(0)
                     .ownText();
+        }
+    }
+
+    /**
+     * 取元素集合中第一个元素的文本，当elements为null或数量为0时，返回空字符串
+     *
+     * @param elements 元素集合
+     * @return 第一个元素的文本
+     */
+    public static String getElementText(Elements elements) {
+        return getElementText(elements, 0);
+    }
+
+    /**
+     * 取元素集合中指定索引元素的文本，当elements为null时或index超出集合的大小时，返回空字符串
+     *
+     * @param elements 元素集合
+     * @return 对应索引元素的文本
+     */
+    public static String getElementText(Elements elements, int index) {
+        if (elements == null) {
+            return "";
+        } else {
+            return index >= elements.size() ? "" : elements.get(index).text();
         }
     }
 }
