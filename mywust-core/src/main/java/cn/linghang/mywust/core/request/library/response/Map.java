@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Map {
+public class Map<S, S1> {
     @JsonProperty("baseInfo")
     private BaseInfo baseInfo;
 

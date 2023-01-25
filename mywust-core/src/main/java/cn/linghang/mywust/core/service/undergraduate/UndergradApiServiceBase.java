@@ -23,7 +23,7 @@ public abstract class UndergradApiServiceBase {
         // 检查响应是否正确
         if (response.getBody() == null ||
                 response.getStatusCode() != HttpResponse.HTTP_OK ||
-                BkjxUtil.checkLoginFinger(response.getBody())) {
+                BkjxUtil.hasLoginFinger(response.getBody())) {
 
             throw new ApiException(ApiException.Code.COOKIE_INVALID);
         }
@@ -34,6 +34,10 @@ public abstract class UndergradApiServiceBase {
         HttpResponse response = requester.get(request, option);
 
         this.checkResponse(response);
+    }
+
+    public void checkCookies(String cookie) throws ApiException, IOException {
+        this.checkCookies(cookie, null);
     }
 
     public abstract String getPage(String cookie, Map<String, String> params, RequestClientOption option) throws ApiException, IOException;

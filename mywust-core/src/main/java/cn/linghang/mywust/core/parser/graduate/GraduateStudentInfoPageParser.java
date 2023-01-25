@@ -36,7 +36,7 @@ public class GraduateStudentInfoPageParser implements Parser<StudentInfo> {
         student.setName(JsoupUtil.getAttr(nameElement, "value"));
 
         Element birthdayElement = table.getElementById("lblcsrq");
-        student.setBirthday(JsoupUtil.getText(birthdayElement));
+        student.setBirthday(JsoupUtil.getOwnText(birthdayElement));
 
         Element collegeElement = table.getElementById("droyx");
         student.setCollege(JsoupUtil.getSelectContent(collegeElement));

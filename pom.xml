@@ -14,6 +14,7 @@
         <module>mywust-model</module>
         <module>mywust-network</module>
         <module>mywust-util</module>
+        <module>mywust-test</module>
         <module>mywust-network-httpclient</module>
         <module>mywust-network-okhttp</module>
     </modules>
@@ -28,7 +29,7 @@
     </dependencies>
 
     <properties>
-        <revision>0.0.1-fixed</revision>
+        <revision>0.0.2-SNAPSHOT</revision>
 
         <lombok.version>1.18.22</lombok.version>
 

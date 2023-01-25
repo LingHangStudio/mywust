@@ -34,7 +34,7 @@ public class ApiException extends BasicException {
 
     @Override
     public String toString() {
-        return "接口调用异常: " + code;
+        return "Mywust接口调用异常: " + code + ";" + getMessage();
     }
 
     public enum Code {

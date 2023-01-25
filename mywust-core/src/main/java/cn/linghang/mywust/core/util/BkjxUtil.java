@@ -16,7 +16,7 @@ public class BkjxUtil {
      * @param response 响应的字节
      * @return 是否需要重新登录
      */
-    public static boolean checkLoginFinger(byte[] response) {
+    public static boolean hasLoginFinger(byte[] response) {
         if (response == null) {
             return false;
         }

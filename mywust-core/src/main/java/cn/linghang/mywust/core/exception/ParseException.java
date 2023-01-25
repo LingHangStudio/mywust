@@ -1,5 +1,7 @@
 package cn.linghang.mywust.core.exception;
 
+import java.util.StringJoiner;
+
 public class ParseException extends BasicException {
     private final String rawData;
 
@@ -20,5 +22,13 @@ public class ParseException extends BasicException {
 
     public String getRawData() {
         return rawData;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ParseException.class.getSimpleName() + "[", "]")
+                .add("message='" + getMessage() + "'")
+                .add("rawData='" + rawData + "'")
+                .toString();
     }
 }

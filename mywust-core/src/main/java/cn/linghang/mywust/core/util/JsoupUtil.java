@@ -10,12 +10,16 @@ public class JsoupUtil {
      * @param element 元素对象
      * @return 获取到的内容，如果element为null，则返回一个空的字符串
      */
-    public static String getElementContext(Element element) {
+    public static String getElementText(Element element) {
         return element == null ? "" : element.text();
     }
 
     public static String getOuterHtml(Element element) {
         return element == null ? "" : element.outerHtml();
+    }
+
+    public static String getOuterHtml(Elements elements) {
+        return elements == null ? "" : elements.outerHtml();
     }
 
     /**
@@ -39,12 +43,37 @@ public class JsoupUtil {
      * @param element 元素对象
      * @return 相应的值，若element为空则返回空字符串
      */
-    public static String getText(Element element) {
+    public static String getOwnText(Element element) {
         if (element == null) {
             return "";
         } else {
             return element.ownText();
         }
+    }
+
+    /**
+     * 从Elements中拿到指定索引的文本内容
+     *
+     * @param elements 元素对象
+     * @param index    索引
+     * @return 相应的值，其他情况均为空字符串
+     */
+    public static String getOwnText(Elements elements, int index) {
+        if (elements == null) {
+            return "";
+        } else {
+            return index >= elements.size() ? "" : elements.get(index).ownText();
+        }
+    }
+
+    /**
+     * 从Elements中拿到索引中首个元素的文本内容
+     *
+     * @param elements 元素对象
+     * @return 相应的值，其他情况均为空字符串
+     */
+    public static String getOwnText(Elements elements) {
+        return getOwnText(elements, 0);
     }
 
     /**

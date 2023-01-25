@@ -39,7 +39,10 @@ public class LibraryLogin {
     }
 
     public boolean checkCookie(String cookies) throws IOException {
-        RequestClientOption option = RequestClientOption.DEFAULT_OPTION;
+        return this.checkCookie(cookies, null);
+    }
+
+    public boolean checkCookie(String cookies, RequestClientOption option) throws IOException {
         HttpRequest testRequest = LibraryRequestFactory.makeHttpRequest(LibraryUrls.LIBRARY_COOKIE_TEST_URL, null, cookies);
         HttpResponse testResponse = requester.get(testRequest, option);
 

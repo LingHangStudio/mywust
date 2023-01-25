@@ -70,4 +70,31 @@ public class StringUtil {
 
         return Base64.encodeBase64String(rawText.toString().getBytes(StandardCharsets.UTF_8));
     }
+
+    public static String NoneNullString(String str) {
+        return str == null ? "" : str;
+    }
+
+    public static String getTermString(Date date, boolean autumn) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        return getTermString(calendar, autumn);
+    }
+
+    public static String getTermString(Calendar calendar, boolean autumn) {
+        int year = calendar.get(Calendar.YEAR);
+        int nextYear = year + 1;
+
+        // 秋季期，就是第一个学期
+        return String.format("%d-%d-%s", year, nextYear, autumn ? "1" : "2");
+    }
+
+    public static String getCurrentTermString() {
+        Calendar now = Calendar.getInstance();
+        int month = now.get(Calendar.MONTH);
+
+        // 一般八月到第二年二月算是是秋季期
+        return getTermString(now, month >= 8 || month < 2);
+    }
 }

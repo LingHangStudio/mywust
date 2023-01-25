@@ -33,4 +33,8 @@ public class GraduateApiServiceBase {
 
         this.checkResponse(response);
     }
+
+    public void checkCookies(String cookie) throws ApiException, IOException {
+        this.checkCookies(cookie, null);
+    }
 }

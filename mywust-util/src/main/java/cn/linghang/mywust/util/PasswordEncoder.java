@@ -115,7 +115,7 @@ public class PasswordEncoder {
      */
     public static String legacyPassword(String username, String password, String dataString) {
         String[] parts = dataString.split("#");
-        String scode = parts[0];
+        StringBuilder scode = new StringBuilder(parts[0]);
         String sxh = parts[1];
 
         String code = username + "%%%" + password;
@@ -123,11 +123,11 @@ public class PasswordEncoder {
         StringBuilder encoded = new StringBuilder();
         for (int i = 0, codeLength = code.length(); i < codeLength; i++) {
             if (i < 20) {
-                int endIndex = parseInt(sxh.substring(i, i + 1));
-                encoded.append(code.charAt(i)).append(scode, 0, endIndex);
-                scode = scode.substring(endIndex);
+                int index = sxh.charAt(i) - 48;
+                encoded.append(code.charAt(i)).append(scode, 0, index);
+                scode.delete(0, index);
             } else {
-                encoded.append(code.substring(i));
+                encoded.append(code, i, codeLength);
                 i = codeLength;
             }
         }

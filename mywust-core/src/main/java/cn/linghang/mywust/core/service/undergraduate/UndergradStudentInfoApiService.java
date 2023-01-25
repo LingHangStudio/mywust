@@ -34,4 +34,8 @@ public class UndergradStudentInfoApiService extends UndergradApiServiceBase {
 
         return new String(response.getBody());
     }
+
+    public String getPage(String cookies) throws IOException, ApiException {
+        return this.getPage(cookies, (RequestClientOption) null);
+    }
 }

@@ -38,10 +38,12 @@ public class RequestFactory {
         return makeStringDataHttpRequest(url, data, cookies).addHeaders(additionalHeaders);
     }
 
+    private static final byte[] ZERO_BYTE = {0};
+
     public static HttpRequest makeStringDataHttpRequest(String url, String stringData, String cookies) {
         return HttpRequest.builder()
                 .url(makeUrl(url))
-                .data(stringData.getBytes(StandardCharsets.UTF_8))
+                .data(stringData == null ? null : stringData.getBytes(StandardCharsets.UTF_8))
                 .cookies(cookies)
                 .build()
                 .addHeaders(DEFAULT_HTTP_REQUEST.getHeaders());

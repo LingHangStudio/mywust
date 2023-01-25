@@ -38,23 +38,23 @@ public class UndergradScoreParser implements Parser<List<Score>> {
                 Score score = new Score();
 
                 // 这段看着震撼，但其实很丑
-                score.setId(JsoupUtil.getElementContext(girds.get(0)));
+                score.setId(JsoupUtil.getElementText(girds.get(0)));
 
-                score.setTerm(JsoupUtil.getElementContext(girds.get(1)));
-                score.setCourseNumber(JsoupUtil.getElementContext(girds.get(2)));
+                score.setTerm(JsoupUtil.getElementText(girds.get(1)));
+                score.setCourseNumber(JsoupUtil.getElementText(girds.get(2)));
 
-                score.setCourseName(JsoupUtil.getElementContext(girds.get(3)));
-                score.setGroupName(JsoupUtil.getElementContext(girds.get(4)));
+                score.setCourseName(JsoupUtil.getElementText(girds.get(3)));
+                score.setGroupName(JsoupUtil.getElementText(girds.get(4)));
 
-                score.setScore(JsoupUtil.getElementContext(girds.get(5)));
-                score.setFlag(JsoupUtil.getElementContext(girds.get(6)));
-                score.setCredit(JsoupUtil.getElementContext(girds.get(7)));
-                score.setCourseHours(JsoupUtil.getElementContext(girds.get(8)));
-                score.setGradePoint(JsoupUtil.getElementContext(girds.get(9)));
+                score.setScore(JsoupUtil.getElementText(girds.get(5)));
+                score.setFlag(JsoupUtil.getElementText(girds.get(6)));
+                score.setCredit(JsoupUtil.getElementText(girds.get(7)));
+                score.setCourseHours(JsoupUtil.getElementText(girds.get(8)));
+                score.setGradePoint(JsoupUtil.getElementText(girds.get(9)));
 
-                score.setEvaluateMethod(JsoupUtil.getElementContext(girds.get(11)));
-                score.setKind(JsoupUtil.getElementContext(girds.get(12)));
-                score.setCourseKind(JsoupUtil.getElementContext(girds.get(13)));
+                score.setEvaluateMethod(JsoupUtil.getElementText(girds.get(11)));
+                score.setKind(JsoupUtil.getElementText(girds.get(12)));
+                score.setCourseKind(JsoupUtil.getElementText(girds.get(13)));
 
                 scores.add(score);
             }

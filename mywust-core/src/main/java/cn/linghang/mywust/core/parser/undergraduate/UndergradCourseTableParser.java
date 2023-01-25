@@ -2,6 +2,7 @@ package cn.linghang.mywust.core.parser.undergraduate;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
+import cn.linghang.mywust.core.util.JsoupUtil;
 import cn.linghang.mywust.model.global.ClassRoom;
 import cn.linghang.mywust.model.global.Course;
 import org.jsoup.Jsoup;
@@ -68,11 +69,11 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     Elements timeElements = courseElement.getElementsByAttributeValue("title", "周次(节次)");
                     Elements classroomElements = courseElement.getElementsByAttributeValue("title", "教室");
 
-                    courseBuilder.teachClass(classElements.isEmpty() ? "" : classElements.get(0).text());
-                    courseBuilder.teacher(teacherElements.isEmpty() ? "" : teacherElements.get(0).text());
+                    courseBuilder.teachClass(JsoupUtil.getElementText(classElements));
+                    courseBuilder.teacher(JsoupUtil.getElementText(teacherElements));
 
                     ClassRoom classRoom = new ClassRoom();
-                    classRoom.setRoom(classroomElements.isEmpty() ? "" : classroomElements.get(0).text());
+                    classRoom.setRoom(JsoupUtil.getElementText(classroomElements));
                     courseBuilder.classroom(classRoom);
 
                     int weekDay = girdCount % 7;
