@@ -20,7 +20,7 @@ public class BkjxRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest examScoreInfoRequest(String cookies, String time, String courseKind, String courseName) {
-        FormBodyBuilder formBodyBuilder = new FormBodyBuilder();
+        FormBodyBuilder formBodyBuilder = new FormBodyBuilder(4);
         // 开课时间(学期)
         formBodyBuilder.add("kksj", time);
 
@@ -95,7 +95,8 @@ public class BkjxRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest buildingListRequest(String campus, String cookie) {
-        return null;
+        // campus可以为空（就是不知道获取到的是哪个校区的楼了），但是null不行
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_BUILDING_LIST_API, campus == null ? "" : campus, cookie);
     }
 
     public static HttpRequest buildingListRequest(Campus campus, String cookie) {
@@ -108,14 +109,14 @@ public class BkjxRequestFactory extends RequestFactory {
         }
 
         public static HttpRequest ticketRedirectRequest(String encode) {
-            Map<String, String> queryParams = new HashMap<>();
+            Map<String, String> queryParams = new HashMap<>(4);
             queryParams.put("userAccount", "");
             queryParams.put("userPassword", "");
             queryParams.put("encoded", encode);
 
             String queryString = StringUtil.generateQueryString(queryParams);
 
-            Map<String, String> extendHeaders = new HashMap<>();
+            Map<String, String> extendHeaders = new HashMap<>(2);
             extendHeaders.put("Referer", "http://bkjx.wust.edu.cn/");
             extendHeaders.put("Origin", "http://bkjx.wust.edu.cn");
 

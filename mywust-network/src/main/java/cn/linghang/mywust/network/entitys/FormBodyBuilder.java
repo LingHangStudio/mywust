@@ -39,7 +39,7 @@ public class FormBodyBuilder {
     }
 
     public FormBodyBuilder add(String key, String value) {
-        this.queryParams.put(key, value);
+        this.queryParams.put(key, value == null ? "" : value);
         return this;
     }
 
@@ -52,5 +52,3 @@ public class FormBodyBuilder {
     }
 
 }
-
-

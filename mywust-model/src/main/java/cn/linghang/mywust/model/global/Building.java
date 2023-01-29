@@ -13,6 +13,12 @@ public final class Building {
         this.campus = campus;
     }
 
+    public Building(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.campus = new Campus("", "");
+    }
+
     public String getId() {
         return id;
     }

@@ -33,3 +33,4 @@ build/
 .vscode/
 
 */.flattened-pom.xml
+/.flattened-pom.xml

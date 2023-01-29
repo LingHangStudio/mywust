@@ -4,6 +4,7 @@ public class ApiException extends BasicException {
     private final Code code;
 
     public ApiException(Code code) {
+        super(code.toString());
         this.code = code;
     }
 
@@ -34,7 +35,7 @@ public class ApiException extends BasicException {
 
     @Override
     public String toString() {
-        return "Mywust接口调用异常: " + code + ";" + getMessage();
+        return "接口调用异常: " + code + ";" + ((getMessage() == null && code == Code.UNKNOWN_EXCEPTION) ? "" : getMessage());
     }
 
     public enum Code {
