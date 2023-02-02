@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassRoom {
+public class Classroom {
     /**
      * 校区，黄家湖或青山
      */

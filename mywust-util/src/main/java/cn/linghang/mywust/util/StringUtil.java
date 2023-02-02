@@ -54,7 +54,8 @@ public class StringUtil {
 
     /**
      * 生成参数签名
-     * @param appId appId
+     *
+     * @param appId     appId
      * @param secretKey secretKey
      * @return 生成得到的签名sign字段
      */
@@ -96,5 +97,23 @@ public class StringUtil {
 
         // 一般八月到第二年二月算是是秋季期
         return getTermString(now, month >= 8 || month < 2);
+    }
+
+    static public List<String> split(String source, char gap) {
+        List<String> result = new ArrayList<>(4);
+        char[] sourceChars = source.toCharArray();
+
+        int startIndex = 0;
+        for (int index = -1; ++index != sourceChars.length; ) {
+            if (sourceChars[index] != gap) {
+                continue;
+            }
+            result.add(source.substring(startIndex, index));
+            startIndex = index + 1;
+        }
+
+        result.add(source.substring(startIndex, sourceChars.length));
+
+        return result;
     }
 }

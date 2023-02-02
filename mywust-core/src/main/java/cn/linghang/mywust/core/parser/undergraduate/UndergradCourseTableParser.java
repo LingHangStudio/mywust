@@ -3,8 +3,9 @@ package cn.linghang.mywust.core.parser.undergraduate;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.util.JsoupUtil;
-import cn.linghang.mywust.model.global.ClassRoom;
+import cn.linghang.mywust.model.global.Classroom;
 import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.util.StringUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,9 +24,7 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
 
     private static final String COURSE_SPLIT_TAG_STR = "</div><div>";
 
-    private static final Pattern WEEK_RANGE_REGEX = Pattern.compile("(?<startWeek>\\d+)-(?<endWeek>\\d+)");
-
-    private static final Pattern SINGLE_WEEK_REGEX = Pattern.compile("(?<week>\\d+)");
+    private static final Pattern WEEK_REGEX = Pattern.compile("\\d+");
 
     @Override
     public List<Course> parse(String html) throws ParseException {
@@ -50,8 +49,6 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                 String girdHtml = gird.outerHtml().replace(COURSE_SPLIT_STR, COURSE_SPLIT_TAG_STR);
                 Elements courseElements = Jsoup.parse(girdHtml).getElementsByTag("div");
                 for (Element courseElement : courseElements) {
-                    Course.CourseBuilder courseBuilder = Course.builder();
-
                     // 格子文本为空，说明这个格子没课，直接跳过这个格子就行了
                     // 注意，使用这个条件判断时对jsoup版本有要求，在比较旧的版本下gird.ownText()空格子其实并不空，而是有一个空格的
                     // 在某个版本之后（至少是1.10到1.15之间的某个版本）会自动剔除多余空格（trim()），所以直接这样判断就行了
@@ -60,6 +57,8 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     if ("".equals(courseName)) {
                         continue;
                     }
+
+                    Course.CourseBuilder courseBuilder = Course.builder();
 
                     courseBuilder.name(courseName);
 
@@ -72,7 +71,7 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     courseBuilder.teachClass(JsoupUtil.getElementText(classElements));
                     courseBuilder.teacher(JsoupUtil.getElementText(teacherElements));
 
-                    ClassRoom classRoom = new ClassRoom();
+                    Classroom classRoom = new Classroom();
                     classRoom.setRoom(JsoupUtil.getElementText(classroomElements));
                     courseBuilder.classroom(classRoom);
 
@@ -86,29 +85,21 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     courseBuilder.startSection(lineIndex * 2 + 1);
                     courseBuilder.endSection(lineIndex * 2 + 2);
 
-                    // 提取周次信息，可能会有用","分成两段的周次信息文本
-                    // 去除后面不需要的节次信息，以免对正则提取产生影响
-                    // 这样做理论上有点浪费性能了，但还行
-                    String timeText = timeElements.isEmpty() ? "" : timeElements.get(0).text().split("\\[")[0];
-                    String[] times = timeText.split(",");
+                    // 不直接使用String.split而是手动分割，是因为系统自带split方法每次调用都需要编译一次切割正则，效率不太行
+                    String timeText = timeElements.isEmpty() ? "" : StringUtil.split(timeElements.get(0).text(), ',').get(0);
+                    List<String> times = StringUtil.split(timeText, ',');
                     for (String time : times) {
-                        int startWeek = 0;
-                        int endWeek = 0;
-
-                        Matcher matcher = WEEK_RANGE_REGEX.matcher(time);
-                        if (matcher.find()) {
-                            startWeek = Integer.parseInt(matcher.group("startWeek"));
-                            endWeek = Integer.parseInt(matcher.group("endWeek"));
-                        } else {
-                            // 普通匹配不到的话多半就是只有一周的课程
-                            matcher = SINGLE_WEEK_REGEX.matcher(time);
-                            if (matcher.find()) {
-                                startWeek = Integer.parseInt(matcher.group("week"));
-                                endWeek = Integer.parseInt(matcher.group("week"));
-                            }
+                        Matcher weekMatcher = WEEK_REGEX.matcher(time);
+                        // 周次信息不是数字，这种情况尚未出现过，这里的if判断只是用于消除warming
+                        if (!weekMatcher.find()) {
+                            continue;
                         }
 
+                        // 第二次matcher.find()匹配结束周，如果没有数字匹配说明是单周课程
+                        int startWeek = Integer.parseInt(weekMatcher.group());
+                        int endWeek = weekMatcher.find() ? Integer.parseInt(weekMatcher.group()) : startWeek;
                         courseBuilder.startWeek(startWeek).endWeek(endWeek);
+
                         courses.add(courseBuilder.build());
                     }
                 }

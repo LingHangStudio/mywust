@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.parser;
 
 import cn.linghang.mywust.core.exception.ParseException;
-import cn.linghang.mywust.model.global.ClassRoom;
+import cn.linghang.mywust.model.global.Classroom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @author lensfrex
  * @create 2022-10-26 08:56
  */
-public class HuangjiahuClassroomNameParser implements Parser<ClassRoom> {
+public class HuangjiahuClassroomNameParser implements Parser<Classroom> {
     private static final Logger log = LoggerFactory.getLogger(HuangjiahuClassroomNameParser.class);
 
     private static final Pattern CLASSROOM_PATTERN = Pattern.compile("(?<buildingId>\\d)(?<areaId>\\d)(?<room>\\d{3})");
@@ -23,8 +23,8 @@ public class HuangjiahuClassroomNameParser implements Parser<ClassRoom> {
     private static final Pattern BUILDING_11_CLASSROOM_PATTERN = Pattern.compile("11(?<areaId>[A-C])(?<room>\\d{3})");
 
     @Override
-    public ClassRoom parse(String classroomName) throws ParseException {
-        ClassRoom classRoom = ClassRoom.builder().campus("黄家湖").build();
+    public Classroom parse(String classroomName) throws ParseException {
+        Classroom classRoom = Classroom.builder().campus("黄家湖").build();
         try {
             Matcher matcher = CLASSROOM_PATTERN.matcher(classroomName);
             // 不匹配普通教学楼正则的多半就是教11的教室

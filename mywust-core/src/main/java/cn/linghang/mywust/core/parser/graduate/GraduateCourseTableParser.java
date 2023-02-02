@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.parser.graduate;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.ClassRoom;
+import cn.linghang.mywust.model.global.Classroom;
 import cn.linghang.mywust.model.global.Course;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,7 +45,7 @@ public class GraduateCourseTableParser implements Parser<List<Course>> {
             courseBuilder.teachClass(teachClass);
 
             String classroom = matcher.group("classRoom");
-            courseBuilder.classroom(new ClassRoom("", "", "", classroom));
+            courseBuilder.classroom(new Classroom("", "", "", classroom));
 
             String teacher = matcher.group("teacher");
             courseBuilder.teacher(teacher);

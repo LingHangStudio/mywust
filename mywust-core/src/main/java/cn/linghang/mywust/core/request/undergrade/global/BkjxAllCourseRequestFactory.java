@@ -43,7 +43,7 @@ public class BkjxAllCourseRequestFactory extends BkjxRequestFactory {
                 .add("jc1", "")
                 .add("jc2", "");
 
-        return makeStringDataHttpRequest(UndergradUrls.BKJX_CLASSROOM_COURSE_API, formBodyBuilder.buildAndToString(), cookies);
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_TEACHER_COURSE_API, formBodyBuilder.buildAndToString(), cookies);
     }
 
     public static HttpRequest allCourseSchedulePageRequest(String cookies, String term, String timeMode, String subCollegeId, String courseName) {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -53,7 +54,7 @@ public class Course {
      */
     private int endSection;
 
-    private ClassRoom classroom;
+    private Classroom classroom;
 
     private static final Map<String, Integer> WEEKDAY_MAP = makeWeekdayMap();
 
@@ -67,6 +68,19 @@ public class Course {
 
     public void setWeekDay(int weekDay) {
         this.weekDay = weekDay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return startWeek == course.startWeek && endWeek == course.endWeek && weekDay == course.weekDay && startSection == course.startSection && endSection == course.endSection && Objects.equals(teachClass, course.teachClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teachClass, startWeek, endWeek, weekDay, startSection, endSection);
     }
 
     private static Map<String, Integer> makeWeekdayMap() {

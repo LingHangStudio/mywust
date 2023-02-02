@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.parser.physics;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.ClassRoom;
+import cn.linghang.mywust.model.global.Classroom;
 import cn.linghang.mywust.model.physics.PhysicsCourse;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
@@ -47,7 +47,7 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
             course.setTeacher(columnContextElements.get(3).text().replace('\uE863', '䶮'));
 
             String classroomNumber = columnContextElements.get(5).text();
-            ClassRoom classRoom = HUANGJIAHU_CLASSROOM_NAME_PARSER.parse(classroomNumber);
+            Classroom classRoom = HUANGJIAHU_CLASSROOM_NAME_PARSER.parse(classroomNumber);
             course.setClassroom(classRoom);
 
             String time = columnContextElements.get(4).text();
