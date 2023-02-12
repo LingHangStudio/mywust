@@ -1,12 +1,11 @@
 package cn.linghang.mywust.core.service.undergraduate.global;
 
 import cn.linghang.mywust.core.api.ConstantParams;
-import cn.linghang.mywust.core.api.UndergradUrls;
 import cn.linghang.mywust.core.exception.ApiException;
 import cn.linghang.mywust.core.request.undergrade.BkjxRequestFactory;
 import cn.linghang.mywust.core.service.undergraduate.UndergradApiServiceBase;
-import cn.linghang.mywust.model.global.Building;
-import cn.linghang.mywust.model.global.Campus;
+import cn.linghang.mywust.data.global.Building;
+import cn.linghang.mywust.data.global.Campus;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.entitys.HttpRequest;

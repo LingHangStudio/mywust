@@ -2,8 +2,8 @@ package cn.linghang.mywust.core.parser.graduate;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.Classroom;
-import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.data.global.Classroom;
+import cn.linghang.mywust.data.global.Course;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.parser.undergraduate;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.util.JsoupUtil;
-import cn.linghang.mywust.model.undergrad.ExamDelayApplication;
+import cn.linghang.mywust.data.undergrad.ExamDelayApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;

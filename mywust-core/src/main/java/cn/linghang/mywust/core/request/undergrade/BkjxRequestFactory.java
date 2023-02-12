@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.request.undergrade;
 
 import cn.linghang.mywust.core.api.UndergradUrls;
 import cn.linghang.mywust.core.request.RequestFactory;
-import cn.linghang.mywust.model.global.Campus;
+import cn.linghang.mywust.data.global.Campus;
 import cn.linghang.mywust.network.entitys.FormBodyBuilder;
 import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;

@@ -1,4 +1,4 @@
-package cn.linghang.mywust.model.undergrad;
+package cn.linghang.mywust.data.undergrad;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

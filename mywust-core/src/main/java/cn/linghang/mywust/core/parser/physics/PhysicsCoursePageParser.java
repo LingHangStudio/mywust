@@ -3,8 +3,8 @@ package cn.linghang.mywust.core.parser.physics;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.Classroom;
-import cn.linghang.mywust.model.physics.PhysicsCourse;
+import cn.linghang.mywust.data.global.Classroom;
+import cn.linghang.mywust.data.physics.PhysicsCourse;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 

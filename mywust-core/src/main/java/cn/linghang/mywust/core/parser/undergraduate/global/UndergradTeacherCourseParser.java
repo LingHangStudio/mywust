@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.parser.undergraduate.global;
 
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
-import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.data.global.Course;
 
 import java.util.List;
 import java.util.regex.Pattern;

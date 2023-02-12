@@ -3,7 +3,7 @@ package cn.linghang.mywust.core.parser.graduate;
 import cn.linghang.mywust.core.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.util.JsoupUtil;
-import cn.linghang.mywust.model.global.StudentInfo;
+import cn.linghang.mywust.data.global.StudentInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 

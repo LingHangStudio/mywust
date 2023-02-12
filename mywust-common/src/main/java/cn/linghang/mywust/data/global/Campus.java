@@ -1,4 +1,4 @@
-package cn.linghang.mywust.model.global;
+package cn.linghang.mywust.data.global;
 
 import java.util.StringJoiner;
 

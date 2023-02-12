@@ -1,6 +1,6 @@
-package cn.linghang.mywust.model.physics;
+package cn.linghang.mywust.data.physics;
 
-import cn.linghang.mywust.model.global.Course;
+import cn.linghang.mywust.data.global.Course;
 import lombok.Getter;
 import lombok.Setter;
 

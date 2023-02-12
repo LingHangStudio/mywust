@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.parser;
 
 import cn.linghang.mywust.core.exception.ParseException;
-import cn.linghang.mywust.model.global.Classroom;
+import cn.linghang.mywust.data.global.Classroom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
