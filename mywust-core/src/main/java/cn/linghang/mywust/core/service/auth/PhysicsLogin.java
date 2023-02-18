@@ -26,8 +26,13 @@ public class PhysicsLogin {
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption requestClientOption) throws IOException, ApiException, ParseException {
+        // 获取“动态”的表单参数，例如__VIEWSTATE等
+        HttpRequest loginIndexPageRequest = PhysicsSystemRequestFactory.loginIndexRequest();
+        HttpResponse loginIndexPageResponse = requester.get(loginIndexPageRequest);
+        String loginIndex = loginIndexPageResponse.getStringBody();
+
         // 直接登录，ASP.NET_SessionId其实在这步就能获取到，不需要再请求一遍首页获取
-        HttpRequest loginCookieRequest = PhysicsSystemRequestFactory.loginCookiesRequest(username, password, null);
+        HttpRequest loginCookieRequest = PhysicsSystemRequestFactory.loginCookiesRequest(username, password, loginIndex);
         HttpResponse loginCookieResponse = requester.post(loginCookieRequest, requestClientOption);
         if (loginCookieResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302) {
             throw new ApiException(ApiException.Code.PHYSICS_PASSWORD_WRONG);

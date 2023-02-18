@@ -35,16 +35,7 @@ public class UndergraduateLogin {
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();
-        if (roughCheckCookieFail(cookies)) {
-            log.error("[mywust]: Cookie粗查不通过：{}", cookies);
-            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "登录获取的Cookie无效");
-        }
-
-        // 检查Cookie是否真正可用，同时请求一次任意接口使后续接口能够正确响应
-        // 拿到Cookie后调用的第一个接口会产生302/301跳转，需要再次调用才能正确响应
-        if (checkCookiesFail(cookies, requestOption)) {
-            log.warn("[mywust]: Cookie检查不通过：{}", cookies);
-        }
+        this.checkCookie(cookies, requestOption);
 
         return cookies;
     }
@@ -56,26 +47,24 @@ public class UndergraduateLogin {
      *
      * @return 获取到的Cookies
      */
-    @Deprecated
     public String getLoginCookieLegacy(String username, String password, RequestClientOption requestOption) throws IOException, ApiException {
         // 获取某段神秘的dataStr（反正官网代码是这么叫的）
         HttpRequest dataStringRequest = BkjxRequestFactory.Legacy.dataStringRequest();
         HttpResponse dataStringResponse = requester.post(dataStringRequest, requestOption);
         if (dataStringResponse.getBody() == null) {
-            log.warn("[mywust]: 本科教学系统旧版登录方式：获取dataStr时发生错误");
+            log.warn("[mywust]: 本科教学系统旧版登录：获取dataStr时发生错误");
             throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
-        String dataString = new String(dataStringResponse.getBody());
+        String dataString = dataStringResponse.getStringBody();
 
         // 获取登录ticket
         String encoded = PasswordEncoder.legacyPassword(username, password, dataString);
-        HttpRequest ticketRequest = BkjxRequestFactory.Legacy.ticketRedirectRequest(encoded);
-        ticketRequest.setCookies(dataStringResponse.getCookies());
-
+        HttpRequest ticketRequest = BkjxRequestFactory.Legacy.ticketRedirectRequest(encoded, dataStringResponse.getCookies());
         HttpResponse ticketResponse = requester.post(ticketRequest, requestOption);
+
         if (ticketResponse.getBody() == null) {
-            log.warn("[mywust]: 本科教学系统旧版登录方式：获取登录ticket时发生错误");
+            log.warn("[mywust]: 本科教学系统旧版登录：获取登录ticket时发生错误");
             throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
         }
 
@@ -89,18 +78,22 @@ public class UndergraduateLogin {
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();
+        this.checkCookie(cookies, requestOption);
+
+        return cookies;
+    }
+
+    private void checkCookie(String cookies, RequestClientOption requestOption) throws ApiException, IOException {
         if (roughCheckCookieFail(cookies)) {
             log.error("[mywust]: Cookie粗查不通过：{}", cookies);
             throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "登录获取的Cookie无效");
         }
 
         // 检查Cookie是否真正可用，同时请求一次任意接口使后续接口能够正确响应
-        // 拿到Cookie后调用的第一个接口会产生302/301跳转，需要再次调用才能正确响应
+        // 拿到Cookie后调用的第一个接口有时候会产生302/301跳转到主页，需要再次调用才能正确响应
         if (checkCookiesFail(cookies, requestOption)) {
             log.warn("[mywust]: Cookie检查不通过：{}", cookies);
         }
-
-        return cookies;
     }
 
     private boolean roughCheckCookieFail(String cookies) {

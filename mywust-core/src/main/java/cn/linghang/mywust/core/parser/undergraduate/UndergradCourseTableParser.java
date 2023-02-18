@@ -86,7 +86,7 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     courseBuilder.endSection(lineIndex * 2 + 2);
 
                     // 不直接使用String.split而是手动分割，是因为系统自带split方法每次调用都需要编译一次切割正则，效率不太行
-                    String timeText = timeElements.isEmpty() ? "" : StringUtil.split(timeElements.get(0).text(), ',').get(0);
+                    String timeText = timeElements.isEmpty() ? "" : StringUtil.split(JsoupUtil.getElementText(timeElements, 0), ',').get(0);
                     List<String> times = StringUtil.split(timeText, ',');
                     for (String time : times) {
                         Matcher weekMatcher = WEEK_REGEX.matcher(time);

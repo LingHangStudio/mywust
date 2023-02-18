@@ -93,6 +93,21 @@ public class JsoupUtil {
     }
 
     /**
+     * 从select类型的Element中拿取到已选中的选项值value字段
+     *
+     * @param element 元素对象
+     * @return 相应的值，若element为空则返回空字符串
+     */
+    public static String getSelectValue(Element element) {
+        if (element == null) {
+            return "";
+        } else {
+            return element.getElementsByAttributeValue("selected", "selected")
+                    .attr("value");
+        }
+    }
+
+    /**
      * 取元素集合中第一个元素的文本，当elements为null或数量为0时，返回空字符串
      *
      * @param elements 元素集合

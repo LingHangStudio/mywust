@@ -108,7 +108,7 @@ public class BkjxRequestFactory extends RequestFactory {
             return makeHttpRequest(UndergradUrls.Legacy.BKJX_DATA_STRING_API);
         }
 
-        public static HttpRequest ticketRedirectRequest(String encode) {
+        public static HttpRequest ticketRedirectRequest(String encode, String cookies) {
             Map<String, String> queryParams = new HashMap<>(4);
             queryParams.put("userAccount", "");
             queryParams.put("userPassword", "");
@@ -120,7 +120,7 @@ public class BkjxRequestFactory extends RequestFactory {
             extendHeaders.put("Referer", "http://bkjx.wust.edu.cn/");
             extendHeaders.put("Origin", "http://bkjx.wust.edu.cn");
 
-            return makeHttpRequest(UndergradUrls.Legacy.BKJX_SESSION_COOKIE_API, queryString.getBytes(StandardCharsets.UTF_8))
+            return makeHttpRequest(UndergradUrls.Legacy.BKJX_SESSION_COOKIE_API, queryString.getBytes(StandardCharsets.UTF_8), cookies)
                     .addHeaders(extendHeaders);
         }
     }

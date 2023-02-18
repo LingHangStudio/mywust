@@ -9,22 +9,18 @@ import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
-public class PhysicsApiService {
-    private final Requester requester;
-
-    public PhysicsApiService(Requester requester) {
-        this.requester = requester;
+public class PhysicsCourseApiServiceBase extends PhysicsApiServiceBase {
+    public PhysicsCourseApiServiceBase(Requester requester) {
+        super(requester);
     }
 
-    public String getCoursePage(String cookie, RequestClientOption requestClientOption) throws IOException, ApiException {
+    public String getPage(String cookie, RequestClientOption requestClientOption) throws IOException, ApiException {
         requestClientOption.setFallowUrlRedirect(false);
 
-        // 请求真正的课表页
+        // 直接请求真正的课表页
         HttpRequest coursePageRequest = PhysicsSystemRequestFactory.physicsCourseRequest(cookie);
         HttpResponse courseResponse = requester.get(coursePageRequest, requestClientOption);
-        if (courseResponse.getStatusCode() != HttpResponse.HTTP_OK) {
-            throw new ApiException(ApiException.Code.COOKIE_INVALID);
-        }
+        checkResponse(courseResponse);
 
         return new String(courseResponse.getBody());
     }

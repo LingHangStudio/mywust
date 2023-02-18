@@ -54,6 +54,12 @@
             <version>2.14.0-rc1</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -63,5 +69,6 @@
 
         <slf4j.version>2.0.3</slf4j.version>
         <jsoup.version>1.15.3</jsoup.version>
+        <hutool.version>5.8.12</hutool.version>
     </properties>
 </project>
