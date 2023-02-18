@@ -8,20 +8,21 @@
 
 由于处在早期阶段，因此项目结构随时可能发生巨大变化，在正式版出来前请勿重度依赖
 
-~~（说白了就是一个爬虫库，只不过泛用性高，在任何jvm平台上都能使用，而不仅限于spring体系）~~
-
 后续可能会根据需要新增其他语言的实现以提供给其他语言和平台的使用
 
 现已实现的接口：
 <details> 
 <summary>展开</summary>
 
-- 教务处
+- 教务处（本科生）
   - 登录
   - 学生信息获取
   - 成绩查询
   - 课表查询
   - 培养方案获取
+  - 缓考申请信息查询
+  - 教室课表查询
+  - 教师课表查询
 - 研究生
   - 登录
   - 学生信息获取
@@ -31,6 +32,7 @@
 - 物理实验预约系统
   - 登录
   - 实验课表安排查询
+  - 成绩查询
 - 图书馆
   - 登录
 
@@ -61,7 +63,15 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 - Gradle项目请参阅：[使用 Gradle 注册表](https://docs.github.com/zh/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry)
 
-~~未来有可能会考虑自建Maven仓库~~
+配置好后，直接在`pom.xml`中引用即可：
+
+```xml
+<dependency>
+  <groupId>cn.linghang</groupId>
+  <artifactId>mywust-core</artifactId>
+  <version>0.0.1-fixed</version>
+</dependency>
+```
 
 ## 目录规范
 
