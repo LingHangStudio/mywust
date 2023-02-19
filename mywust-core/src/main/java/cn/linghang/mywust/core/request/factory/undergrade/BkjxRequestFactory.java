@@ -8,7 +8,10 @@ import cn.linghang.mywust.network.entitys.HttpRequest;
 import cn.linghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class BkjxRequestFactory extends RequestFactory {
     public static HttpRequest sessionCookieRequest(String serviceTicket) {
@@ -53,7 +56,7 @@ public class BkjxRequestFactory extends RequestFactory {
         return makeStringDataHttpRequest(UndergradUrls.BKJX_CREDIT_STATUS_API, formBodyBuilder.buildAndToString(), cookies);
     }
 
-    public static HttpRequest creditStatusPageRequest(String cookies, Map<String , String> params) {
+    public static HttpRequest creditStatusPageRequest(String cookies, Map<String, String> params) {
         FormBodyBuilder formBodyBuilder = new FormBodyBuilder(2);
         Set<String> keys = params.keySet();
         for (String key : keys) {
@@ -70,8 +73,13 @@ public class BkjxRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest courseTablePageRequest(String term, String cookies) {
-        Map<String, String> params = new TreeMap<>(FormBodyBuilder.REPEATABLE_COMPARATOR);
-        params.putAll(CourseTableRequestParamFactory.COURSE_TABLE_MAGIC_QUERY_PARAMS);
+        Map<String, String> params = new HashMap<>(7);
+        params.put("jx0404id", "");
+        params.put("cj0701id", "");
+        params.put("zc", "");
+        params.put("demo", "");
+        params.put("sfFD", "1");
+        params.put("kbjcmsid", "9486203B90F3E3CBE0532914A8C03BE2");
         params.put("xnxq01id", term);
 
         byte[] queryData = StringUtil.generateQueryString(params).getBytes(StandardCharsets.UTF_8);

@@ -9,8 +9,8 @@ import cn.linghang.mywust.network.entitys.HttpResponse;
 
 import java.io.IOException;
 
-public class PhysicsCourseApiServiceBase extends PhysicsApiServiceBase {
-    public PhysicsCourseApiServiceBase(Requester requester) {
+public class PhysicsCourseApiService extends PhysicsApiServiceBase {
+    public PhysicsCourseApiService(Requester requester) {
         super(requester);
     }
 

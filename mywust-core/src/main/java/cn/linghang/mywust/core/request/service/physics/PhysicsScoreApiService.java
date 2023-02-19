@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PhysicsScoreApiServiceBase extends PhysicsApiServiceBase {
+public class PhysicsScoreApiService extends PhysicsApiServiceBase {
 
     private static final PhysicsScoreListPageParser scoreListPageParser = new PhysicsScoreListPageParser();
 
-    public PhysicsScoreApiServiceBase(Requester requester) {
+    public PhysicsScoreApiService(Requester requester) {
         super(requester);
     }
 

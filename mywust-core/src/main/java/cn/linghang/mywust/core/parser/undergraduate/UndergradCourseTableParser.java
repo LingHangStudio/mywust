@@ -81,12 +81,13 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     // 靠行位置来确定节次和星期，而不是靠time字段的数据确定（因为太不好处理了）
                     // 对于只有一个小节的课程，这类课程多数是在线课程，这里一律按照两小节大课处理
                     // 具体算法就是行索引x2 + 1就是开始的节次（索引从0开始）
-                    int lineIndex = (int) (girdCount * 0.142);
+                    int lineIndex = (girdCount / 7);
                     courseBuilder.startSection(lineIndex * 2 + 1);
                     courseBuilder.endSection(lineIndex * 2 + 2);
 
+                    // 切割连续周信息，如"1-2,4-6(周)"这样两段的连续周(1-3周和5-10周)
                     // 不直接使用String.split而是手动分割，是因为系统自带split方法每次调用都需要编译一次切割正则，效率不太行
-                    String timeText = timeElements.isEmpty() ? "" : StringUtil.split(JsoupUtil.getElementText(timeElements, 0), ',').get(0);
+                    String timeText = StringUtil.split(JsoupUtil.getElementText(timeElements, 0), ',').get(0);
                     List<String> times = StringUtil.split(timeText, ',');
                     for (String time : times) {
                         Matcher weekMatcher = WEEK_REGEX.matcher(time);
@@ -106,11 +107,10 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
             }
 
             return courses;
+
         } catch (Exception e) {
             log.warn("解析课表时出现问题：{}", e.getMessage(), e);
-            throw new ParseException(html);
+            throw new ParseException("解析课表时出现问题：" + e, html);
         }
-
     }
-
 }

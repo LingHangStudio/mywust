@@ -28,7 +28,7 @@ public class ParseException extends BasicException {
     public String toString() {
         return new StringJoiner(", ", ParseException.class.getSimpleName() + "[", "]")
                 .add("message='" + getMessage() + "'")
-                .add("rawData='" + rawData + "'")
+                .add("rawData='" + (rawData.length() > 32 ? rawData.substring(0, 32) : rawData) + "'")
                 .toString();
     }
 }

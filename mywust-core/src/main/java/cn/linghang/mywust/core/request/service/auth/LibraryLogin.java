@@ -46,10 +46,7 @@ public class LibraryLogin {
         HttpRequest testRequest = LibraryRequestFactory.makeHttpRequest(LibraryUrls.LIBRARY_COOKIE_TEST_URL, null, cookies);
         HttpResponse testResponse = requester.get(testRequest, option);
 
-        // 响应居然是JSON，好评！
-        // 但是我们只要看是不是Unauthorized就行了
-        // 未认证的话是Unauthorized（如果人家没有抽风改掉的话）
-        byte[] responseData = testResponse.getBody();
-        return responseData != null && !new String(responseData).equalsIgnoreCase("Unauthorized");
+        // cookie不正确的话状态码会是401，而不是200
+        return testResponse.getStatusCode() == 200;
     }
 }
