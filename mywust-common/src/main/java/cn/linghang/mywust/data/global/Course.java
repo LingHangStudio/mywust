@@ -75,12 +75,12 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return startWeek == course.startWeek && endWeek == course.endWeek && weekDay == course.weekDay && startSection == course.startSection && endSection == course.endSection && Objects.equals(teachClass, course.teachClass);
+        return startWeek == course.startWeek && endWeek == course.endWeek && weekDay == course.weekDay && startSection == course.startSection && endSection == course.endSection && name.equals(course.name) && teacher.equals(course.teacher) && teachClass.equals(course.teachClass);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(teachClass, startWeek, endWeek, weekDay, startSection, endSection);
+        return Objects.hash(name, teacher, teachClass, startWeek, endWeek, weekDay, startSection, endSection);
     }
 
     private static Map<String, Integer> makeWeekdayMap() {
