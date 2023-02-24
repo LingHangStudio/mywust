@@ -16,9 +16,15 @@ import java.util.regex.Pattern;
 
 public class GraduateCourseTableParser implements Parser<List<Course>> {
 
-    private static final Pattern COURSE_TABLE_REGEX = Pattern.compile("课程:(?<name>.*?)<br>班级:(?<class>.*?)<br>\\((?<classRoom>.*?)\\)<br>(?<week>.*?)<br>(?<section>.*?)<br>主讲教师:(?<teacher>.*?)<br>");
+    private static final Pattern COURSE_TABLE_REGEX = Pattern.compile("课程:(?<name>.*?)<br>班级:(?<class>.*?)<br>\\((?<classRoom>.*?)\\)<br>(?<week>.*?) (?<weekdaySection>.*?)<br>主讲教师:(?<teacher>.*?)<br>");
 
-    private static final Pattern WEEK_REGEX = Pattern.compile("(?<startWeek>\\d+)-(?<endWeek>\\d+)周.*?星期(?<weekDay>[一二三四五六七日天])");
+    private static final Pattern DIGITAL_REGEX = Pattern.compile("\\d+");
+
+    private static final Pattern WEEKDAY_SECTION_REGEX = Pattern.compile("星期(?<weekDay>[一二三四五六七日天])<br>(?<sectionText>([上下晚]\\d,?)+)");
+
+    private static final Pattern SECTION_REGEX = Pattern.compile("(?<dayTime>[上下晚])(?<section>\\d)");
+
+    private static final String courseGirdXpath = "//*[@id=\"DataGrid1\"]/tbody/tr/td[@rowspan]";
 
     @Override
     public List<Course> parse(String html) throws ParseException {
@@ -28,33 +34,34 @@ public class GraduateCourseTableParser implements Parser<List<Course>> {
             throw new ParseException("解析研究生课表失败：关键元素不存在...", html);
         }
 
-        // 初步拿到所有的课程格子
-        Elements girds = table.getElementsByAttribute("rowspan");
-        String girdsHtml = girds.outerHtml();
+        Elements courseGirds = table.selectXpath(courseGirdXpath);
 
-        List<Course> courses = new ArrayList<>(girds.size());
+        List<Course> courses = new ArrayList<>(courseGirds.size());
         Course.CourseBuilder courseBuilder = Course.builder();
+        for (Element courseGird : courseGirds) {
+            String girdHtml = courseGird.html();
 
-        // 正则提取每一段课程文本
-        Matcher matcher = COURSE_TABLE_REGEX.matcher(girdsHtml);
-        while (matcher.find()) {
-            String name = matcher.group("name");
-            courseBuilder.name(name);
+            // 正则提取每一段课程文本
+            Matcher matcher = COURSE_TABLE_REGEX.matcher(girdHtml);
+            while (matcher.find()) {
+                String name = matcher.group("name");
+                courseBuilder.name(name);
 
-            String teachClass = matcher.group("class");
-            courseBuilder.teachClass(teachClass);
+                String teachClass = matcher.group("class");
+                courseBuilder.teachClass(teachClass);
 
-            String classroom = matcher.group("classRoom");
-            courseBuilder.classroom(new Classroom("", "", "", classroom));
+                String classroom = matcher.group("classRoom");
+                courseBuilder.classroom(new Classroom("", "", "", classroom));
 
-            String teacher = matcher.group("teacher");
-            courseBuilder.teacher(teacher);
+                String teacher = matcher.group("teacher");
+                courseBuilder.teacher(teacher);
 
-            String weekStr = matcher.group("week");
-            this.parseWeek(weekStr, courseBuilder);
+                String weekStr = matcher.group("week");
+                this.parseWeek(weekStr, courseBuilder);
 
-            String section = matcher.group("section");
-            this.fillCourseList(section, courseBuilder, courses);
+                this.parseWeekdaySectionAndFillCourse(matcher.group("weekdaySection"), courseBuilder, courses);
+            }
+
         }
 
         return courses;
@@ -64,36 +71,54 @@ public class GraduateCourseTableParser implements Parser<List<Course>> {
      * 解析周次信息文本
      *
      * @param weekText 周次文本，如“3-14周:连续周 星期三”
-     * @param builder  Lesson的builder
+     * @param builder  Course的builder
      */
     private void parseWeek(String weekText, Course.CourseBuilder builder) {
-        Matcher matcher = WEEK_REGEX.matcher(weekText);
+        Matcher matcher = DIGITAL_REGEX.matcher(weekText);
         if (matcher.find()) {
-            String startWeek = matcher.group("startWeek");
-            String endWeek = matcher.group("endWeek");
-            String weekDay = matcher.group("weekDay");
+            String startWeek = matcher.group();
+
+            // 一直匹配搜寻到最后一个数字，即为结束周次，第一次就匹配不到就是单周课
+            // 实际上单周课写的也是"3-3"这样子，但是这样写兼容性比较好
+            String endWeek = startWeek;
+            while (matcher.find()) {
+                endWeek = matcher.group();
+            }
 
             builder.startWeek(Integer.parseInt(startWeek));
             builder.endWeek(Integer.parseInt(endWeek));
-            builder.weekDay(Course.getWeekDayNumber(weekDay));
         }
     }
 
     /**
-     * 解析节次，并将解析出来的完整的节次放入List中
+     * 解析时间并填充最后的解析结果
      *
-     * @param sectionText 提取出来的节次文本，如“上1,上2,上3,上4,下1,下2”
-     * @param builder     LessonImpl中的builder
-     * @param courses     存放Lesson的List
+     * @param timeText 时间字段，如 "星期五&lt;br&gt;上3,上4", "星期六&lt;br&gt;上1,上2,上3,上4"
+     * @param builder  已经解析好其他必要数据的courseBuilder
+     * @param courses  解析结果List
      */
-    private void fillCourseList(String sectionText, Course.CourseBuilder builder, List<Course> courses) {
-        String[] sections = sectionText.split(",");
-        for (int i = 0; i < sections.length / 2; i += 2) {
-            int startSection = this.getSection(sections[i]);
-            int endSection = this.getSection(sections[i + 1]);
+    private void parseWeekdaySectionAndFillCourse(String timeText, Course.CourseBuilder builder, List<Course> courses) {
+        Matcher timeMatcher = WEEKDAY_SECTION_REGEX.matcher(timeText);
+        // 解析星期和节次，一直匹配，匹配到一次就是一次连续课
+        while (timeMatcher.find()) {
+            // 解析星期
+            builder.weekDay(Course.getWeekDayNumber(timeMatcher.group("weekDay")));
 
-            builder.startSection(startSection);
-            builder.endSection(endSection);
+            // 解析节次
+            Matcher sectionMatcher = SECTION_REGEX.matcher(timeMatcher.group("sectionText"));
+            if (sectionMatcher.find()) {
+                int startSection = getSection(sectionMatcher);
+
+                // todo 这段可以稍微优化一下
+                // 一直匹配，最后的那个就是结束节次，如果第一次就不匹配的话就是单节课
+                int endSection = startSection;
+                while (sectionMatcher.find()) {
+                    endSection = getSection(sectionMatcher);
+                }
+
+                builder.startSection(startSection);
+                builder.endSection(endSection);
+            }
 
             courses.add(builder.build());
         }
@@ -102,20 +127,31 @@ public class GraduateCourseTableParser implements Parser<List<Course>> {
     /**
      * 将上1，下2，晚1这种相对的节次格式转换为相应的绝对节次
      *
-     * @param time 类似于上1，下2，晚1这种相对的节次格式文本
+     * @param dateTime    上，下这种早上晚上的文本
+     * @param sectionText 1，2，3这种相对的节次数文本
      * @return 相应的绝对节次
      */
-    private int getSection(String time) {
-        int i = time.charAt(1) - 48;
-        switch (time.charAt(0)) {
+    private int getSection(String dateTime, String sectionText) {
+        int section = Integer.parseInt(sectionText);
+        switch (dateTime.charAt(0)) {
             case '上':
-                return i;
+                return section;
             case '下':
-                return i + 4;
+                return section + 4;
             case '晚':
-                return i + 8;
+                return section + 8;
             default:
                 return 1;
         }
+    }
+
+    /**
+     * 通过正则匹配器计算节次
+     *
+     * @param matcher 以及匹配好的matcher
+     * @return 相应的绝对节次
+     */
+    private int getSection(Matcher matcher) {
+        return getSection(matcher.group("dayTime"), matcher.group("section"));
     }
 }
