@@ -1,4 +1,4 @@
-package cn.linghang.mywust.core.exception;
+package cn.linghang.mywust.exception;
 
 public class BasicException extends Exception {
     public BasicException() {

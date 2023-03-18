@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.request.service.library;
 
-import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.exception.ApiException;
 import cn.linghang.mywust.core.request.factory.library.LibraryRequestFactory;
 import cn.linghang.mywust.network.Requester;
 import cn.linghang.mywust.network.entitys.HttpRequest;

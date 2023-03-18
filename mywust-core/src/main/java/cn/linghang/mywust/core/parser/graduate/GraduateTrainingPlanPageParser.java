@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.parser.graduate;
 
-import cn.linghang.mywust.core.exception.ParseException;
+import cn.linghang.mywust.exception.ParseException;
 import cn.linghang.mywust.core.parser.Parser;
 import cn.linghang.mywust.core.util.JsoupUtil;
 import org.jsoup.Jsoup;

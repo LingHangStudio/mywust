@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.request.service.physics;
 
-import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.exception.ApiException;
 import cn.linghang.mywust.core.request.factory.physics.PhysicsSystemRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;

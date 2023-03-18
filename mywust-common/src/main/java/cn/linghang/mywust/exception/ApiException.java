@@ -1,4 +1,4 @@
-package cn.linghang.mywust.core.exception;
+package cn.linghang.mywust.exception;
 
 public class ApiException extends BasicException {
     private final Code code;

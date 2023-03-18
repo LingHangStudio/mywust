@@ -1,4 +1,4 @@
-package cn.linghang.mywust.core.exception;
+package cn.linghang.mywust.exception;
 
 import java.util.StringJoiner;
 

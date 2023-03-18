@@ -2,7 +2,7 @@ package cn.linghang.mywust.core.request.service.auth;
 
 import cn.linghang.mywust.core.api.LibraryUrls;
 import cn.linghang.mywust.core.api.UnionAuthUrls;
-import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.exception.ApiException;
 import cn.linghang.mywust.core.request.factory.library.LibraryRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;

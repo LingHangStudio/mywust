@@ -1,6 +1,6 @@
 package cn.linghang.mywust.core.parser.undergraduate.global;
 
-import cn.linghang.mywust.core.exception.ParseException;
+import cn.linghang.mywust.exception.ParseException;
 import cn.linghang.mywust.data.global.Classroom;
 import cn.linghang.mywust.data.global.Course;
 import cn.linghang.mywust.util.StringUtil;

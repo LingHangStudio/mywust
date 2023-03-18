@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request.service.graduate;
 
 import cn.linghang.mywust.core.api.GraduateUrls;
-import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.exception.ApiException;
 import cn.linghang.mywust.core.request.factory.RequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;
 import cn.linghang.mywust.network.Requester;

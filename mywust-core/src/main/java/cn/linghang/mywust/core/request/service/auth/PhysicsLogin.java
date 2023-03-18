@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request.service.auth;
 
-import cn.linghang.mywust.core.exception.ApiException;
-import cn.linghang.mywust.core.exception.ParseException;
+import cn.linghang.mywust.exception.ApiException;
+import cn.linghang.mywust.exception.ParseException;
 import cn.linghang.mywust.core.parser.physics.PhysicsIndexPageParser;
 import cn.linghang.mywust.core.request.factory.physics.PhysicsSystemRequestFactory;
 import cn.linghang.mywust.network.RequestClientOption;

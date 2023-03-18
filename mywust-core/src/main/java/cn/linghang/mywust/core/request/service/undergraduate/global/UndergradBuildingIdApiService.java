@@ -1,7 +1,7 @@
 package cn.linghang.mywust.core.request.service.undergraduate.global;
 
 import cn.linghang.mywust.core.api.ConstantParams;
-import cn.linghang.mywust.core.exception.ApiException;
+import cn.linghang.mywust.exception.ApiException;
 import cn.linghang.mywust.core.request.factory.undergrade.BkjxRequestFactory;
 import cn.linghang.mywust.core.request.service.undergraduate.UndergradApiServiceBase;
 import cn.linghang.mywust.data.global.Building;
