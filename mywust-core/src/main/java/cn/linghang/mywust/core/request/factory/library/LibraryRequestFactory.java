@@ -25,7 +25,7 @@ public class LibraryRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest bookSearchRequest(String keyword, int page, int pageSize) {
-        return bookSearchRequest(new SearchRequest(keyword, page, pageSize));
+        return bookSearchRequest(new SearchRequest(keyword, pageSize, page));
     }
 
     public static HttpRequest bookSearchRequest(SearchRequest request) {

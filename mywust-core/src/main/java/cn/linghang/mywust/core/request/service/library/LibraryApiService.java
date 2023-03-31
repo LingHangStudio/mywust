@@ -21,46 +21,46 @@ public class LibraryApiService extends LibraryApiServiceBase {
         HttpResponse response = requester.post(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 
     public String getBookDetail(String bookId) throws ApiException, IOException {
         HttpRequest request = LibraryRequestFactory.bookInfoRequest(bookId);
-        HttpResponse response = requester.post(request);
+        HttpResponse response = requester.get(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 
     public String getBookCoverImageUrl(String isbn) throws ApiException, IOException {
         HttpRequest request = LibraryRequestFactory.bookCoverImageUrlRequest(isbn);
-        HttpResponse response = requester.post(request);
+        HttpResponse response = requester.get(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 
     public String getOverdueSoon(String cookie) throws ApiException, IOException {
         HttpRequest request = LibraryRequestFactory.overdueSoonRequest(cookie);
-        HttpResponse response = requester.post(request);
+        HttpResponse response = requester.get(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 
     public String getCurrentLoan(String cookie) throws ApiException, IOException {
         HttpRequest request = LibraryRequestFactory.currentLoanRequest(cookie);
-        HttpResponse response = requester.post(request);
+        HttpResponse response = requester.get(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 
     public String getLoanHistory(String cookie) throws ApiException, IOException {
         HttpRequest request = LibraryRequestFactory.loanHistoryRequest(cookie);
-        HttpResponse response = requester.post(request);
+        HttpResponse response = requester.get(request);
         checkResponse(response);
 
-        return request.getStringData();
+        return response.getStringBody();
     }
 }

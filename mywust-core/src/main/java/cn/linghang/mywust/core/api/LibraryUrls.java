@@ -13,7 +13,7 @@ public class LibraryUrls {
     public static final String LIBRARY_LOAN_HISTORY_API = "https://libsys.wust.edu.cn/meta-local/opac/users/loan_hists?page=1&pageSize=100";
     public static final String LIBRARY_OVERDUE_SOON_API = "https://libsys.wust.edu.cn/meta-local/opac/users/overdue_soon";
 
-    public static final String LIBRARY_BOOK_INFO_API = "https://libsys.wust.edu.cn/meta-local/opac/bibs/%s/holdings";
+    public static final String LIBRARY_BOOK_INFO_API = "https://libsys.wust.edu.cn/meta-local/opac/bibs/%s/infos";
 
     public static final String LIBRARY_BOOK_COVER_IMAGE_API = "https://libsys.wust.edu.cn/meta-local/opac/search/extend/";
 
