@@ -38,7 +38,7 @@ public class PhysicsScoreApiService extends PhysicsApiServiceBase {
 
         PhysicsScoreListPageParser.PhysicsScoreListPageParseResult pageParseResult = scoreListPageParser.parse(scoreListPage);
 
-        Map<String, String> pageParams = PageFormExtractor.extractAllParams(scoreListPage);
+        Map<String, String> pageParams = PageFormExtractor.searchAllParams(scoreListPage);
         pageParams.put("ID_PEE63$ddlxq", pageParseResult.getTerm());
 
         List<String> courseIds = pageParseResult.getCourseIds();

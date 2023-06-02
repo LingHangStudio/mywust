@@ -30,12 +30,17 @@ public class GraduateLogin {
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption option) throws IOException, ApiException {
-        // 请求获取验证码
-        HttpRequest captchaImageRequest = GraduateRequestFactory.captchaRequest();
+        HttpRequest loginIndexRequest = RequestFactory.makeHttpRequest(GraduateUrls.GRADUATE_LOGIN_API);
+        HttpResponse loginIndexResponse = requester.get(loginIndexRequest, option);
+
+        String loginCookie = loginIndexResponse.getCookies();
+
+        // 用得到的Cookie请求获取验证码
+        HttpRequest captchaImageRequest = GraduateRequestFactory.captchaRequest(loginCookie);
         HttpResponse captchaImageResponse = requester.get(captchaImageRequest, option);
 
         UnsolvedImageCaptcha unsolvedImageCaptcha = new UnsolvedImageCaptcha();
-        unsolvedImageCaptcha.setBindInfo(captchaImageResponse.getCookies());
+        unsolvedImageCaptcha.setBindInfo(loginCookie);
 
         byte[] processedImage = ImageUtil.process(captchaImageResponse.getBody());
         unsolvedImageCaptcha.setImage(processedImage);
@@ -44,7 +49,7 @@ public class GraduateLogin {
         SolvedImageCaptcha solvedImageCaptcha = captchaSolver.solve(unsolvedImageCaptcha);
 
         // 进行登录
-        HttpRequest loginRequest = GraduateRequestFactory.loginRequest(username, password, solvedImageCaptcha);
+        HttpRequest loginRequest = GraduateRequestFactory.loginRequest(username, password, loginIndexResponse.getStringBody(), solvedImageCaptcha);
         HttpResponse loginResponse = requester.post(loginRequest, option);
 
         // 登陆成功，应该会是302跳转，不是的话多半是认证错误
@@ -52,8 +57,8 @@ public class GraduateLogin {
             throw new ApiException(ApiException.Code.GRADUATE_PASSWORD_WRONG);
         }
 
-        // 使用当初通过验证码得到的cookie来作为登录cookie，至于是否真正可行待验证
-        return captchaImageResponse.getCookies();
+        // 使用首页第一次访问得到的cookie来作为登录cookie
+        return loginCookie;
     }
 
     public void checkCookies(String cookie, RequestClientOption option) throws ApiException, IOException {

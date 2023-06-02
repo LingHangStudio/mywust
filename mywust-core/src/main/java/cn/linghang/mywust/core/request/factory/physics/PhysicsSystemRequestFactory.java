@@ -15,7 +15,7 @@ public class PhysicsSystemRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest loginCookiesRequest(String username, String password, String loginIndexHtml) {
-        Map<String, String> params = PageFormExtractor.extractAllParams(loginIndexHtml);
+        Map<String, String> params = PageFormExtractor.searchAllParams(loginIndexHtml);
         String viewState = params.get("__VIEWSTATE");
 
         String queryData = StringUtil.generateQueryString(makeLoginQueryParam(username, password, viewState));

@@ -30,7 +30,7 @@ public class PageFormExtractor {
 
     private static final Pattern formPattern = Pattern.compile("name=\"(?<name>.*?)\"(.*?)value=\"(?<value>.*?)\"");
 
-    public static Map<String, String> extractAllParams(String wholeHtml) {
+    public static Map<String, String> searchAllParams(String wholeHtml) {
         Map<String, String> params = new HashMap<>(16);
         Matcher matcher = formPattern.matcher(wholeHtml);
         while (matcher.find()) {
