@@ -67,7 +67,7 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 ```xml
 <dependency>
-  <groupId>cn.linghang</groupId>
+  <groupId>cn.wustlinghang.mywust</groupId>
   <artifactId>mywust-core</artifactId>
   <version>0.0.1-fixed</version>
 </dependency>

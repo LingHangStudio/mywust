@@ -5,7 +5,7 @@
 
     <parent>
         <artifactId>mywust</artifactId>
-        <groupId>cn.linghang</groupId>
+        <groupId>cn.wustlinghang.mywust</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -34,12 +34,12 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.linghang</groupId>
+            <groupId>cn.wustlinghang.mywust</groupId>
             <artifactId>mywust-network</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>cn.linghang</groupId>
+            <groupId>cn.wustlinghang.mywust</groupId>
             <artifactId>mywust-util</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
