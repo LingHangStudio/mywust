@@ -70,4 +70,11 @@ public class PhysicsLogin {
 
         return loginCookies;
     }
+
+    public boolean checkCookie(String cookie, RequestClientOption option) throws IOException {
+        HttpRequest testRequest = PhysicsSystemRequestFactory.physicsSystemIndexRequest(cookie);
+        HttpResponse testResponse = requester.get(testRequest, option);
+
+        return testResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302;
+    }
 }

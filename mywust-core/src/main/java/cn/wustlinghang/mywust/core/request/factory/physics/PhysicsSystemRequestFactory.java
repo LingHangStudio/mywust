@@ -31,6 +31,10 @@ public class PhysicsSystemRequestFactory extends RequestFactory {
         return makeHttpRequest(redirect, null, cookies);
     }
 
+    public static HttpRequest physicsSystemIndexRequest(String cookies) {
+        return makeHttpRequest(PhysicsSystemUrls.PHYSICS_SYSTEM_INDEX_URL, null, cookies);
+    }
+
     public static HttpRequest physicsCourseRequest(String cookies) {
         return makeHttpRequest(PhysicsSystemUrls.PHYSICS_COURSE_API, null, cookies);
     }
