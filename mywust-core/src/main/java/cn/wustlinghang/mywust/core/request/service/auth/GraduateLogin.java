@@ -11,6 +11,7 @@ import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,7 +19,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
+@Slf4j
 public class GraduateLogin {
     private final Requester requester;
 
@@ -55,11 +58,35 @@ public class GraduateLogin {
 
         // 登陆成功，应该会是302跳转，不是的话多半是认证错误
         if (loginResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302) {
-            throw new ApiException(ApiException.Code.GRADUATE_PASSWORD_WRONG);
+            String responseHtml = loginResponse.getStringBody();
+            if (responseHtml.contains("验证码错误")) {
+                throw new ApiException(ApiException.Code.GRADUATE_CAPTCHA_WRONG);
+            } else if (responseHtml.contains("密码错误") || responseHtml.contains("用户名不存在")) {
+                throw new ApiException(ApiException.Code.GRADUATE_PASSWORD_WRONG);
+            } else {
+                throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
+            }
         }
 
         // 使用首页第一次访问得到的cookie来作为登录cookie
         return loginCookie;
+    }
+
+    public String getLoginCookie(String username, String password, int maxRetryTimes, RequestClientOption option)
+            throws IOException, ApiException {
+        for (int i = 0; i < maxRetryTimes; i++) {
+            try {
+                return getLoginCookie(username, password, option);
+            } catch (ApiException e) {
+                if (e.getCode() != ApiException.Code.GRADUATE_CAPTCHA_WRONG) {
+                    throw e;
+                } else {
+                    log.info("[mywust]: Retrying login for {} time(s)", i);
+                }
+            }
+        }
+
+        return "";
     }
 
     public void checkCookies(String cookie, RequestClientOption option) throws ApiException, IOException {

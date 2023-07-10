@@ -1,11 +1,14 @@
 package cn.wustlinghang.mywust.core.request.factory;
 
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
+import lombok.extern.slf4j.Slf4j;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+@Slf4j
 public class RequestFactory {
     protected static final HttpRequest DEFAULT_HTTP_REQUEST = new HttpRequest();
 
@@ -52,7 +55,8 @@ public class RequestFactory {
     public static URL makeUrl(String url) {
         try {
             return new URL(url);
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
+            log.error("[mywust]: Invalid url: {} , {}", url, e.getMessage());
             return null;
         }
     }

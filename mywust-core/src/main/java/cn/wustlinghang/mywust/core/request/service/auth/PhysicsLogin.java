@@ -1,9 +1,9 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.core.parser.physics.PhysicsIndexPageParser;
 import cn.wustlinghang.mywust.core.request.factory.physics.PhysicsSystemRequestFactory;
+import cn.wustlinghang.mywust.exception.ApiException;
+import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
@@ -34,7 +34,14 @@ public class PhysicsLogin {
         HttpRequest loginCookieRequest = PhysicsSystemRequestFactory.loginCookiesRequest(username, password, loginIndex);
         HttpResponse loginCookieResponse = requester.post(loginCookieRequest, requestClientOption);
         if (loginCookieResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302) {
-            throw new ApiException(ApiException.Code.PHYSICS_PASSWORD_WRONG);
+            String responseHtml = loginCookieResponse.getStringBody();
+            if (responseHtml.contains("该用户不存在于当前学期")){
+                throw new ApiException(ApiException.Code.PHYSICS_NOT_CURRENT_TERM);
+            } else if (responseHtml.contains("用户名或者密码有误")) {
+                throw new ApiException(ApiException.Code.PHYSICS_PASSWORD_WRONG);
+            } else {
+                throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
+            }
         }
 
         String loginCookies = loginCookieResponse.getCookies();

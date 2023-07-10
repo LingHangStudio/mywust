@@ -9,9 +9,6 @@ import org.jsoup.nodes.Element;
 
 public class GraduateTrainingPlanPageParser implements Parser<String> {
 
-    private static final String HTML_PREFIX = "<!DOCTYPE html><html lang=\"zh\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>培养计划</title></head><body>";
-    private static final String HTML_SUFFIX = "</body></html>";
-
     @Override
     public String parse(String html) throws ParseException {
         try {
@@ -25,7 +22,7 @@ public class GraduateTrainingPlanPageParser implements Parser<String> {
             String table = JsoupUtil.getOuterHtml(fullTable.getElementById("_ctl0_MainWork_dgData"));
             String foot = JsoupUtil.getOuterHtml(fullTable.getElementById("Table4"));
 
-            return HTML_PREFIX + head + table + foot + HTML_SUFFIX;
+            return head + table + foot;
         }catch (Exception e) {
             // 解析失败就直接返回原网页展示
             return html;

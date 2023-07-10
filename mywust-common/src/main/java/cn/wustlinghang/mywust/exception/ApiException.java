@@ -128,6 +128,11 @@ public class ApiException extends BasicException {
          */
         PHYSICS_PASSWORD_WRONG(130100, "物理实验系统登录: 密码错误"),
 
+        /**
+         * 物理实验系统用户不存在于当前学期
+         */
+        PHYSICS_NOT_CURRENT_TERM(130101, "物理实验系统登录: 当前用户不存在于当前学期"),
+
         // --------------------------------
         // 研究生API异常代码
 
@@ -136,6 +141,10 @@ public class ApiException extends BasicException {
          */
         GRADUATE_PASSWORD_WRONG(140100, "研究生登录: 密码错误"),
 
+        /**
+         * 研究生验证码错误
+         */
+        GRADUATE_CAPTCHA_WRONG(140101, "研究生登录: 验证码错误"),
 
         // --------------------------------
         // 图书馆API异常代码
