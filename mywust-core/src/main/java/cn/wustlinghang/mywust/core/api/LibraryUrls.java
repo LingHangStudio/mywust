@@ -5,7 +5,8 @@ public class LibraryUrls {
 
     public static final String LIBRARY_INDEX_URL = "https://libsys.wust.edu.cn/meta-local/opac/cas/rosetta";
 
-    public static final String LIBRARY_COOKIE_TEST_URL = "https://libsys.wust.edu.cn/meta-local/opac/users/info";
+    // 用违章记录信息api地址作为测试url（大部分人应该没有违章吧 :）
+    public static final String LIBRARY_COOKIE_TEST_URL = "https://libsys.wust.edu.cn/meta-local/opac/users/volts";
 
     public static final String LIBRARY_ACCOUNT_STATUS_API = "https://libsys.wust.edu.cn/meta-local/opac/users/stats";
 

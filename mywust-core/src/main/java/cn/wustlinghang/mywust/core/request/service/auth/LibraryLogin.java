@@ -2,8 +2,8 @@ package cn.wustlinghang.mywust.core.request.service.auth;
 
 import cn.wustlinghang.mywust.core.api.LibraryUrls;
 import cn.wustlinghang.mywust.core.api.UnionAuthUrls;
-import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.core.request.factory.library.LibraryRequestFactory;
+import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
@@ -30,10 +30,15 @@ public class LibraryLogin {
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
         String cookies = sessionResponse.getCookies();
 
-        // 请求一次首页
+        // 请求一次首页，这次获得的cookie才是真正的cookie
         HttpRequest indexRequest = LibraryRequestFactory.indexRequest();
         indexRequest.setCookies(cookies);
-        requester.get(indexRequest, requestOption);
+        HttpResponse indexResponse = requester.get(indexRequest, requestOption);
+        cookies = indexResponse.getCookies() != null ? indexResponse.getCookies() : cookies;
+
+        if (!checkCookie(cookies)) {
+            throw new ApiException(ApiException.Code.COOKIE_INVALID);
+        }
 
         return cookies;
     }
