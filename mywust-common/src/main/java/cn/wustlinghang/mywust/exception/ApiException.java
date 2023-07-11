@@ -99,6 +99,11 @@ public class ApiException extends BasicException {
          */
         UNI_LOGIN_NEED_TFA(100107, "统一认证登录: 用户账号需要TFA二步验证"),
 
+        /**
+         * 专属选课时间段账号被禁用
+         */
+        UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME(100108, "本科生登录：专属选课时间段账号被禁用"),
+
         // --------------------------------
         // 共有异常码：cookie无效
 

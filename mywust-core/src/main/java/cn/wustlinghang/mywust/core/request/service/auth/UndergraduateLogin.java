@@ -84,36 +84,43 @@ public class UndergraduateLogin {
     }
 
     private void checkCookie(String cookies, RequestClientOption requestOption) throws ApiException, IOException {
-        if (roughCheckCookieFail(cookies)) {
+        if (!roughCheckCookie(cookies)) {
             log.error("[mywust]: Cookie粗查不通过：{}", cookies);
             throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "登录获取的Cookie无效");
         }
 
         // 检查Cookie是否真正可用，同时请求一次任意接口使后续接口能够正确响应
         // 拿到Cookie后调用的第一个接口有时候会产生302/301跳转到主页，需要再次调用才能正确响应
-        if (checkCookiesFail(cookies, requestOption)) {
+        if (!testCookie(cookies, requestOption)) {
             log.warn("[mywust]: Cookie检查不通过：{}", cookies);
         }
     }
 
-    private boolean roughCheckCookieFail(String cookies) {
-        return cookies == null || !cookies.contains("JSESSIONID") || !cookies.contains("SERVERID");
+    private boolean roughCheckCookie(String cookies) {
+        return cookies != null && cookies.contains("JSESSIONID") && cookies.contains("SERVERID");
     }
 
-    private static final int COOKIES_ERROR_RESPONSE_LENGTH =
-            ("<script languge='javascript'>window.location.href='https://auth.wust.edu.cn/lyuapServer/login?service=http%3A%2F%2Fbkjx.wust.edu.cn%2Fjsxsd%2Fframework%2FblankPage.jsp'</script>")
-                    .length();
-
-    public boolean checkCookiesFail(String cookies, RequestClientOption option) throws IOException {
+    public boolean testCookie(String cookies, RequestClientOption option) throws IOException, ApiException {
         HttpRequest testRequest = BkjxRequestFactory.makeHttpRequest(UndergradUrls.BKJX_TEST_API, null, cookies);
         HttpResponse testResponse = requester.get(testRequest, option);
 
-        // 判断响应长度是否为这么多个字，登录跳转响应长度
-        // 这种办法虽然在极端情况下可能会出错（而且还挺蠢的），但是是最快的办法中比较准确的了
-        return Math.abs(COOKIES_ERROR_RESPONSE_LENGTH - testResponse.getBody().length) <= 8;
+        // 空白页返回的是很短的几个换行符，优先判断响应长度，暂时定为8
+        if (testResponse.getBody().length < 8) {
+            return true;
+        }
+
+        String test = testResponse.getStringBody();
+        if (test.contains("script")) {
+            return false;
+        } else if (test.contains("禁用")) {
+            // 选课时间段
+            throw new ApiException(ApiException.Code.UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME);
+        }
+
+        return true;
     }
 
-    public boolean checkCookiesFail(String cookies) throws IOException {
-        return this.checkCookiesFail(cookies, null);
+    public boolean testCookie(String cookies) throws IOException, ApiException {
+        return this.testCookie(cookies, null);
     }
 }
