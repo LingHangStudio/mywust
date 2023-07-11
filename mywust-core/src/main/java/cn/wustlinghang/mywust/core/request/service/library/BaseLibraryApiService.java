@@ -4,10 +4,10 @@ import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
 
-public abstract class LibraryApiServiceBase {
+public abstract class BaseLibraryApiService {
     protected final Requester requester;
 
-    public LibraryApiServiceBase(Requester requester) {
+    public BaseLibraryApiService(Requester requester) {
         this.requester = requester;
     }
 
