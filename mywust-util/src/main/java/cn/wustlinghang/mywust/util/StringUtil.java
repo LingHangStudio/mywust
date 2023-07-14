@@ -110,4 +110,29 @@ public class StringUtil {
 
         return result;
     }
+
+    /**
+     * 清除字符串中的html（xml）标签，其中`&lt;br&gt;`被替换为换行`\n`
+     *
+     * @param raw 原始字符串
+     * @return 处理后的字符串
+     */
+    public static String cleanHtml(String raw) {
+        return cleanHtml(raw, true);
+    }
+
+    /**
+     * 清除字符串中的html（xml）标签，并指定`&lt;br&gt;`是否要替换为换行符`\n`
+     *
+     * @param raw 原始字符串
+     * @param withBreakLine 是否将换行标签`&lt;br&gt;`替换成换行符`\n`
+     * @return 处理后的字符串
+     */
+    public static String cleanHtml(String raw, boolean withBreakLine) {
+        if (withBreakLine) {
+            raw = raw.replaceAll("<br>", "\n");
+        }
+
+        return raw.replaceAll("<.*?>", "");
+    }
 }

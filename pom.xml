@@ -29,7 +29,7 @@
     </dependencies>
 
     <properties>
-        <revision>0.0.2-SNAPSHOT</revision>
+        <revision>0.0.2-beta</revision>
 
         <lombok.version>1.18.22</lombok.version>
 

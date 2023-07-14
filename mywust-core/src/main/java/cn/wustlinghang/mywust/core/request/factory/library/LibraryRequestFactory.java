@@ -2,14 +2,16 @@ package cn.wustlinghang.mywust.core.request.factory.library;
 
 import cn.wustlinghang.mywust.core.api.LibraryUrls;
 import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
-import cn.wustlinghang.mywust.core.request.factory.library.request.SearchRequest;
+import cn.wustlinghang.mywust.data.library.origin.BookSearchRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.StringJoiner;
 
+@Slf4j
 public class LibraryRequestFactory extends RequestFactory {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -24,10 +26,10 @@ public class LibraryRequestFactory extends RequestFactory {
     }
 
     public static HttpRequest bookSearchRequest(String keyword, int page, int pageSize) {
-        return bookSearchRequest(new SearchRequest(keyword, pageSize, page));
+        return bookSearchRequest(new BookSearchRequest(keyword, pageSize, page));
     }
 
-    public static HttpRequest bookSearchRequest(SearchRequest request) {
+    public static HttpRequest bookSearchRequest(BookSearchRequest request) {
         return makeHttpRequest(LibraryUrls.LIBRARY_SEARCH_API, json(request))
                 .addHeaders("Content-Type", "application/json");
     }
@@ -36,20 +38,35 @@ public class LibraryRequestFactory extends RequestFactory {
         return makeHttpRequest(LibraryUrls.LIBRARY_ACCOUNT_STATUS_API, null, cookie);
     }
 
-    public static HttpRequest currentLoanRequest(String cookie) {
-        return makeHttpRequest(LibraryUrls.LIBRARY_CURRENT_LOAN_API, null, cookie);
+    public static HttpRequest currentLoanRequest(String cookie, int page, int pageSize) {
+        return makeHttpRequest(String.format(LibraryUrls.LIBRARY_CURRENT_LOAN_API, page, pageSize), null, cookie);
     }
 
-    public static HttpRequest loanHistoryRequest(String cookie) {
-        return makeHttpRequest(LibraryUrls.LIBRARY_LOAN_HISTORY_API, null, cookie);
+    public static HttpRequest loanHistoryRequest(String cookie, int page, int pageSize) {
+        return makeHttpRequest(String.format(LibraryUrls.LIBRARY_LOAN_HISTORY_API, page, pageSize), null, cookie);
     }
 
-    public static HttpRequest overdueSoonRequest(String cookie) {
-        return makeHttpRequest(LibraryUrls.LIBRARY_OVERDUE_SOON_API, null, cookie);
+    public static HttpRequest overdueSoonRequest(String cookie, int page, int pageSize) {
+        return makeHttpRequest(String.format(LibraryUrls.LIBRARY_OVERDUE_SOON_API, page, pageSize), null, cookie);
     }
 
     public static HttpRequest bookInfoRequest(String bookId) {
         String url = String.format(LibraryUrls.LIBRARY_BOOK_INFO_API, bookId);
+        return makeHttpRequest(url, (byte[]) null);
+    }
+
+    public static HttpRequest bookDoubanInfoRequest(String isbn) {
+        String url = String.format(LibraryUrls.LIBRARY_BOOK_DOUBAN_INFO_API, isbn);
+        return makeHttpRequest(url, (byte[]) null);
+    }
+
+    public static HttpRequest bookContentRequest(String id) {
+        String url = String.format(LibraryUrls.LIBRARY_BOOK_CONTENT_API, id);
+        return makeHttpRequest(url, (byte[]) null);
+    }
+
+    public static HttpRequest bookHoldingRequest(String bookId) {
+        String url = String.format(LibraryUrls.LIBRARY_BOOK_HOLDING_API, bookId);
         return makeHttpRequest(url, (byte[]) null);
     }
 
@@ -67,7 +84,8 @@ public class LibraryRequestFactory extends RequestFactory {
     private static String json(Object object) {
         try {
             return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException ignored) {
+        } catch (JsonProcessingException e) {
+            log.error("生成json时出现不应出现的异常：", e);
             return "";
         }
     }

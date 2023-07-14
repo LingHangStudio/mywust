@@ -10,11 +10,14 @@ public class LibraryUrls {
 
     public static final String LIBRARY_ACCOUNT_STATUS_API = "https://libsys.wust.edu.cn/meta-local/opac/users/stats";
 
-    public static final String LIBRARY_CURRENT_LOAN_API = "https://libsys.wust.edu.cn/meta-local/opac/users/loans?page=1&pageSize=100";
-    public static final String LIBRARY_LOAN_HISTORY_API = "https://libsys.wust.edu.cn/meta-local/opac/users/loan_hists?page=1&pageSize=100";
-    public static final String LIBRARY_OVERDUE_SOON_API = "https://libsys.wust.edu.cn/meta-local/opac/users/overdue_soon";
+    public static final String LIBRARY_CURRENT_LOAN_API = "https://libsys.wust.edu.cn/meta-local/opac/users/loans?page=%d&pageSize=%d";
+    public static final String LIBRARY_LOAN_HISTORY_API = "https://libsys.wust.edu.cn/meta-local/opac/users/loan_hists?page=%d&pageSize=%d";
+    public static final String LIBRARY_OVERDUE_SOON_API = "https://libsys.wust.edu.cn/meta-local/opac/users/overdue_soon?page=%d&pageSize=%d";
 
     public static final String LIBRARY_BOOK_INFO_API = "https://libsys.wust.edu.cn/meta-local/opac/bibs/%s/infos";
+    public static final String LIBRARY_BOOK_DOUBAN_INFO_API = "https://libsys.wust.edu.cn/meta-local/opac/third_api/douban/%s/info";
+    public static final String LIBRARY_BOOK_CONTENT_API = "https://libsys.wust.edu.cn/meta-local/opac/bibs/%s/quoteds/quoted.caj-cd/content";
+    public static final String LIBRARY_BOOK_HOLDING_API = "https://libsys.wust.edu.cn/meta-local/opac/bibs/%s/holdings";
 
     public static final String LIBRARY_BOOK_COVER_IMAGE_API = "https://libsys.wust.edu.cn/meta-local/opac/search/extend/";
 
