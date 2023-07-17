@@ -1,7 +1,7 @@
 package cn.wustlinghang.mywust.core.request.factory.library;
 
 import cn.wustlinghang.mywust.core.api.LibraryUrls;
-import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.data.library.origin.BookSearchRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

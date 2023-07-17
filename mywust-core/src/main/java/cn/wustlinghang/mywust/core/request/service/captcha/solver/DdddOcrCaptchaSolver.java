@@ -3,7 +3,7 @@ package cn.wustlinghang.mywust.core.request.service.captcha.solver;
 import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
 import cn.wustlinghang.mywust.captcha.UnsolvedImageCaptcha;
 import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;

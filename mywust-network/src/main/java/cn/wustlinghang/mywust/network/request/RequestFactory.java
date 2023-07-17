@@ -1,4 +1,4 @@
-package cn.wustlinghang.mywust.core.request.factory;
+package cn.wustlinghang.mywust.network.request;
 
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import lombok.extern.slf4j.Slf4j;

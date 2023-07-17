@@ -2,7 +2,7 @@ package cn.wustlinghang.mywust.core.request.service.graduate;
 
 import cn.wustlinghang.mywust.core.api.GraduateUrls;
 import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;

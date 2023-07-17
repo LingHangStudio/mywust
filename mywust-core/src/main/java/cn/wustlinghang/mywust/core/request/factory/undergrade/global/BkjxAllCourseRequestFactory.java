@@ -2,7 +2,7 @@ package cn.wustlinghang.mywust.core.request.factory.undergrade.global;
 
 import cn.wustlinghang.mywust.core.api.ConstantParams;
 import cn.wustlinghang.mywust.core.api.UndergradUrls;
-import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.request.factory.undergrade.BkjxRequestFactory;
 import cn.wustlinghang.mywust.network.entitys.FormBodyBuilder;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;

@@ -4,7 +4,7 @@ import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
 import cn.wustlinghang.mywust.captcha.UnsolvedImageCaptcha;
 import cn.wustlinghang.mywust.core.api.GraduateUrls;
 import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.core.request.factory.RequestFactory;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.request.factory.graduate.GraduateRequestFactory;
 import cn.wustlinghang.mywust.core.request.service.captcha.solver.CaptchaSolver;
 import cn.wustlinghang.mywust.network.RequestClientOption;
@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class GraduateLogin {
