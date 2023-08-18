@@ -87,7 +87,7 @@ public class StringUtil {
 
     public static String getCurrentTermString() {
         Calendar now = Calendar.getInstance();
-        int month = now.get(Calendar.MONTH);
+        int month = now.get(Calendar.MONTH) + 1;
 
         // 一般八月到第二年二月算是是秋季期
         return getTermString(now, month >= 8 || month < 2);
