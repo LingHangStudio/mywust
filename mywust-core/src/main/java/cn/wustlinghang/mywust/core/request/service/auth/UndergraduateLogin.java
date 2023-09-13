@@ -115,6 +115,9 @@ public class UndergraduateLogin {
         } else if (test.contains("禁用")) {
             // 选课时间段
             throw new ApiException(ApiException.Code.UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME);
+        } else if (test.contains("不存在")) {
+            // 新生信息未录入/老生被删号
+            throw new ApiException(ApiException.Code.UNDERGRAD_USERINFO_NOT_EXISTS);
         }
 
         return true;

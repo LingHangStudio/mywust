@@ -104,6 +104,11 @@ public class ApiException extends BasicException {
          */
         UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME(100108, "本科生登录：专属选课时间段账号被禁用"),
 
+        /**
+         * 用户名信息不存在（新生信息未录入或者老生删档）
+         */
+        UNDERGRAD_USERINFO_NOT_EXISTS(100109, "本科生登录：用户名信息（新生信息未录入或者老生删档）"),
+
         // --------------------------------
         // 共有异常码：cookie无效
 

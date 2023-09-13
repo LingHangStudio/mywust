@@ -1,13 +1,13 @@
 package cn.wustlinghang.mywust.core.request.service.undergraduate;
 
 import cn.wustlinghang.mywust.core.api.UndergradUrls;
-import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.util.BkjxUtil;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,12 +21,13 @@ public abstract class UndergradApiServiceBase {
 
     public void checkResponse(HttpResponse response) throws ApiException {
         // 检查响应是否正确
-        if (response.getBody() == null ||
+        boolean cookieInvalid = response.getBody() == null ||
                 response.getStatusCode() != HttpResponse.HTTP_OK ||
-                BkjxUtil.needLogin(response.getBody()) ||
-                BkjxUtil.isBannedResponse(response)) {
-
+                BkjxUtil.needLogin(response.getBody());
+        if (cookieInvalid) {
             throw new ApiException(ApiException.Code.COOKIE_INVALID);
+        } else if (BkjxUtil.isBannedResponse(response)) {
+            throw new ApiException(ApiException.Code.UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME);
         }
     }
 
