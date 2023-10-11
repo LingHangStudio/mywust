@@ -10,17 +10,40 @@
     </parent>
     <artifactId>mywust-network-httpclient</artifactId>
 
+    <name>${project.artifactId}</name>
+    <description>The API encapsulations of WUST's official web service. Module `${project.artifactId}`</description>
+    <url>https://github.com/LingHangStudio/mywust</url>
+
+    <scm>
+        <url>https://github.com/LingHangStudio/mywust</url>
+        <connection>scm:git:https://github.com/LingHangStudio/mywust.git</connection>
+        <developerConnection>scm:git:https://github.com/LingHangStudio/mywust.git</developerConnection>
+        <tag>${project.parent.version}</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>lensfrex</id>
+            <name>lensfrex</name>
+            <email>lensferno@outlook.com</email>
+            <url>https://github.com/lensferno</url>
+            <organization>wustlinghang</organization>
+            <organizationUrl>https://github.com/LingHangStudio</organizationUrl>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://mit-license.org/</url>
+        </license>
+    </licenses>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub LingHangStudio Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/LingHangStudio/mywust</url>
-        </repository>
-    </distributionManagement>
 </project>

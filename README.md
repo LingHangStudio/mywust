@@ -58,23 +58,18 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 ## 使用说明
 
+> 文档？什么文档？不知道不知道
+> 以后再说
+
 ### 在项目中引用mywust-core
 
-目前该项目发布在Github Package上，如遇网络问题请自备工具解决
-
-关于如何在自己的项目中引用：
-
-- Maven项目请参阅：[使用 Apache Maven 注册表](https://docs.github.com/zh/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
-
-- Gradle项目请参阅：[使用 Gradle 注册表](https://docs.github.com/zh/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry)
-
-配置好后，直接在`pom.xml`中引用即可：
+在`pom.xml`中引用核心即可：
 
 ```xml
 <dependency>
   <groupId>cn.wustlinghang.mywust</groupId>
   <artifactId>mywust-core</artifactId>
-  <version>0.0.1-fixed</version>
+  <version>0.0.2-beta</version>
 </dependency>
 ```
 

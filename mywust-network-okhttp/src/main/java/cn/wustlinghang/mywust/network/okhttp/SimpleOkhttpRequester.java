@@ -252,14 +252,14 @@ public class SimpleOkhttpRequester implements Requester {
             requestBuilder.get();
 
         } else if (requestMethod == RequestMethod.POST) {
-            requestBuilder.post(RequestBody.create(this.getMediaType(httpRequest), data));
+            requestBuilder.post(RequestBody.create(data, this.getMediaType(httpRequest)));
 
         } else if (requestMethod == RequestMethod.PUT) {
-            requestBuilder.put(RequestBody.create(this.getMediaType(httpRequest), data));
+            requestBuilder.put(RequestBody.create(data, this.getMediaType(httpRequest)));
 
         } else if (requestMethod == RequestMethod.DELETE) {
             if (httpRequest.getData() != null) {
-                requestBuilder.delete(RequestBody.create(this.getMediaType(httpRequest), data));
+                requestBuilder.delete(RequestBody.create(data, this.getMediaType(httpRequest)));
             } else {
                 requestBuilder.delete();
             }
