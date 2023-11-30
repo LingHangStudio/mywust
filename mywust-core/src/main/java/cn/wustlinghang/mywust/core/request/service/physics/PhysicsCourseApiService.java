@@ -15,11 +15,12 @@ public class PhysicsCourseApiService extends PhysicsApiServiceBase {
     }
 
     public String getPage(String cookie, RequestClientOption requestClientOption) throws IOException, ApiException {
-        requestClientOption.setFollowUrlRedirect(false);
+        RequestClientOption tmpOption = requestClientOption.copy();
+        tmpOption.setFollowUrlRedirect(false);
 
         // 直接请求真正的课表页
         HttpRequest coursePageRequest = PhysicsSystemRequestFactory.physicsCourseRequest(cookie);
-        HttpResponse courseResponse = requester.get(coursePageRequest, requestClientOption);
+        HttpResponse courseResponse = requester.get(coursePageRequest, tmpOption);
         checkResponse(courseResponse);
 
         return new String(courseResponse.getBody());

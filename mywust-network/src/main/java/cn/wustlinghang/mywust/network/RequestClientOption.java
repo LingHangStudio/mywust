@@ -38,6 +38,26 @@ public class RequestClientOption {
         return new ConstantRequestClientOption();
     }
 
+    public static RequestClientOption copy(RequestClientOption origin) {
+        RequestClientOption requestClientOption = new RequestClientOption();
+        requestClientOption.setProxy(origin.getProxy());
+        requestClientOption.setTimeout(origin.getTimeout());
+        requestClientOption.setFollowUrlRedirect(origin.isFollowUrlRedirect());
+        requestClientOption.setIgnoreSSLError(origin.isIgnoreSSLError());
+
+        return requestClientOption;
+    }
+
+    public RequestClientOption copy() {
+        RequestClientOption requestClientOption = new RequestClientOption();
+        requestClientOption.setProxy(this.getProxy());
+        requestClientOption.setTimeout(this.getTimeout());
+        requestClientOption.setFollowUrlRedirect(this.isFollowUrlRedirect());
+        requestClientOption.setIgnoreSSLError(this.isIgnoreSSLError());
+
+        return requestClientOption;
+    }
+
     /**
      * 常量化的RequestClientOption，对其使用setter时不会起任何作用
      */
@@ -88,8 +108,8 @@ public class RequestClientOption {
             return this;
         }
 
-        public RequestClientOptionBuilder fallowUrlRedirect(boolean fallowUrlRedirect) {
-            requestClientOption.setFollowUrlRedirect(fallowUrlRedirect);
+        public RequestClientOptionBuilder followUrlRedirect(boolean followUrlRedirect) {
+            requestClientOption.setFollowUrlRedirect(followUrlRedirect);
             return this;
         }
 

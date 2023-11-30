@@ -98,7 +98,7 @@ public class SimpleOkhttpRequester implements Requester {
         this.useSingletonClient = useSingletonClient;
         if (rootClient == null) {
             synchronized (SimpleOkhttpRequester.class) {
-                if (rootClient == null ) {
+                if (rootClient == null) {
                     rootClient = this.buildClient(new OkHttpClient.Builder(), requestClientOption, cookieJar);
                 }
             }
@@ -113,7 +113,7 @@ public class SimpleOkhttpRequester implements Requester {
     private void setRootClient(OkHttpClient okHttpClient) {
         if (rootClient == null) {
             synchronized (SimpleOkhttpRequester.class) {
-                if (rootClient == null ) {
+                if (rootClient == null) {
                     rootClient = okHttpClient;
                 }
             }
@@ -149,8 +149,12 @@ public class SimpleOkhttpRequester implements Requester {
         builder.callTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .readTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
-                .followRedirects(requestClientOption.isFollowUrlRedirect())
-                .addInterceptor(new RedirectInterceptor());
+                .retryOnConnectionFailure(true)
+                .followRedirects(requestClientOption.isFollowUrlRedirect());
+
+        if (!requestClientOption.isFollowUrlRedirect()) {
+            builder.addInterceptor(new NoneRedirectInterceptor());
+        }
 
         // 是否忽略SSL错误
         if (requestClientOption.isIgnoreSSLError()) {
@@ -182,11 +186,6 @@ public class SimpleOkhttpRequester implements Requester {
      * @return okhttpClient
      */
     private OkHttpClient getOkhttpClient(RequestClientOption requestClientOption) {
-        // 单例模式直接使用root client
-        if (useSingletonClient) {
-            return rootClient;
-        }
-
         return buildClient(rootClient.newBuilder(), requestClientOption, null);
     }
 

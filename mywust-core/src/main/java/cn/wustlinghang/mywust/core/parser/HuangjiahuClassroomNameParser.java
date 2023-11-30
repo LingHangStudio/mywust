@@ -40,8 +40,8 @@ public class HuangjiahuClassroomNameParser implements Parser<Classroom> {
                     classRoom.setRoom(matcher.group("room"));
                 } else {
                     // 解析都不匹配就直接用传进来的编号作为教室
-                    classRoom.setBuilding("未知");
-                    classRoom.setArea("未知");
+                    classRoom.setBuilding("");
+                    classRoom.setArea("");
                     classRoom.setRoom(classroomName);
                 }
             }

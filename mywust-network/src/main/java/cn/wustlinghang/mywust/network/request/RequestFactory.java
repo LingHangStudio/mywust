@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
-public class RequestFactory {
+public abstract class RequestFactory {
     protected static final HttpRequest DEFAULT_HTTP_REQUEST = new HttpRequest();
 
     public static HttpRequest makeHttpRequest(String url) {

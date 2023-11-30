@@ -35,7 +35,7 @@ public class PhysicsLogin {
         HttpResponse loginCookieResponse = requester.post(loginCookieRequest, requestClientOption);
         if (loginCookieResponse.getStatusCode() != HttpResponse.HTTP_REDIRECT_302) {
             String responseHtml = loginCookieResponse.getStringBody();
-            if (responseHtml.contains("该用户不存在于当前学期")){
+            if (responseHtml.contains("该用户不存在于当前学期")) {
                 throw new ApiException(ApiException.Code.PHYSICS_NOT_CURRENT_TERM);
             } else if (responseHtml.contains("用户名或者密码有误")) {
                 throw new ApiException(ApiException.Code.PHYSICS_PASSWORD_WRONG);
@@ -62,8 +62,9 @@ public class PhysicsLogin {
         String redirect = physicsIndexPageParser.parse(indexHtml);
         HttpRequest systemIndexRequest = PhysicsSystemRequestFactory.physicsSystemIndexRequest(redirect, loginCookies);
 
-        requestClientOption.setFollowUrlRedirect(true);
-        HttpResponse response = requester.get(systemIndexRequest, requestClientOption);
+        RequestClientOption tmpOption = requestClientOption.copy();
+        tmpOption.setFollowUrlRedirect(true);
+        HttpResponse response = requester.get(systemIndexRequest, tmpOption);
         if (response.getStatusCode() != HttpResponse.HTTP_OK) {
             throw new ApiException(ApiException.Code.COOKIE_INVALID);
         }
