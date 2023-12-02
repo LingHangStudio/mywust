@@ -27,6 +27,10 @@ public class UndergradScoreParser implements Parser<List<Score>> {
 
         try {
             for (Element row : rows) {
+                if (row.text().contains("评教")) {
+                    continue;
+                }
+
                 // 提取出当前行的所有格子
                 Elements girds = row.getElementsByTag("td");
 
