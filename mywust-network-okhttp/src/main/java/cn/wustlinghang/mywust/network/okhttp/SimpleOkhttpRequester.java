@@ -18,25 +18,27 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>使用Okhttp的Requester，简单的实现了mywust的需求，能应付普通的使用</p>
- * <p>可以设置OkhttpClient是否使用单例模式以节省部分内存和对象分配的消耗，默认不使用（多例模式）</p>
- * <p>按照Okhttp官方的说法以及其他人的测试，使用多例Okhttp对性能消耗其实并不是很大，可以忽略，在多例模式下性能可能也比httpclient要好</p>
- * <p>但是如果每次请求的代理或者超时等设置有动态需求的话<b>只能使用多例模式</b>，因为单例模式下OkhttpClient的设置是全局一致的，无法定制选项</p>
+ * <p>使用Okhttp的Requester，简单的实现了mywust的需求，能应付普通的使用。</p>
+ * <p>有自动重试的功能，如果请求出现任何的IO异常，都会根据RequestClientOption的设置进行自动重试。</p>
+ * <p>内部封装有一个全局的rootClient，所有的请求都是通过基于这个rootClient派生出的一个子client来进行请求的。</p>
+ * <p>换句话说，就是每次请求都会有一个从rootClient派生出的轻量的OkhttpClient实例来进行请求。</p>
+ * <p>这样做是为了实现每次请求的代理或者超时等设置有动态的需求。<b>这种情况下只能使用多例模式</b>，
+ *    单例模式下OkhttpClient的设置是全局一致的，无法定制选项</p>
  * <p>详见：<a href="https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/">官方OkHttpClient文档</a></p>
  * <p>StackOverflow上也有人讨论过：<a href="https://stackoverflow.com/questions/42955571/how-to-set-proxy-for-each-request-in-okhttp">How to set proxy for each request in OkHttp?</a></p>
- * <p>注意，这里的“多例”并不是每次都new一个builder来build，这种情况每个client都有一个独立的连接池和线程，多了会导致oom，因此如果想要“多例”，应该是rootClient.newBuild()而不是new Builder().build()</p>
+ * <p>注意，这里的“多例”并不是每次都new一个builder来build，这种情况每个client都有一个独立的连接池和线程，多了会导致oom，
+ *    这里说的“多例”，是rootClient.newBuild()出来的轻量OkhttpClient，
+ *    而不是new Builder().build()出来的完整client，它们的连接池等都不是共享的，因此会非常耗资源。</p>
  * <p>总之看文档就知道了</p>
  * <br>
  * <p>如果有更加高级的需求实现，也可以自己实现Requester接口</p>
  *
  * @author lensfrex
  * @create 2022-10-15 09:49
- * @edit 2023-01-21 15:35
+ * @edit 2023-12-27 11:45
  */
 public class SimpleOkhttpRequester implements Requester {
     private static final Logger log = LoggerFactory.getLogger(SimpleOkhttpRequester.class);
-
-    private final boolean useSingletonClient;
 
     private static volatile OkHttpClient rootClient;
 
@@ -44,16 +46,6 @@ public class SimpleOkhttpRequester implements Requester {
      * 默认的，多例模式的SimpleOkhttpRequester构造方法
      */
     public SimpleOkhttpRequester() {
-        this(false);
-    }
-
-    /**
-     * 指定是否使用单例模式的SimpleOkhttpRequester构造方法
-     *
-     * @param useSingletonClient 是否使用单例模式
-     */
-    public SimpleOkhttpRequester(boolean useSingletonClient) {
-        this.useSingletonClient = useSingletonClient;
         this.setRootClient();
     }
 
@@ -61,41 +53,27 @@ public class SimpleOkhttpRequester implements Requester {
      * 使用特定okhttpClient对象作为rootClient，仅在rootClient为null时起作用，并指定是否使用单例模式的SimpleOkhttpRequester私有构造方法
      *
      * @param okHttpClient       okhttpClient对象
-     * @param useSingletonClient 是否使用单例模式
      */
-    private SimpleOkhttpRequester(OkHttpClient okHttpClient, boolean useSingletonClient) {
-        this.useSingletonClient = useSingletonClient;
+    private SimpleOkhttpRequester(OkHttpClient okHttpClient) {
         this.setRootClient(okHttpClient);
-    }
-
-    /**
-     * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，默认不使用单例模式
-     *
-     * @param requestClientOption client参数选项，为null时使用默认选项
-     */
-    public SimpleOkhttpRequester(RequestClientOption requestClientOption) {
-        this(requestClientOption, false);
     }
 
     /**
      * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，并且指定是否使用单例模式
      *
      * @param requestClientOption client参数选项，为null时使用默认选项
-     * @param useSingletonClient  是否使用单例模式
      */
-    public SimpleOkhttpRequester(RequestClientOption requestClientOption, boolean useSingletonClient) {
-        this(requestClientOption, useSingletonClient, null);
+    public SimpleOkhttpRequester(RequestClientOption requestClientOption) {
+        this(requestClientOption, null);
     }
 
     /**
      * 指定client参数选项的SimpleOkhttpRequester构造方法，仅在rootClient为null时起作用，并且指定是否使用单例模式以及CookieJar
      *
      * @param requestClientOption client参数选项，为null时使用默认选项
-     * @param useSingletonClient  是否使用单例模式
      * @param cookieJar           指定的cookieJar
      */
-    public SimpleOkhttpRequester(RequestClientOption requestClientOption, boolean useSingletonClient, CookieJar cookieJar) {
-        this.useSingletonClient = useSingletonClient;
+    public SimpleOkhttpRequester(RequestClientOption requestClientOption, CookieJar cookieJar) {
         if (rootClient == null) {
             synchronized (SimpleOkhttpRequester.class) {
                 if (rootClient == null) {
@@ -149,12 +127,8 @@ public class SimpleOkhttpRequester implements Requester {
         builder.callTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .readTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
                 .connectTimeout(requestClientOption.getTimeout(), TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
+                .retryOnConnectionFailure(false)
                 .followRedirects(requestClientOption.isFollowUrlRedirect());
-
-        if (!requestClientOption.isFollowUrlRedirect()) {
-            builder.addInterceptor(new NoneRedirectInterceptor());
-        }
 
         // 是否忽略SSL错误
         if (requestClientOption.isIgnoreSSLError()) {
@@ -327,7 +301,21 @@ public class SimpleOkhttpRequester implements Requester {
         log.debug("Request: {}", request);
         log.debug("Headers: {}", request.headers());
 
-        return this.sendRequest(client, request);
+        int cnt = 0;
+        while (true) {
+            try {
+                return this.sendRequest(client, request);
+            } catch (IOException e) {
+                // 出现IOE，重传请求
+                log.debug("IOException, Retry for {} time(s).", cnt + 1);
+                boolean shouldRetry = (!requestClientOption.isRetryable()) || (cnt < requestClientOption.getMaxRetryTimes());
+                if (shouldRetry) {
+                    cnt++;
+                } else {
+                    throw e;
+                }
+            }
+        }
     }
 
     @Override

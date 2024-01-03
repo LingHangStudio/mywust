@@ -2,7 +2,7 @@ package cn.wustlinghang.mywust.core.parser.graduate;
 
 import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.core.parser.Parser;
-import cn.wustlinghang.mywust.data.global.Score;
+import cn.wustlinghang.mywust.data.common.Score;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

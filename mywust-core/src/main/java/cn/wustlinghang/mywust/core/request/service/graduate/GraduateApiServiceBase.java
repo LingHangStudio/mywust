@@ -1,6 +1,6 @@
 package cn.wustlinghang.mywust.core.request.service.graduate;
 
-import cn.wustlinghang.mywust.core.api.GraduateUrls;
+import cn.wustlinghang.mywust.urls.GraduateUrls;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.network.RequestClientOption;

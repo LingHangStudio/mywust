@@ -1,6 +1,6 @@
 package cn.wustlinghang.mywust.core.request.factory.auth;
 
-import cn.wustlinghang.mywust.core.api.UnionAuthUrls;
+import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.util.StringUtil;

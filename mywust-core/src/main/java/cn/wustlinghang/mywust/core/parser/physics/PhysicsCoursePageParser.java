@@ -3,7 +3,7 @@ package cn.wustlinghang.mywust.core.parser.physics;
 import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.wustlinghang.mywust.core.parser.Parser;
-import cn.wustlinghang.mywust.data.global.Classroom;
+import cn.wustlinghang.mywust.data.common.Classroom;
 import cn.wustlinghang.mywust.data.physics.PhysicsCourse;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;

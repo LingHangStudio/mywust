@@ -1,8 +1,8 @@
 package cn.wustlinghang.mywust.core.request.factory.undergrade;
 
-import cn.wustlinghang.mywust.core.api.UndergradUrls;
+import cn.wustlinghang.mywust.urls.UndergradUrls;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
-import cn.wustlinghang.mywust.data.global.Campus;
+import cn.wustlinghang.mywust.data.common.Campus;
 import cn.wustlinghang.mywust.network.entitys.FormBodyBuilder;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.util.StringUtil;
@@ -35,7 +35,7 @@ public class BkjxRequestFactory extends RequestFactory {
         // 显示方式，这里直接选择全部显示
         formBodyBuilder.add("xsfs", "all");
 
-        byte[] postData = formBodyBuilder.buildAndToString().getBytes(StandardCharsets.UTF_8);
+        byte[] postData = formBodyBuilder.buildString().getBytes(StandardCharsets.UTF_8);
         return makeHttpRequest(UndergradUrls.BKJX_SCORE_API, postData, cookies);
     }
 
@@ -52,7 +52,7 @@ public class BkjxRequestFactory extends RequestFactory {
         // “年度专业代码”（猜的）和“教学0301执行计划id”的参数
         formBodyBuilder.add("ndzydm", majorId).add("jx0301zxjhid", teachPlainId);
 
-        return makeStringDataHttpRequest(UndergradUrls.BKJX_CREDIT_STATUS_API, formBodyBuilder.buildAndToString(), cookies);
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_CREDIT_STATUS_API, formBodyBuilder.buildString(), cookies);
     }
 
     public static HttpRequest creditStatusPageRequest(String cookies, Map<String, String> params) {
@@ -62,7 +62,7 @@ public class BkjxRequestFactory extends RequestFactory {
             formBodyBuilder.add(key, params.get(key));
         }
 
-        return makeStringDataHttpRequest(UndergradUrls.BKJX_CREDIT_STATUS_API, formBodyBuilder.buildAndToString(), cookies);
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_CREDIT_STATUS_API, formBodyBuilder.buildString(), cookies);
     }
 
     // 不带参数的学分修读情况获取，正常情况下是待带两个参数的（ndzyd和mjx0301zxjhid）
@@ -86,6 +86,15 @@ public class BkjxRequestFactory extends RequestFactory {
         return makeHttpRequest(UndergradUrls.BKJX_COURSE_TABLE_API, queryData, cookies);
     }
 
+    public static HttpRequest singleWeekCoursePageRequest(String date, String cookies) {
+        Map<String, String> params = new HashMap<>(7);
+        params.put("rq", date);
+
+        byte[] queryData = StringUtil.generateQueryString(params).getBytes(StandardCharsets.UTF_8);
+
+        return makeHttpRequest(UndergradUrls.BKJX_SINGLE_WEEK_COURSE_TABLE_API, queryData, cookies);
+    }
+
     public static HttpRequest examActivityListRequest(String term, String cookie) {
         String url = String.format(UndergradUrls.BKJX_EXAM_ACTIVITY_LIST_API, term);
         return makeHttpRequest(url, null, cookie);
@@ -98,12 +107,13 @@ public class BkjxRequestFactory extends RequestFactory {
         formBodyBuilder.add("kch", "");
         formBodyBuilder.add("iswfmes", "");
 
-        return makeStringDataHttpRequest(UndergradUrls.BKJX_EXAM_DELAY_APPLICATION_LIST_API, formBodyBuilder.buildAndToString(), cookie);
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_EXAM_DELAY_APPLICATION_LIST_API, formBodyBuilder.buildString(), cookie);
     }
 
     public static HttpRequest buildingListRequest(String campus, String cookie) {
-        // campus可以为空（就是不知道获取到的是哪个校区的楼了），但是null不行
-        return makeStringDataHttpRequest(UndergradUrls.BKJX_BUILDING_LIST_API, campus == null ? "" : campus, cookie);
+        FormBodyBuilder builder = new FormBodyBuilder(1);
+        builder.add("xqid", campus);
+        return makeStringDataHttpRequest(UndergradUrls.BKJX_BUILDING_LIST_API, builder.buildString(), cookie);
     }
 
     public static HttpRequest buildingListRequest(Campus campus, String cookie) {

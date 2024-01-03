@@ -3,7 +3,7 @@ package cn.wustlinghang.mywust.core.parser.physics;
 import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.core.parser.Parser;
 import cn.wustlinghang.mywust.core.util.JsoupUtil;
-import cn.wustlinghang.mywust.data.global.Score;
+import cn.wustlinghang.mywust.data.common.Score;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

@@ -1,6 +1,6 @@
 package cn.wustlinghang.mywust.core.request.service.undergraduate;
 
-import cn.wustlinghang.mywust.core.api.UndergradUrls;
+import cn.wustlinghang.mywust.urls.UndergradUrls;
 import cn.wustlinghang.mywust.core.util.BkjxUtil;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;

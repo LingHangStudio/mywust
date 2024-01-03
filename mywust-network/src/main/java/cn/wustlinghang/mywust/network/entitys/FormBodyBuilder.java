@@ -43,11 +43,11 @@ public class FormBodyBuilder {
         return this;
     }
 
-    public Map<String, String> build() {
+    public Map<String, String> buildMap() {
         return this.queryParams;
     }
 
-    public String buildAndToString() {
+    public String buildString() {
         return StringUtil.generateQueryString(this.queryParams);
     }
 

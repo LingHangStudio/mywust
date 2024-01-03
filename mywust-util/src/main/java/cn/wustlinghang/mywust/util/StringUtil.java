@@ -70,6 +70,10 @@ public class StringUtil {
         return str == null ? "" : str;
     }
 
+    public static String NoneNullString(String str, String defaultStr) {
+        return str == null ? defaultStr : str;
+    }
+
     public static String getTermString(Date date, boolean autumn) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
@@ -124,7 +128,7 @@ public class StringUtil {
     /**
      * 清除字符串中的html（xml）标签，并指定`&lt;br&gt;`是否要替换为换行符`\n`
      *
-     * @param raw 原始字符串
+     * @param raw           原始字符串
      * @param withBreakLine 是否将换行标签`&lt;br&gt;`替换成换行符`\n`
      * @return 处理后的字符串
      */
@@ -134,5 +138,20 @@ public class StringUtil {
         }
 
         return raw.replaceAll("<.*?>", "");
+    }
+
+    /**
+     * 解析转换字符串，如果出现任何问题，则返回给定的默认值
+     *
+     * @param string       待转换字符串
+     * @param defaultValue 默认值
+     * @return 转换后的int值，若转换中出现问题，则返回默认值
+     */
+    public static int parseInt(String string, int defaultValue) {
+        try {
+            return Integer.parseInt(string);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 }

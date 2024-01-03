@@ -9,6 +9,9 @@ public class RequestClientOption {
     private long timeout;
     private boolean followUrlRedirect;
 
+    private boolean retryable;
+    private int maxRetryTimes;
+
     private boolean ignoreSSLError;
 
     @Data
@@ -20,15 +23,20 @@ public class RequestClientOption {
 
     public RequestClientOption() {
         this.proxy = null;
-        this.timeout = 5;
+        this.timeout = 10;
         this.followUrlRedirect = false;
+        this.retryable = true;
+        this.maxRetryTimes = 3;
         this.ignoreSSLError = true;
     }
 
-    public RequestClientOption(Proxy proxy, long timeout, boolean followUrlRedirect, boolean ignoreSSLError) {
+    public RequestClientOption(Proxy proxy, long timeout, boolean followUrlRedirect,
+                               boolean retryable, int maxRetryTimes, boolean ignoreSSLError) {
         this.proxy = proxy;
         this.timeout = timeout;
         this.followUrlRedirect = followUrlRedirect;
+        this.retryable = retryable;
+        this.maxRetryTimes = maxRetryTimes;
         this.ignoreSSLError = ignoreSSLError;
     }
 
@@ -43,6 +51,8 @@ public class RequestClientOption {
         requestClientOption.setProxy(origin.getProxy());
         requestClientOption.setTimeout(origin.getTimeout());
         requestClientOption.setFollowUrlRedirect(origin.isFollowUrlRedirect());
+        requestClientOption.setRetryable(origin.isRetryable());
+        requestClientOption.setMaxRetryTimes(origin.getMaxRetryTimes());
         requestClientOption.setIgnoreSSLError(origin.isIgnoreSSLError());
 
         return requestClientOption;
@@ -53,6 +63,8 @@ public class RequestClientOption {
         requestClientOption.setProxy(this.getProxy());
         requestClientOption.setTimeout(this.getTimeout());
         requestClientOption.setFollowUrlRedirect(this.isFollowUrlRedirect());
+        requestClientOption.setRetryable(this.isRetryable());
+        requestClientOption.setMaxRetryTimes(this.getMaxRetryTimes());
         requestClientOption.setIgnoreSSLError(this.isIgnoreSSLError());
 
         return requestClientOption;
@@ -73,6 +85,11 @@ public class RequestClientOption {
         }
 
         @Override
+        public boolean isRetryable() {
+            return super.isRetryable();
+        }
+
+        @Override
         public boolean isFollowUrlRedirect() {
             return super.isFollowUrlRedirect();
         }
@@ -82,6 +99,12 @@ public class RequestClientOption {
 
         @Override
         public void setTimeout(long timeout) {}
+
+        @Override
+        public void setRetryable(boolean retryable) {}
+
+        @Override
+        public void setMaxRetryTimes(int retryTimes) {}
 
         @Override
         public void setFollowUrlRedirect(boolean followUrlRedirect) {}
@@ -110,6 +133,16 @@ public class RequestClientOption {
 
         public RequestClientOptionBuilder followUrlRedirect(boolean followUrlRedirect) {
             requestClientOption.setFollowUrlRedirect(followUrlRedirect);
+            return this;
+        }
+
+        public RequestClientOptionBuilder retryable(boolean retryable) {
+            requestClientOption.setRetryable(retryable);
+            return this;
+        }
+
+        public RequestClientOptionBuilder maxRetryTimes(int maxRetryTimes) {
+            requestClientOption.setMaxRetryTimes(maxRetryTimes);
             return this;
         }
 

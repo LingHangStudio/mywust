@@ -1,7 +1,7 @@
 package cn.wustlinghang.mywust.core.request.factory.graduate;
 
 import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
-import cn.wustlinghang.mywust.core.api.GraduateUrls;
+import cn.wustlinghang.mywust.urls.GraduateUrls;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.util.PageFormExtractor;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;

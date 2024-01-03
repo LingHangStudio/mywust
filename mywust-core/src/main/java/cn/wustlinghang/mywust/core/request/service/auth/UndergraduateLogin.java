@@ -1,7 +1,7 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.wustlinghang.mywust.core.api.UndergradUrls;
-import cn.wustlinghang.mywust.core.api.UnionAuthUrls;
+import cn.wustlinghang.mywust.urls.UndergradUrls;
+import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.core.request.factory.undergrade.BkjxRequestFactory;
 import cn.wustlinghang.mywust.network.RequestClientOption;
@@ -32,6 +32,8 @@ public class UndergraduateLogin {
 
         // 获取登录cookie（session）
         HttpRequest sessionRequest = BkjxRequestFactory.sessionCookieRequest(serviceTicket);
+        RequestClientOption tmpOption = requestOption.copy();
+        tmpOption.setFollowUrlRedirect(true);
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
 
         String cookies = sessionResponse.getCookies();

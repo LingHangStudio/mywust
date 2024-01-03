@@ -3,15 +3,18 @@ package cn.wustlinghang.mywust.core.request.service.library;
 import cn.wustlinghang.mywust.core.request.factory.library.LibraryRequestFactory;
 import cn.wustlinghang.mywust.data.library.PagingResult;
 import cn.wustlinghang.mywust.data.library.origin.BookSearchRequest;
-import cn.wustlinghang.mywust.data.library.origin.BookSearchResult;
+import cn.wustlinghang.mywust.data.library.origin.OriginBookSearchResult;
 import cn.wustlinghang.mywust.data.library.parsed.BookHolding;
+import cn.wustlinghang.mywust.data.library.parsed.BookSearchResult;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import cn.wustlinghang.mywust.util.StringUtil;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,13 +45,19 @@ public class SearchApiService extends BaseLibraryApiService {
             int totalPage = totalResult / pageSize + 1;
 
             JsonNode dataList = data.get("dataList");
+            List<OriginBookSearchResult> originSearchResultList = objectMapper.treeToValue(dataList, originBookSearchResultListType);
             List<BookSearchResult> books = new ArrayList<>(dataList.size());
-            for (JsonNode item : dataList) {
+            for (OriginBookSearchResult result : originSearchResultList) {
+                BookSearchResult book = this.convert(result);
+
                 // 反序列化holding字段，原字段为字符串值，无法直接原样转换
-                List<BookHolding> holdings = objectMapper.readValue(
-                        item.path("holdings").asText("[]"), bookHoldingListType);
-                BookSearchResult book = objectMapper.treeToValue(item, BookSearchResult.class);
-                book.setHoldings(holdings);
+                if (result.getHoldings() != null) {
+                    List<BookHolding> holdings = objectMapper.readValue(result.getHoldings(), bookHoldingListType);
+                    book.setHoldings(holdings);
+                } else {
+                    book.setHoldings(new ArrayList<>());
+                }
+
                 books.add(book);
             }
 
@@ -64,5 +73,26 @@ public class SearchApiService extends BaseLibraryApiService {
             e.printStackTrace();
             throw new ParseException(e.getMessage(), "");
         }
+    }
+
+    private BookSearchResult convert(OriginBookSearchResult result) {
+        BookSearchResult bookSearchResult = new BookSearchResult();
+        bookSearchResult.setBibId(result.getBibId());
+        bookSearchResult.setHoldingTypes(result.getHoldingTypes());
+        bookSearchResult.setAuthor(result.getAuthor());
+        bookSearchResult.setCallNumber(result.getCallNumber());
+        bookSearchResult.setDocType(result.getDocType());
+        bookSearchResult.setGroupId(result.getGroupId());
+        bookSearchResult.setIsbn(result.getIsbn());
+        bookSearchResult.setBibNo(result.getBibNo());
+        bookSearchResult.setTitle(result.getTitle());
+        bookSearchResult.setItemCount(result.getItemCount());
+        bookSearchResult.setCircCount(result.getCircCount());
+        bookSearchResult.setPubYear(result.getPubYear());
+        bookSearchResult.setClassNumber(result.getClassNumber());
+        bookSearchResult.setPublisher(result.getPublisher());
+//        bookSearchResult.setHoldings(result.getHoldings());
+
+        return bookSearchResult;
     }
 }

@@ -3,7 +3,7 @@ package cn.wustlinghang.mywust.core.parser.undergraduate;
 import cn.wustlinghang.mywust.exception.ParseException;
 import cn.wustlinghang.mywust.core.parser.Parser;
 import cn.wustlinghang.mywust.core.util.JsoupUtil;
-import cn.wustlinghang.mywust.data.global.StudentInfo;
+import cn.wustlinghang.mywust.data.common.StudentInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

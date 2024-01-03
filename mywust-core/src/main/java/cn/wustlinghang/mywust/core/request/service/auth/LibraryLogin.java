@@ -1,7 +1,7 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.wustlinghang.mywust.core.api.LibraryUrls;
-import cn.wustlinghang.mywust.core.api.UnionAuthUrls;
+import cn.wustlinghang.mywust.urls.LibraryUrls;
+import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.core.request.factory.library.LibraryRequestFactory;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;

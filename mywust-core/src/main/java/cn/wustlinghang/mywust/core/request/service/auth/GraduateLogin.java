@@ -2,15 +2,15 @@ package cn.wustlinghang.mywust.core.request.service.auth;
 
 import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
 import cn.wustlinghang.mywust.captcha.UnsolvedImageCaptcha;
-import cn.wustlinghang.mywust.core.api.GraduateUrls;
-import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.request.factory.graduate.GraduateRequestFactory;
 import cn.wustlinghang.mywust.core.request.service.captcha.solver.CaptchaSolver;
+import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
+import cn.wustlinghang.mywust.urls.GraduateUrls;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -73,19 +73,22 @@ public class GraduateLogin {
 
     public String getLoginCookie(String username, String password, int maxRetryTimes, RequestClientOption option)
             throws IOException, ApiException {
-        for (int i = 0; i < maxRetryTimes; i++) {
-            try {
-                return getLoginCookie(username, password, option);
-            } catch (ApiException e) {
-                if (e.getCode() != ApiException.Code.GRADUATE_CAPTCHA_WRONG) {
-                    throw e;
-                } else {
-                    log.info("[mywust]: Retrying login for {} time(s)", i);
-                }
+        return getLoginCookie(username, password, maxRetryTimes, 0, option);
+    }
+
+    private String getLoginCookie(String username, String password, int maxRetryTimes, int cnt, RequestClientOption option)
+            throws IOException, ApiException {
+        try {
+            return getLoginCookie(username, password, option);
+        } catch (ApiException e) {
+            boolean shouldRetry = (cnt < maxRetryTimes) && (e.getCode() != ApiException.Code.GRADUATE_CAPTCHA_WRONG);
+            if (shouldRetry) {
+                log.info("[mywust]: Retrying login for {} time(s)", cnt + 1);
+                return getLoginCookie(username, password, maxRetryTimes, cnt + 1, option);
+            } else {
+                throw e;
             }
         }
-
-        return "";
     }
 
     public void checkCookies(String cookie, RequestClientOption option) throws ApiException, IOException {

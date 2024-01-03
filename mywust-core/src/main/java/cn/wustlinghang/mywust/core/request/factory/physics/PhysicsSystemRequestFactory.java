@@ -1,6 +1,6 @@
 package cn.wustlinghang.mywust.core.request.factory.physics;
 
-import cn.wustlinghang.mywust.core.api.PhysicsSystemUrls;
+import cn.wustlinghang.mywust.urls.PhysicsSystemUrls;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.core.util.PageFormExtractor;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
