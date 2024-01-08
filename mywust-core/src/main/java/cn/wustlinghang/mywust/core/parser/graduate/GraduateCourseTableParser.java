@@ -62,7 +62,7 @@ public class GraduateCourseTableParser implements Parser<List<Course>> {
                 courseBuilder.teachClass(teachClass);
 
                 String classroom = matcher.group("classRoom");
-                courseBuilder.classroom(new Classroom("", "", "", classroom));
+                courseBuilder.classroom(classroom);
 
                 String teacher = matcher.group("teacher");
                 courseBuilder.teacher(teacher);

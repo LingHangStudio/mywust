@@ -42,13 +42,10 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
             Elements columnContextElements = courseElements.get(i).getElementsByTag("td");
             PhysicsCourse course = new PhysicsCourse();
 
-            // 这里的代码硬编码了，不是很规范，抱歉
-            course.setName(columnContextElements.get(1).text());
+            // 某个老师名字的字符替换
             course.setTeacher(columnContextElements.get(3).text().replace('\uE863', '䶮'));
-
-            String classroomNumber = columnContextElements.get(5).text();
-            Classroom classRoom = HUANGJIAHU_CLASSROOM_NAME_PARSER.parse(classroomNumber);
-            course.setClassroom(classRoom);
+            course.setName(columnContextElements.get(1).text());
+            course.setClassroom(columnContextElements.get(5).text());
 
             String time = columnContextElements.get(4).text();
 

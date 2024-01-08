@@ -83,10 +83,7 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
 
                     courseBuilder.teachClass(JsoupUtil.getElementText(classElements));
                     courseBuilder.teacher(JsoupUtil.getElementText(teacherElements));
-
-                    Classroom classRoom = new Classroom();
-                    classRoom.setRoom(JsoupUtil.getElementText(classroomElements));
-                    courseBuilder.classroom(classRoom);
+                    courseBuilder.classroom(JsoupUtil.getElementText(classroomElements));
 
                     int weekDay = girdCount % 7;
                     courseBuilder.weekDay(weekDay == 0 ? 7 : weekDay);

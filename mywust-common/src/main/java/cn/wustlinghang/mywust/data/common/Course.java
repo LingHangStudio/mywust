@@ -54,7 +54,7 @@ public class Course {
      */
     private int endSection;
 
-    private Classroom classroom;
+    private String classroom;
 
     private static final Map<String, Integer> WEEKDAY_MAP = makeWeekdayMap();
 

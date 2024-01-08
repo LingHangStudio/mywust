@@ -15,25 +15,12 @@ import java.util.regex.Pattern;
 
 abstract class CourseTableParserBase implements Parser<List<Course>> {
 
-    private static final PlaceNameParser placeNameParser = new PlaceNameParser();
-
-    static {
-        placeNameParser.registerRule(PlaceNameParser.ParserRules.huangjiahuBuildingWithAreaRule);
-        placeNameParser.registerRule(PlaceNameParser.ParserRules.buildingWithRoomRule);
-        placeNameParser.registerRule(PlaceNameParser.ParserRules.buildingWithCampusRule);
-        placeNameParser.registerRule(PlaceNameParser.ParserRules.buildingWithCollegeRule);
-    }
-
     private final Pattern regex;
     private final String courseGirdsXPath;
 
     CourseTableParserBase(Pattern regex, String courseGirdsXPath) {
         this.regex = regex;
         this.courseGirdsXPath = courseGirdsXPath;
-    }
-
-    public static void registerPlaceNameParserRule(PlaceNameParser.Rule rule) {
-        placeNameParser.registerRule(rule);
     }
 
     public List<Course> parse(String html) throws ParseException {
@@ -98,7 +85,7 @@ abstract class CourseTableParserBase implements Parser<List<Course>> {
         courseBuilder.name(courseInfoMatcher.group("name"));
         courseBuilder.teacher(courseInfoMatcher.group("teacher"));
         courseBuilder.teachClass(courseInfoMatcher.group("teachClass"));
-        courseBuilder.classroom(placeNameParser.parse(courseInfoMatcher.group("building")));
+        courseBuilder.classroom(courseInfoMatcher.group("building"));
 
         // 解析周次，不使用String.split而是手动分割，是因为系统自带split方法每次调用都需要编译一次切割正则，这里需要执行次数较多，效率不太行
         List<String> weeks = StringUtil.split(courseInfoMatcher.group("weekString"), ',');

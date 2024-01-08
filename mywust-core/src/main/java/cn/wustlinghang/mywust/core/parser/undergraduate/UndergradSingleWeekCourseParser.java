@@ -47,7 +47,7 @@ public class UndergradSingleWeekCourseParser implements Parser<List<Course>> {
                 Course course = new Course();
                 course.setWeekDay(matcher.group("weekday"));
                 course.setName(matcher.group("name"));
-                course.setClassroom(new Classroom(matcher.group("place")));
+                course.setClassroom(matcher.group("place"));
 
                 // 单周课程拿不到教师和教学班信息
                 course.setTeacher("");
