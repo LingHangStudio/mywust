@@ -1,10 +1,8 @@
 package cn.wustlinghang.mywust.core.parser.physics;
 
-import cn.wustlinghang.mywust.exception.ParseException;
-import cn.wustlinghang.mywust.core.parser.HuangjiahuClassroomNameParser;
 import cn.wustlinghang.mywust.core.parser.Parser;
-import cn.wustlinghang.mywust.data.common.Classroom;
 import cn.wustlinghang.mywust.data.physics.PhysicsCourse;
+import cn.wustlinghang.mywust.exception.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
@@ -14,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
-    private static final HuangjiahuClassroomNameParser HUANGJIAHU_CLASSROOM_NAME_PARSER = new HuangjiahuClassroomNameParser();
 
     // 第几周
     private static final Pattern PHYSICS_COURSE_WEEK_PATTERN = Pattern.compile("第(?<week>.*?)周");
@@ -82,7 +79,7 @@ public class PhysicsCoursePageParser implements Parser<List<PhysicsCourse>> {
 final class PhysicsCourseXpath {
     /**
      * 用于获取表格中所有行的xpath
-     * */
+     */
     public static final String COURSE_ROWS_XPATH = "//*[@id=\"ID_PEE110301_gvpee120101\"]/tbody/tr";
 
     public static final String COURSE_ROW_NAME_XPATH = "";

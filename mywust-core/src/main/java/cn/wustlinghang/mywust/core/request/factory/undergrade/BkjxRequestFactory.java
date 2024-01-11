@@ -1,10 +1,10 @@
 package cn.wustlinghang.mywust.core.request.factory.undergrade;
 
-import cn.wustlinghang.mywust.urls.UndergradUrls;
-import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.data.common.Campus;
 import cn.wustlinghang.mywust.network.entitys.FormBodyBuilder;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
+import cn.wustlinghang.mywust.urls.UndergradUrls;
 import cn.wustlinghang.mywust.util.StringUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -121,6 +121,10 @@ public class BkjxRequestFactory extends RequestFactory {
     }
 
     public static class Legacy {
+        public static HttpRequest systemIndexRequest() {
+            return makeHttpRequest(UndergradUrls.BKJX_INDEX_URL);
+        }
+
         public static HttpRequest dataStringRequest() {
             return makeHttpRequest(UndergradUrls.Legacy.BKJX_DATA_STRING_API);
         }
@@ -134,8 +138,8 @@ public class BkjxRequestFactory extends RequestFactory {
             String queryString = StringUtil.generateQueryString(queryParams);
 
             Map<String, String> extendHeaders = new HashMap<>(2);
-            extendHeaders.put("Referer", "http://bkjx.wust.edu.cn/");
-            extendHeaders.put("Origin", "http://bkjx.wust.edu.cn");
+            extendHeaders.put("Referer", UndergradUrls.BKJX_BASE_URL + "/");
+            extendHeaders.put("Origin", UndergradUrls.BKJX_BASE_URL);
 
             return makeHttpRequest(UndergradUrls.Legacy.BKJX_SESSION_COOKIE_API, queryString.getBytes(StandardCharsets.UTF_8), cookies)
                     .addHeaders(extendHeaders);

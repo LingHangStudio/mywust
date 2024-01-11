@@ -109,6 +109,11 @@ public class ApiException extends BasicException {
          */
         UNDERGRAD_USERINFO_NOT_EXISTS(100109, "本科生登录：用户名信息（新生信息未录入或者老生删档）"),
 
+        /**
+         * 系统错误
+         */
+        UNDERGRAD_SYSTEM_ERROR(100110, "本科生：教务系统出现异常"),
+
         // --------------------------------
         // 共有异常码：cookie无效
 
@@ -128,7 +133,7 @@ public class ApiException extends BasicException {
         /**
          * 需要评教
          */
-        BKJX_COURSE_NEED_EVALUATE(110102, "需要评教"),
+        BKJX_COURSE_NEED_EVALUATE(110102, "本科生：需要评教"),
 
         // --------------------------------
         // 物理实验系统API异常代码

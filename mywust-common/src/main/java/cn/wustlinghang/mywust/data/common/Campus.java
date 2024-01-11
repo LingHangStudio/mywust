@@ -3,8 +3,11 @@ package cn.wustlinghang.mywust.data.common;
 import java.util.StringJoiner;
 
 public final class Campus implements WithIdData {
-    public final String id;
-    public final String name;
+    public String id;
+    public String name;
+
+    public Campus() {
+    }
 
     public Campus(String id, String name) {
         this.id = id;
@@ -17,6 +20,14 @@ public final class Campus implements WithIdData {
 
     public String getName() {
         return name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

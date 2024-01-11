@@ -1,13 +1,13 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.wustlinghang.mywust.urls.UndergradUrls;
-import cn.wustlinghang.mywust.urls.UnionAuthUrls;
-import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.core.request.factory.undergrade.BkjxRequestFactory;
+import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import cn.wustlinghang.mywust.urls.UndergradUrls;
+import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.util.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +32,10 @@ public class UndergraduateLogin {
 
         // 获取登录cookie（session）
         HttpRequest sessionRequest = BkjxRequestFactory.sessionCookieRequest(serviceTicket);
-        RequestClientOption tmpOption = requestOption.copy();
-        tmpOption.setFollowUrlRedirect(true);
         HttpResponse sessionResponse = requester.get(sessionRequest, requestOption);
+        if (sessionResponse.getStatusCode() >= HttpResponse.HTTP_SERVER_ERROR) {
+            throw new ApiException(ApiException.Code.UNDERGRAD_SYSTEM_ERROR);
+        }
 
         String cookies = sessionResponse.getCookies();
         this.checkCookie(cookies, requestOption);
@@ -50,8 +51,13 @@ public class UndergraduateLogin {
      * @return 获取到的Cookies
      */
     public String getLoginCookieLegacy(String username, String password, RequestClientOption requestOption) throws IOException, ApiException {
+        HttpRequest indexRequest = BkjxRequestFactory.Legacy.systemIndexRequest();
+        HttpResponse indexResponse = requester.get(indexRequest, requestOption);
+        String cookie = indexResponse.getCookies();
+
         // 获取某段神秘的dataStr（反正官网代码是这么叫的）
         HttpRequest dataStringRequest = BkjxRequestFactory.Legacy.dataStringRequest();
+        dataStringRequest.setCookies(cookie);
         HttpResponse dataStringResponse = requester.post(dataStringRequest, requestOption);
         if (dataStringResponse.getBody() == null) {
             log.warn("[mywust]: 本科教学系统旧版登录：获取dataStr时发生错误");
@@ -63,6 +69,7 @@ public class UndergraduateLogin {
         // 获取登录ticket
         String encoded = PasswordEncoder.legacyPassword(username, password, dataString);
         HttpRequest ticketRequest = BkjxRequestFactory.Legacy.ticketRedirectRequest(encoded, dataStringResponse.getCookies());
+        ticketRequest.setCookies(cookie);
         HttpResponse ticketResponse = requester.post(ticketRequest, requestOption);
 
         if (ticketResponse.getBody() == null) {
@@ -120,6 +127,8 @@ public class UndergraduateLogin {
         } else if (test.contains("不存在")) {
             // 新生信息未录入/老生被删号
             throw new ApiException(ApiException.Code.UNDERGRAD_USERINFO_NOT_EXISTS);
+        } else if (test.contains("500")) {
+            throw new ApiException(ApiException.Code.UNDERGRAD_SYSTEM_ERROR);
         }
 
         return true;

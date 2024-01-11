@@ -218,7 +218,7 @@ public class SimpleOkhttpRequester implements Requester {
 
         byte[] data = httpRequest.getData();
         if (data == null && requestMethod != RequestMethod.GET) {
-            data = new byte[]{0};
+            data = new byte[0];
         }
 
         if (requestMethod == RequestMethod.GET) {

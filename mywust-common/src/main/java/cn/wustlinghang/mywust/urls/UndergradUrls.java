@@ -11,10 +11,12 @@ public class UndergradUrls {
 
     public static final String BKJX_BASE_URL = "https://bkjx.wust.edu.cn";
 
+    public static final String BKJX_INDEX_URL = BKJX_BASE_URL;
+
     /**
      * 登录cookie获取url
      */
-    public static final String BKJX_SESSION_COOKIE_API = BKJX_BASE_URL + "/jsxsd/sso.jsp?ticket=%s";
+    public static final String BKJX_SESSION_COOKIE_API = BKJX_BASE_URL + "/jsxsd/?ticket=%s";
 
     /**
      * cookie测试url（空白页）

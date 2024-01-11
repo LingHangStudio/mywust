@@ -11,7 +11,7 @@ public class UnionAuthUrls {
     public static class Service {
         public static final String LIBRARY_SSO_SERVICE = "https://libsys.wust.edu.cn:443/meta-local/opac/cas/rosetta";
 
-        public static final String BKJX_SSO_SERVICE = "http://bkjx.wust.edu.cn/jsxsd/sso.jsp";
+        public static final String BKJX_SSO_SERVICE = "https://bkjx.wust.edu.cn/jsxsd/";
 
         public static final String PORTAL_SSO_SERVICE = "https://portal.wust.edu.cn/c/portal/login?redirect=%2F&p_l_id=121585";
     }
