@@ -58,10 +58,7 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 
 ## 使用说明
 
-> 文档？什么文档？不知道不知道
-> 以后再说
-
-### 在项目中引用mywust-core
+### 1. 在项目中引用mywust-core
 
 在`pom.xml`中引用核心即可：
 
@@ -69,9 +66,178 @@ JDK版本：1.8及以上，推荐JDK 11及以上
 <dependency>
   <groupId>cn.wustlinghang.mywust</groupId>
   <artifactId>mywust-core</artifactId>
-  <version>0.0.2-beta</version>
+  <version>${mywust.version}</version>
 </dependency>
 ```
+
+引入okhttp请求器以实现网络请求功能：
+```xml
+<dependency>
+    <groupId>cn.wustlinghang.mywust</groupId>
+    <artifactId>mywust-network-okhttp</artifactId>
+    <version>${mywust.version}</version>
+</dependency>
+```
+
+请求器也可以通过自己实现Requester接口传入核心使用。
+
+### 2. 快速使用
+
+使用mywust很简单，只需几行即可（以本科生登录和课表获取为例）：
+
+```java
+
+import cn.wustlinghang.mywust.core.parser.undergraduate.UndergradCourseTableParser;
+import cn.wustlinghang.mywust.core.request.service.auth.UndergraduateLogin;
+import cn.wustlinghang.mywust.core.request.service.undergraduate.UndergradCourseTableApiService;
+import cn.wustlinghang.mywust.data.common.Course;
+import cn.wustlinghang.mywust.exception.ApiException;
+import cn.wustlinghang.mywust.exception.ParseException;
+import cn.wustlinghang.mywust.network.RequestClientOption;
+import cn.wustlinghang.mywust.network.Requester;
+import cn.wustlinghang.mywust.network.okhttp.SimpleOkhttpRequester;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+public class TestMain {
+
+  public static void main(String[] args) throws IOException, ApiException, ParseException {
+    RequestClientOption.Proxy proxy = RequestClientOption.Proxy.builder()
+            .address("127.0.0.1")
+            .port(8080)
+            .build();
+
+//        设置请求选项
+    RequestClientOption requestClientOption = new RequestClientOption();
+    requestClientOption.setProxy(proxy);
+    requestClientOption.setTimeout(10);
+    requestClientOption.setFollowUrlRedirect(false);
+    requestClientOption.setRetryable(true);
+    requestClientOption.setMaxRetryTimes(3);
+    requestClientOption.setIgnoreSSLError(true);
+
+//        实例化一个请求器，实际使用中只实例化一次即可
+    Requester requester = new SimpleOkhttpRequester();
+
+//        初始化登录服务
+    UndergraduateLogin login = new UndergraduateLogin(requester);
+
+//        登录并获取cookie
+    String cookie = login.getLoginCookie("学号", "密码", requestClientOption);
+
+//        初始化api服务和解析器，实际使用中只实例化一次即可
+    UndergradCourseTableApiService courseTableApi = new UndergradCourseTableApiService(requester);
+    UndergradCourseTableParser parser = new UndergradCourseTableParser();
+
+//        获取页面
+//        不指定请求选项的调用方式
+//        String page = courseTableApi.getPage("2021-2022-1", cookie);
+//        指定请求选项的调用方式
+    String page = courseTableApi.getPage("学期", cookie, requestClientOption);
+
+//        解析上文获取的课表页面
+    List<Course> courseList = parser.parse(page);
+    System.out.println(Arrays.toString(courseList.toArray()));
+  }
+}
+```
+
+目前可用的api服务与解析器：
+
+api服务：
+
+```text
+├─auth
+│      GraduateLogin.java
+│      LibraryLogin.java
+│      PhysicsLogin.java
+│      UndergraduateLogin.java
+│      UnionLogin.java
+│
+├─captcha
+│  └─solver
+│          CaptchaSolver.java
+│          DdddOcrCaptchaSolver.java
+│
+├─graduate
+│      GraduateApiServiceBase.java
+│      GraduateCourseTableApiService.java
+│      GraduateScoreApiService.java
+│      GraduateStudentInfoApiService.java
+│      GraduateTrainingPlanApiService.java
+│
+├─library
+│      BaseLibraryApiService.java
+│      BookCoverImageUrlApiService.java
+│      BookDetailApiService.java
+│      BookHoldingApiService.java
+│      CurrentLoanApiService.java
+│      LoanHistoryApiService.java
+│      OverdueSoonApiService.java
+│      SearchApiService.java
+│
+├─physics
+│      PhysicsApiServiceBase.java
+│      PhysicsCourseApiService.java
+│      PhysicsScoreApiService.java
+│
+└─undergraduate
+    │  UndergradApiServiceBase.java
+    │  UndergradCourseTableApiService.java
+    │  UndergradCreditStatusApiService.java
+    │  UndergradExamDelayApiService.java
+    │  UndergradScoreApiService.java
+    │  UndergradSingleWeekCourseApiService.java
+    │  UndergradStudentInfoApiService.java
+    │  UndergradTrainingPlanApiService.java
+    │
+    └─school
+            package-info.java
+            UndergradAllCourseScheduleApiService.java
+            UndergradBuildingIdApiService.java
+            UndergradClassroomCourseApiService.java
+            UndergradTeacherCourseApiService.java
+```
+
+解析器：
+
+```text
+│  HuangjiahuClassroomNameParser.java
+│  Parser.java
+│
+├─graduate
+│      GraduateCourseTableParser.java
+│      GraduateScoreParser.java
+│      GraduateStudentInfoPageParser.java
+│      GraduateTrainingPlanPageParser.java
+│
+├─physics
+│      PhysicsCoursePageParser.java
+│      PhysicsIndexPageParser.java
+│      PhysicsScoreListPageParser.java
+│      PhysicsScorePageParser.java
+│
+└─undergraduate
+    │  UndergradCourseTableParser.java
+    │  UndergradCreditStatusIndexParser.java
+    │  UndergradCreditStatusParser.java
+    │  UndergradExamDelayParser.java
+    │  UndergradScoreParser.java
+    │  UndergradSingleWeekCourseParser.java
+    │  UndergradStudentInfoPageParser.java
+    │  UndergradTrainingPlanPageParser.java
+    │
+    └─school
+            CourseTableParserBase.java
+            PlaceNameParser.java
+            UndergradAllCourseScheduleParser.java
+            UndergradClassroomParser.java
+            UndergradTeacherCourseParser.java
+```
+
+其他部分具体用法大同小异，根据doc传参即可
 
 ## 目录规范
 
