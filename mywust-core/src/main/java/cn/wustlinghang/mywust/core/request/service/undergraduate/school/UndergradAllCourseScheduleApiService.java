@@ -3,7 +3,7 @@ package cn.wustlinghang.mywust.core.request.service.undergraduate.school;
 import cn.wustlinghang.mywust.urls.ConstantParams;
 import cn.wustlinghang.mywust.data.undergrad.params.AllCourseScheduleGettingParam;
 import cn.wustlinghang.mywust.exception.ApiException;
-import cn.wustlinghang.mywust.core.request.factory.undergrade.global.BkjxAllCourseRequestFactory;
+import cn.wustlinghang.mywust.core.request.factory.undergrade.school.BkjxAllCourseRequestFactory;
 import cn.wustlinghang.mywust.core.request.service.undergraduate.UndergradApiServiceBase;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;

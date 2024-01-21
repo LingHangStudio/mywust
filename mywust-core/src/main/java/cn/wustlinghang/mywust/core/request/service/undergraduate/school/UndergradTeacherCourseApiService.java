@@ -1,6 +1,6 @@
 package cn.wustlinghang.mywust.core.request.service.undergraduate.school;
 
-import cn.wustlinghang.mywust.core.request.factory.undergrade.global.BkjxAllCourseRequestFactory;
+import cn.wustlinghang.mywust.core.request.factory.undergrade.school.BkjxAllCourseRequestFactory;
 import cn.wustlinghang.mywust.core.request.service.undergraduate.UndergradApiServiceBase;
 import cn.wustlinghang.mywust.data.undergrad.params.TeacherCourseGettingParam;
 import cn.wustlinghang.mywust.exception.ApiException;

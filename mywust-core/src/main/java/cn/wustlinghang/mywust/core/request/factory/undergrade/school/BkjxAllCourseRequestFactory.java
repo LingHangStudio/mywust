@@ -1,4 +1,4 @@
-package cn.wustlinghang.mywust.core.request.factory.undergrade.global;
+package cn.wustlinghang.mywust.core.request.factory.undergrade.school;
 
 import cn.wustlinghang.mywust.urls.ConstantParams;
 import cn.wustlinghang.mywust.urls.UndergradUrls;
