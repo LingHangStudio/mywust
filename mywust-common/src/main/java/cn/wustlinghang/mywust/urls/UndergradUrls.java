@@ -17,6 +17,7 @@ public class UndergradUrls {
      * 登录cookie获取url
      */
     public static final String BKJX_SESSION_COOKIE_API = BKJX_BASE_URL + "/jsxsd/?ticket=%s";
+    public static final String BKJX_SESSION_COOKIE_BASE_URL = BKJX_BASE_URL + "/jsxsd/";
 
     /**
      * cookie测试url（空白页）

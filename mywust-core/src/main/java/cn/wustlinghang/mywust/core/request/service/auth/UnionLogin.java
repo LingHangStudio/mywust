@@ -1,7 +1,7 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.core.request.factory.auth.UnionAuthRequestFactory;
+import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
@@ -17,6 +17,8 @@ import java.io.IOException;
  * 统一认证登录
  */
 public class UnionLogin {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     Logger log = LoggerFactory.getLogger(UnionLogin.class);
 
     private final Requester requester;
@@ -28,32 +30,24 @@ public class UnionLogin {
     public String getServiceTicket(String username, String password, String serviceUrl, RequestClientOption requestOption) throws IOException, ApiException {
         String encodedPassword = PasswordEncoder.encodePassword(password);
 
-        // 获取ticket granting ticket（TGT），以获取ServiceTicket
-        HttpRequest TGTRequest = UnionAuthRequestFactory.unionLoginTGTRequest(username, encodedPassword, serviceUrl);
-        HttpResponse unionAuthResponse = requester.post(TGTRequest, requestOption);
+        // 获取ticket，以便在后续的系统中登录获取cookie
+        HttpRequest ticketRequest = UnionAuthRequestFactory.loginTicketRequest(username, encodedPassword, serviceUrl);
+        HttpResponse ticketResponse = requester.post(ticketRequest, requestOption);
 
-        String redirectAddress = unionAuthResponse.getHeaders().get("Location");
-        if (redirectAddress == null) {
-            throw analyzeFailReason(unionAuthResponse.getBody());
+        String ticketResponseBody = ticketResponse.getStringBody();
+        String ticket = objectMapper.readTree(ticketResponseBody).path("ticket").asText(null);
+        if (ticket == null) {
+            throw analyzeFailReason(ticketResponseBody);
         }
 
-        // 获取服务ticket（service ticket，ST）
-        HttpRequest serviceTicketRequest = UnionAuthRequestFactory.loginTicketRequest(redirectAddress.replace("http:", "https:"), serviceUrl);
-        HttpResponse serviceTicketResponse = requester.post(serviceTicketRequest, requestOption);
-
-        byte[] serviceTicketResponseData = serviceTicketResponse.getBody();
-        if (serviceTicketResponseData == null) {
-            log.warn("获取服务st出错，serviceTicketResponseData == null");
-
-            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION);
-        }
-
-        return new String(serviceTicketResponseData);
+        return ticket;
     }
 
-    private ApiException analyzeFailReason(byte[] response) {
+    private ApiException analyzeFailReason(String response) {
         try {
-            String code = new ObjectMapper().readTree(response).get("data").get("code").asText();
+            String code = objectMapper.readTree(response)
+                    .path("data").path("code")
+                    .asText("");
             switch (code) {
                 case "PASSERROR":
                 case "FALSE":
@@ -77,7 +71,7 @@ public class UnionLogin {
                     return new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "未知的错误原因：" + code);
             }
         } catch (Exception e) {
-            log.warn("分析失败原因出错：{}， 响应：{}", e, new String(response));
+            log.warn("分析失败原因出错：{}， 响应：{}", e, response);
             return new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, e.toString());
         }
     }

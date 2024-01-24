@@ -6,6 +6,7 @@ import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
+import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.urls.UndergradUrls;
 import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.util.PasswordEncoder;
@@ -38,6 +39,19 @@ public class UndergraduateLogin {
         }
 
         String cookies = sessionResponse.getCookies();
+
+        // 请求一遍任意其他页面，使cookie真正生效
+        RequestClientOption tmpOption = requestOption.copy();
+        tmpOption.setFollowUrlRedirect(true);
+        String redirectedUrl = sessionResponse.getHeaders().get("Location");
+        if (redirectedUrl != null && cookies != null) {
+            HttpRequest redirectedRequest = RequestFactory.makeHttpRequest(redirectedUrl, null, cookies);
+            requester.get(redirectedRequest, tmpOption);
+        } else {
+            HttpRequest anyRequest = RequestFactory.makeHttpRequest(UndergradUrls.BKJX_SESSION_COOKIE_BASE_URL, null, cookies);
+            requester.get(anyRequest, tmpOption);
+        }
+
         this.checkCookie(cookies, requestOption);
 
         return cookies;
@@ -102,6 +116,7 @@ public class UndergraduateLogin {
         // 拿到Cookie后调用的第一个接口有时候会产生302/301跳转到主页，需要再次调用才能正确响应
         if (!testCookie(cookies, requestOption)) {
             log.warn("[mywust]: Cookie检查不通过：{}", cookies);
+            throw new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "登录获取的Cookie无效");
         }
     }
 

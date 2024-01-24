@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UnionAuthRequestFactory extends RequestFactory {
-    public static HttpRequest unionLoginTGTRequest(String username, String password, String service) {
+    public static HttpRequest loginTicketRequest(String username, String password, String service) {
         Map<String, String> requestForm = new HashMap<>(4);
         requestForm.put("username", username);
         requestForm.put("password", password);
@@ -20,14 +20,5 @@ public class UnionAuthRequestFactory extends RequestFactory {
         String queryString = StringUtil.generateQueryString(requestForm);
 
         return makeHttpRequest(UnionAuthUrls.UNION_AUTH_API, queryString.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static HttpRequest loginTicketRequest(String redirectUrl, String service) {
-        Map<String, String> requestForm = new HashMap<>(1);
-        requestForm.put("service", service);
-
-        String queryString = StringUtil.generateQueryString(requestForm);
-
-        return makeHttpRequest(redirectUrl, queryString.getBytes(StandardCharsets.UTF_8));
     }
 }
