@@ -74,15 +74,30 @@ public class StringUtil {
         return str == null ? defaultStr : str;
     }
 
-    public static String getTermString(Date date, boolean autumn) {
+    public static String getTermString(Date date, boolean autumn, boolean firstHalfTerm) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
 
-        return getTermString(calendar, autumn);
+        return getTermString(calendar, autumn, firstHalfTerm);
     }
 
-    public static String getTermString(Calendar calendar, boolean autumn) {
+    public static String getTermString(Calendar calendar, boolean autumn, boolean firstHalfTerm) {
         int year = calendar.get(Calendar.YEAR);
+        if (firstHalfTerm) {
+            year -= 1;
+        }
+
+        int nextYear = year + 1;
+
+        // 秋季期，就是第一个学期
+        return String.format("%d-%d-%s", year, nextYear, autumn ? "1" : "2");
+    }
+
+    public static String getTermString(int year, boolean autumn, boolean firstHalf) {
+        if (firstHalf) {
+            year -= 1;
+        }
+
         int nextYear = year + 1;
 
         // 秋季期，就是第一个学期
@@ -93,8 +108,7 @@ public class StringUtil {
         Calendar now = Calendar.getInstance();
         int month = now.get(Calendar.MONTH) + 1;
 
-        // 一般八月到第二年二月算是是秋季期
-        return getTermString(now, month >= 8 || month < 2);
+        return getTermString(now, month >= 8 || month < 2, month < 2);
     }
 
     static public List<String> split(String source, char gap) {
