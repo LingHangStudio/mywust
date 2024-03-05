@@ -59,7 +59,7 @@
     </dependencies>
 
     <properties>
-        <revision>0.0.3-alpha</revision>
+        <revision>0.0.4-alpha</revision>
 
         <lombok.version>1.18.22</lombok.version>
 
