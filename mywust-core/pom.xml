@@ -100,7 +100,7 @@
 
         <slf4j.version>2.0.3</slf4j.version>
         <jsoup.version>1.15.3</jsoup.version>
-        <hutool.version>5.8.22</hutool.version>
+        <hutool.version>5.8.25</hutool.version>
         <jackson.version>2.15.2</jackson.version>
     </properties>
 </project>
