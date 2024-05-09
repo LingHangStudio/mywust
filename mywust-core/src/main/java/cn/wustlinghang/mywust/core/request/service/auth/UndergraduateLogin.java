@@ -121,7 +121,7 @@ public class UndergraduateLogin {
     }
 
     private boolean roughCheckCookie(String cookies) {
-        return cookies != null && cookies.contains("JSESSIONID") && cookies.contains("SERVERID");
+        return cookies != null;
     }
 
     public boolean testCookie(String cookies, RequestClientOption option) throws IOException, ApiException {
