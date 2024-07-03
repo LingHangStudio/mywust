@@ -1,5 +1,6 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
+import cn.wustlinghang.mywust.core.request.service.captcha.solver.CaptchaSolver;
 import cn.wustlinghang.mywust.urls.LibraryUrls;
 import cn.wustlinghang.mywust.urls.UnionAuthUrls;
 import cn.wustlinghang.mywust.core.request.factory.library.LibraryRequestFactory;
@@ -16,9 +17,9 @@ public class LibraryLogin {
 
     private final UnionLogin unionLogin;
 
-    public LibraryLogin(Requester requester) {
+    public LibraryLogin(Requester requester, CaptchaSolver<String> captchaSolver) {
         this.requester = requester;
-        this.unionLogin = new UnionLogin(requester);
+        this.unionLogin = new UnionLogin(requester, captchaSolver);
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws ApiException, IOException {

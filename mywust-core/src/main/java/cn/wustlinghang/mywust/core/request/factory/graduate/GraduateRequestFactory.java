@@ -33,7 +33,7 @@ public class GraduateRequestFactory extends RequestFactory {
     }
 
     @Deprecated
-    public static HttpRequest loginRequest(String username, String password, SolvedImageCaptcha captcha) {
+    public static HttpRequest loginRequest(String username, String password, SolvedImageCaptcha<byte[]> captcha) {
         Map<String, String> params = new HashMap<>(7);
         params.putAll(LOGIN_CONST_PARAMS);
         params.put("_ctl0:txtusername", username);
@@ -53,7 +53,7 @@ public class GraduateRequestFactory extends RequestFactory {
         private final String vewStateGenerator;
     }
 
-    public static HttpRequest loginRequest(String username, String password, LoginPageParams loginPageParams, SolvedImageCaptcha captcha) {
+    public static HttpRequest loginRequest(String username, String password, LoginPageParams loginPageParams, SolvedImageCaptcha<byte[]> captcha) {
         Map<String, String> params = new HashMap<>(7);
         params.putAll(LOGIN_CONST_PARAMS);
 
@@ -69,7 +69,7 @@ public class GraduateRequestFactory extends RequestFactory {
         return makeHttpRequest(GraduateUrls.GRADUATE_LOGIN_API, requestData, captcha.getBindInfo());
     }
 
-    public static HttpRequest loginRequest(String username, String password, String loginPage, SolvedImageCaptcha captcha) {
+    public static HttpRequest loginRequest(String username, String password, String loginPage, SolvedImageCaptcha<byte[]> captcha) {
         Map<String, String> params = new HashMap<>(7);
         params.putAll(LOGIN_CONST_PARAMS);
 

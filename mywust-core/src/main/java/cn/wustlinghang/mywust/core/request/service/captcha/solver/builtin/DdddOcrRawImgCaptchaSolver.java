@@ -1,7 +1,8 @@
-package cn.wustlinghang.mywust.core.request.service.captcha.solver;
+package cn.wustlinghang.mywust.core.request.service.captcha.solver.builtin;
 
 import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
 import cn.wustlinghang.mywust.captcha.UnsolvedImageCaptcha;
+import cn.wustlinghang.mywust.core.request.service.captcha.solver.CaptchaSolver;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.network.Requester;
@@ -11,20 +12,20 @@ import cn.wustlinghang.mywust.network.entitys.HttpResponse;
 import java.io.IOException;
 import java.util.Base64;
 
-public class DdddOcrCaptchaSolver implements CaptchaSolver {
+public class DdddOcrRawImgCaptchaSolver implements CaptchaSolver<byte[]> {
     private final String baseUrl;
 
     private final Requester requester;
 
-    public DdddOcrCaptchaSolver(String baseUrl, Requester requester) {
+    public DdddOcrRawImgCaptchaSolver(String baseUrl, Requester requester) {
         this.baseUrl = baseUrl;
         this.requester = requester;
     }
 
     @Override
-    public SolvedImageCaptcha solve(UnsolvedImageCaptcha unsolvedImageCaptcha) throws ApiException {
+    public SolvedImageCaptcha<byte[]> solve(UnsolvedImageCaptcha<byte[]> unsolvedImageCaptcha) throws ApiException {
         try {
-            SolvedImageCaptcha solvedImageCaptcha = new SolvedImageCaptcha(unsolvedImageCaptcha);
+            SolvedImageCaptcha<byte[]> solvedImageCaptcha = new SolvedImageCaptcha<>(unsolvedImageCaptcha);
 
             String result = this.ocr(unsolvedImageCaptcha.getImage());
             solvedImageCaptcha.setResult(result);

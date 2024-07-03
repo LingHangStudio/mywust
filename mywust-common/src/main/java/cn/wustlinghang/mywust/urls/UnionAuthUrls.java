@@ -8,6 +8,11 @@ public class UnionAuthUrls {
      */
     public static final String UNION_AUTH_API = UNION_AUTH_BASE_URL +"/lyuapServer/v1/tickets";
 
+    /**
+     * 验证码api地址
+     */
+    public static final String UNION_AUTH_CAPTCHA_API = UNION_AUTH_BASE_URL +"/lyuapServer/kaptcha?_t=%d&uid=%s";
+
     public static class Service {
         public static final String LIBRARY_SSO_SERVICE = "https://libsys.wust.edu.cn:443/meta-local/opac/cas/rosetta";
 

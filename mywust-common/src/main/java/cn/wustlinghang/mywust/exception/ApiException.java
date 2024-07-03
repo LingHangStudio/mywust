@@ -1,5 +1,8 @@
 package cn.wustlinghang.mywust.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ApiException extends BasicException {
     private final Code code;
 
@@ -19,10 +22,6 @@ public class ApiException extends BasicException {
 
     public static ApiException create(Code code) {
         return new ApiException(code);
-    }
-
-    public Code getCode() {
-        return code;
     }
 
     public int getCodeValue() {
@@ -54,6 +53,11 @@ public class ApiException extends BasicException {
          */
         PARAM_WRONG_EXCEPTION(-3, "输入参数错误..."),
 
+        /**
+         * 验证码错误
+         */
+        CAPTCHA_WRONG(-4, "自动验证码处理错误，请重试"),
+
         // --------------------------------
         // 统一认证的异常(本科生、图书馆)
 
@@ -82,8 +86,6 @@ public class ApiException extends BasicException {
          */
         UNI_LOGIN_NEED_CHANGE_PASSWORD(100104, "统一认证登录: 用户账号密码需要修改"),
 
-        // 下面的几个几乎不会遇到，但是从官网源码来看是有可能的
-
         /**
          * 用户账号不唯一
          */
@@ -99,21 +101,6 @@ public class ApiException extends BasicException {
          */
         UNI_LOGIN_NEED_TFA(100107, "统一认证登录: 用户账号需要TFA二步验证"),
 
-        /**
-         * 专属选课时间段账号被禁用
-         */
-        UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME(100108, "本科生登录：专属选课时间段账号被禁用"),
-
-        /**
-         * 用户名信息不存在（新生信息未录入或者老生删档）
-         */
-        UNDERGRAD_USERINFO_NOT_EXISTS(100109, "本科生登录：用户名信息（新生信息未录入或者老生删档）"),
-
-        /**
-         * 系统错误
-         */
-        UNDERGRAD_SYSTEM_ERROR(100110, "本科生：教务系统出现异常"),
-
         // --------------------------------
         // 共有异常码：cookie无效
 
@@ -126,14 +113,29 @@ public class ApiException extends BasicException {
         // 本科生API异常代码
 
         /**
+         * 专属选课时间段账号被禁用
+         */
+        UNDERGRAD_BANNED_IN_EXCLUSIVE_TIME(110101, "本科生登录：专属选课时间段账号被禁用"),
+
+        /**
+         * 用户名信息不存在（新生信息未录入或者老生删档）
+         */
+        UNDERGRAD_USERINFO_NOT_EXISTS(110102, "本科生登录：用户名信息（新生信息未录入或者老生删档）"),
+
+        /**
+         * 系统错误
+         */
+        UNDERGRAD_SYSTEM_ERROR(110103, "本科生：教务系统出现异常"),
+
+        /**
          *
          */
-        BKJX_LEGACY_LOGIN_PASSWORD_WRONG(110101, "本科教学系统-旧版登录方式：密码错误"),
+        BKJX_LEGACY_LOGIN_PASSWORD_WRONG(110104, "本科教学系统-旧版登录方式：密码错误"),
 
         /**
          * 需要评教
          */
-        BKJX_COURSE_NEED_EVALUATE(110102, "本科生：需要评教"),
+        BKJX_COURSE_NEED_EVALUATE(110105, "本科生：需要评教"),
 
         // --------------------------------
         // 物理实验系统API异常代码

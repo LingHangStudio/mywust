@@ -1,6 +1,7 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
 import cn.wustlinghang.mywust.core.request.factory.undergrade.BkjxRequestFactory;
+import cn.wustlinghang.mywust.core.request.service.captcha.solver.CaptchaSolver;
 import cn.wustlinghang.mywust.exception.ApiException;
 import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
@@ -22,9 +23,9 @@ public class UndergraduateLogin {
 
     private final UnionLogin unionLogin;
 
-    public UndergraduateLogin(Requester requester) {
+    public UndergraduateLogin(Requester requester, CaptchaSolver<String> captchaSolver) {
         this.requester = requester;
-        this.unionLogin = new UnionLogin(requester);
+        this.unionLogin = new UnionLogin(requester, captchaSolver);
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption requestOption) throws IOException, ApiException {
@@ -41,7 +42,12 @@ public class UndergraduateLogin {
         String cookies = sessionResponse.getCookies();
 
         // 请求一遍任意其他页面，使cookie真正生效
-        RequestClientOption tmpOption = requestOption.copy();
+        RequestClientOption tmpOption;
+        if (requestOption == null) {
+            tmpOption = new RequestClientOption();
+        } else {
+            tmpOption = requestOption.copy();
+        }
         tmpOption.setFollowUrlRedirect(true);
         String redirectedUrl = sessionResponse.getHeaders().get("Location");
         if (redirectedUrl != null && cookies != null) {

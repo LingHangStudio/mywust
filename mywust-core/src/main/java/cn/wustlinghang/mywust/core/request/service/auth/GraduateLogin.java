@@ -24,9 +24,9 @@ import java.io.IOException;
 public class GraduateLogin {
     private final Requester requester;
 
-    private final CaptchaSolver captchaSolver;
+    private final CaptchaSolver<byte[]> captchaSolver;
 
-    public GraduateLogin(Requester requester, CaptchaSolver captchaSolver) {
+    public GraduateLogin(Requester requester, CaptchaSolver<byte[]> captchaSolver) {
         this.requester = requester;
         this.captchaSolver = captchaSolver;
     }
@@ -41,14 +41,14 @@ public class GraduateLogin {
         HttpRequest captchaImageRequest = GraduateRequestFactory.captchaRequest(loginCookie);
         HttpResponse captchaImageResponse = requester.get(captchaImageRequest, option);
 
-        UnsolvedImageCaptcha unsolvedImageCaptcha = new UnsolvedImageCaptcha();
+        UnsolvedImageCaptcha<byte[]> unsolvedImageCaptcha = new UnsolvedImageCaptcha<>();
         unsolvedImageCaptcha.setBindInfo(loginCookie);
 
         byte[] processedImage = ImageUtil.process(captchaImageResponse.getBody());
         unsolvedImageCaptcha.setImage(processedImage);
 
         // 通过传入的captchaSolver来处理验证码
-        SolvedImageCaptcha solvedImageCaptcha = captchaSolver.solve(unsolvedImageCaptcha);
+        SolvedImageCaptcha<byte[]> solvedImageCaptcha = captchaSolver.solve(unsolvedImageCaptcha);
 
         // 进行登录
         String loginIndexHtml = loginIndexResponse.getStringBody();
