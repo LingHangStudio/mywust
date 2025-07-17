@@ -101,6 +101,11 @@ public class ApiException extends BasicException {
          */
         UNI_LOGIN_NEED_TFA(100107, "统一认证登录: 用户账号需要TFA二步验证"),
 
+        /**
+         * 用户账号设置了TFA验证，不能直接用密码账号登录
+         */
+        UNI_LOGIN_METHOD_NOT_SUPPORT(100108, "统一认证登录: 用户登录方式不支持"),
+
         // --------------------------------
         // 共有异常码：cookie无效
 

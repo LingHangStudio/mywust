@@ -10,7 +10,7 @@ import cn.wustlinghang.mywust.network.entitys.HttpResponse;
 import cn.wustlinghang.mywust.network.request.RequestFactory;
 import cn.wustlinghang.mywust.urls.UndergradUrls;
 import cn.wustlinghang.mywust.urls.UnionAuthUrls;
-import cn.wustlinghang.mywust.util.PasswordEncoder;
+import cn.wustlinghang.mywust.util.UnionPasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +87,7 @@ public class UndergraduateLogin {
         String dataString = dataStringResponse.getStringBody();
 
         // 获取登录ticket
-        String encoded = PasswordEncoder.legacyPassword(username, password, dataString);
+        String encoded = UnionPasswordEncoder.legacyPassword(username, password, dataString);
         HttpRequest ticketRequest = BkjxRequestFactory.Legacy.ticketRedirectRequest(encoded, dataStringResponse.getCookies());
         ticketRequest.setCookies(cookie);
         HttpResponse ticketResponse = requester.post(ticketRequest, requestOption);

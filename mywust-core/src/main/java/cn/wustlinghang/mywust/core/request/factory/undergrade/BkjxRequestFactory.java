@@ -23,16 +23,9 @@ public class BkjxRequestFactory extends RequestFactory {
 
     public static HttpRequest examScoreInfoRequest(String cookies, String time, String courseKind, String courseName) {
         FormBodyBuilder formBodyBuilder = new FormBodyBuilder(4);
-        // 开课时间(学期)
         formBodyBuilder.add("kksj", time);
-
-        // 课程性质
         formBodyBuilder.add("kcxz", courseKind);
-
-        // 课程名称
         formBodyBuilder.add("kcmc", courseName);
-
-        // 显示方式，这里直接选择全部显示
         formBodyBuilder.add("xsfs", "all");
 
         byte[] postData = formBodyBuilder.buildString().getBytes(StandardCharsets.UTF_8);

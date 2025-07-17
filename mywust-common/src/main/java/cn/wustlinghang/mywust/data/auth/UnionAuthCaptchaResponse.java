@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class UnionAuthCaptchaResponse {
+    private String captchaType;
+
     private String uid;
 
     private String content;

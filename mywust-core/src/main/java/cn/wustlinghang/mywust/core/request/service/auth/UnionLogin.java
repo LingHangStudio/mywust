@@ -1,6 +1,5 @@
 package cn.wustlinghang.mywust.core.request.service.auth;
 
-import cn.hutool.core.util.RandomUtil;
 import cn.wustlinghang.mywust.captcha.SolvedImageCaptcha;
 import cn.wustlinghang.mywust.captcha.UnsolvedImageCaptcha;
 import cn.wustlinghang.mywust.core.request.factory.auth.UnionAuthRequestFactory;
@@ -12,9 +11,9 @@ import cn.wustlinghang.mywust.network.RequestClientOption;
 import cn.wustlinghang.mywust.network.Requester;
 import cn.wustlinghang.mywust.network.entitys.HttpRequest;
 import cn.wustlinghang.mywust.network.entitys.HttpResponse;
-import cn.wustlinghang.mywust.util.PasswordEncoder;
+import cn.wustlinghang.mywust.util.UnionPasswordEncoder;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +24,9 @@ import java.io.IOException;
  */
 public class UnionLogin {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    static {
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+    }
 
     Logger log = LoggerFactory.getLogger(UnionLogin.class);
 
@@ -46,10 +48,9 @@ public class UnionLogin {
     public String getServiceTicket(String username, String password, String serviceUrl, int maxRetry,
                                    RequestClientOption requestOption
     ) throws IOException, ApiException {
-        String encodedPassword = PasswordEncoder.encodePassword(password);
+        String encodedPassword = UnionPasswordEncoder.encodePassword(password);
 
-        String captchaId = Hex.encodeHexString(RandomUtil.randomBytes(16));
-        HttpRequest captchaRequest = UnionAuthRequestFactory.loginCaptchaRequest(captchaId);
+        HttpRequest captchaRequest = UnionAuthRequestFactory.loginCaptchaRequest();
         HttpResponse captchaResponse = requester.get(captchaRequest, requestOption);
 
         String json = captchaResponse.getStringBody();
@@ -78,10 +79,10 @@ public class UnionLogin {
             String ticketResponseBody = ticketResponse.getStringBody();
             String ticket = objectMapper.readTree(ticketResponseBody).path("ticket").asText(null);
             if (ticket == null) {
-                throw  this.analyzeFailReason(ticketResponseBody);
+                throw this.analyzeFailReason(ticketResponseBody);
             }
 
-            return  ticket;
+            return ticket;
         } catch (ApiException e) {
             if (e.getCode() == ApiException.Code.CAPTCHA_WRONG && maxRetry > 0) {
                 return this.getServiceTicket(username, password, serviceUrl, maxRetry - 1, requestOption);
@@ -116,6 +117,8 @@ public class UnionLogin {
                     return new ApiException(ApiException.Code.UNI_LOGIN_NEED_TFA);
                 case "CODEFALSE":
                     return new ApiException(ApiException.Code.CAPTCHA_WRONG);
+                case "ISPHONEOREMAILORANSWER":
+                    return new ApiException(ApiException.Code.UNI_LOGIN_METHOD_NOT_SUPPORT);
                 default:
                     log.warn("未知的原因：{}", code);
                     return new ApiException(ApiException.Code.UNKNOWN_EXCEPTION, "未知的错误原因：" + code);

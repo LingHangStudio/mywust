@@ -40,7 +40,7 @@ abstract class CourseTableParserBase implements Parser<List<Course>> {
             }
 
             // 大格子是空的，没课，跳过就好了
-            if (bigGird.text().length() == 0) {
+            if (bigGird.text().isEmpty()) {
                 girdCount++;
                 continue;
             }

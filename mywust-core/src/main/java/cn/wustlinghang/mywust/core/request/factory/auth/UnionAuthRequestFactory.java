@@ -25,9 +25,9 @@ public class UnionAuthRequestFactory extends RequestFactory {
         return makeHttpRequest(UnionAuthUrls.UNION_AUTH_API, queryString.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static HttpRequest loginCaptchaRequest(String captchaId) {
+    public static HttpRequest loginCaptchaRequest() {
         long now = System.currentTimeMillis() / 1000;
-        String url = String.format(UnionAuthUrls.UNION_AUTH_CAPTCHA_API, now, captchaId);
+        String url = String.format(UnionAuthUrls.UNION_AUTH_CAPTCHA_API, now);
 
         return makeHttpRequest(url);
     }

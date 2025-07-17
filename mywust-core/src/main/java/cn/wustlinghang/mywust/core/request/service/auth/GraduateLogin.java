@@ -32,8 +32,11 @@ public class GraduateLogin {
     }
 
     public String getLoginCookie(String username, String password, RequestClientOption option) throws IOException, ApiException {
-        HttpRequest loginIndexRequest = RequestFactory.makeHttpRequest(GraduateUrls.GRADUATE_LOGIN_API);
-        HttpResponse loginIndexResponse = requester.get(loginIndexRequest, option);
+        RequestClientOption _option = option.copy();
+        _option.setFollowUrlRedirect(true);
+
+        HttpRequest loginIndexRequest = RequestFactory.makeHttpRequest(GraduateUrls.GRADUATE_HOME);
+        HttpResponse loginIndexResponse = requester.get(loginIndexRequest, _option);
 
         String loginCookie = loginIndexResponse.getCookies();
 
@@ -81,7 +84,7 @@ public class GraduateLogin {
         try {
             return getLoginCookie(username, password, option);
         } catch (ApiException e) {
-            boolean shouldRetry = (cnt < maxRetryTimes) && (e.getCode() != ApiException.Code.GRADUATE_CAPTCHA_WRONG);
+            boolean shouldRetry = (cnt < maxRetryTimes) && (e.getCode() == ApiException.Code.GRADUATE_CAPTCHA_WRONG);
             if (shouldRetry) {
                 log.info("[mywust]: Retrying login for {} time(s)", cnt + 1);
                 return getLoginCookie(username, password, maxRetryTimes, cnt + 1, option);

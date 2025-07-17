@@ -1,7 +1,9 @@
 package cn.wustlinghang.mywust.urls;
 
 public class GraduateUrls {
-    public static final String GRADUATE_BASE_URL = "http://59.68.177.189";
+    public static final String GRADUATE_BASE_URL = "https://yjsjygl.wust.edu.cn";
+
+    public static final String GRADUATE_HOME = GRADUATE_BASE_URL + "/home/login";
 
     public static final String GRADUATE_CAPTCHA_API = GRADUATE_BASE_URL + "/pyxx/PageTemplate/NsoftPage/yzm/createyzm.aspx";
     public static final String GRADUATE_LOGIN_API = GRADUATE_BASE_URL + "/pyxx/login.aspx";

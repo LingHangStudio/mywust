@@ -67,7 +67,7 @@ public class UndergradCourseTableParser implements Parser<List<Course>> {
                     // 在某个版本之后（至少是1.10到1.15之间的某个版本）会自动剔除多余空格（trim()），所以直接这样判断就行了
                     // 只不过需要注意一下jsoup的版本，太旧的话可能不会起作用，如确需在旧版本上使用请手动trim或加条件
                     String courseName = courseElement.ownText();
-                    if ("".equals(courseName)) {
+                    if (courseName.isEmpty()) {
                         continue;
                     }
 

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CurrentLoanApiService extends BaseLibraryApiService {
+
     public CurrentLoanApiService(Requester requester) {
         super(requester);
     }
